@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -12,7 +13,15 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { BatteryCharging, Leaf, Clock, DollarSign } from "lucide-react";
+import { BatteryCharging, Leaf, Clock, DollarSign, Zap, ThermometerSun, Car } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 // Define charger types and their charging rates
 const chargerTypes = {
@@ -34,15 +43,19 @@ export const EVChargeCalculator = () => {
     // Calculate energy needed per day (kWh)
     const dailyEnergyNeeded = (dailyMiles / efficiency);
     
-    // Calculate charging times for each level
+    // Calculate charging times for each level with more precise rates
+    // Adding battery charging curve factor - slower at high/low charge states
+    const batteryEfficiencyFactor = 0.85; // Accounts for charging inefficiency
     const chargingTimes = {
-      level1: (batterySize * 0.8) / chargerTypes.level1.kw,
-      level2: (batterySize * 0.8) / chargerTypes.level2.kw,
-      level3: (batterySize * 0.8) / chargerTypes.level3.kw
+      level1: (batterySize * 0.8) / (chargerTypes.level1.kw * batteryEfficiencyFactor),
+      level2: (batterySize * 0.8) / (chargerTypes.level2.kw * batteryEfficiencyFactor),
+      level3: (batterySize * 0.8) / (chargerTypes.level3.kw * 0.75) // DC fast charging has lower efficiency at high power
     };
     
-    // Calculate cost per charge
-    const costPerCharge = (batterySize * 0.8) * kwhRate;
+    // Calculate cost per charge with tiered electricity rates
+    // Many utilities charge more during peak hours
+    const peakHoursFactor = chargerType === "level1" ? 1.0 : 1.15; // Level 2/3 more likely used during peak hours
+    const costPerCharge = (batterySize * 0.8 / batteryEfficiencyFactor) * kwhRate * peakHoursFactor;
     
     // Calculate time saved relative to current choice
     const currentChargeTime = chargingTimes[chargerType];
@@ -51,33 +64,68 @@ export const EVChargeCalculator = () => {
     
     // Calculate additional cost for faster charging
     // Level 3 typically costs more per kWh
-    const level3PremiumRate = kwhRate * 2; // Assuming fast charging costs twice as much
+    const level3PremiumRate = kwhRate * 2.5; // Updated: commercial DC chargers charge more premium
     const level3ExtraCost = (batterySize * 0.8) * (level3PremiumRate - kwhRate);
     
-    // Calculate cost per hour saved
-    const costPerHourSavedToLevel3 = chargerType !== "level3" 
+    // Calculate cost per hour saved with better precision
+    const costPerHourSavedToLevel3 = chargerType !== "level3" && (chargingTimes[chargerType] - chargingTimes.level3) > 0 
       ? level3ExtraCost / (chargingTimes[chargerType] - chargingTimes.level3)
       : 0;
+      
+    // NEW: Calculate lifetime battery impact
+    // Fast charging can degrade battery faster
+    const batteryDegradationPerFastCharge = 0.05; // percentage per charge
+    const batteryCost = 150 * batterySize; // $150 per kWh for replacement
+    const additionalBatteryCostPerYear = chargerType === "level3" ? 
+      (batteryDegradationPerFastCharge/100 * 52 * batteryCost) : 0;
+      
+    // NEW: Calculate comprehensive charging data
+    // Calculate charging frequency based on daily miles with more realistic cycles
+    const batteryUsableCapacity = batterySize * 0.8;
+    const rangeMiles = batteryUsableCapacity * efficiency;
+    const daysPerCharge = dailyMiles > 0 ? rangeMiles / dailyMiles : Infinity;
+    const chargesPerMonth = dailyMiles > 0 ? 30 / daysPerCharge : 0;
     
-    // Calculate charging frequency based on daily miles
-    const chargeCyclesPerMonth = dailyMiles > 0 
-      ? (30 * dailyMiles) / (batterySize * 0.8 * efficiency)
-      : 0;
+    // Calculate monthly costs with more factors
+    const monthlyCost = costPerCharge * chargesPerMonth;
+    const monthlyTimeCharging = currentChargeTime * chargesPerMonth;
     
-    // Calculate monthly costs
-    const monthlyCost = costPerCharge * chargeCyclesPerMonth;
+    // NEW: Home vs Public charging comparison
+    const publicLevel2Rate = kwhRate * 2;
+    const publicLevel3Rate = kwhRate * 3.5;
+    const homeChargeMonthly = costPerCharge * chargesPerMonth;
+    const publicLevel2Monthly = (batterySize * 0.8 / batteryEfficiencyFactor) * publicLevel2Rate * chargesPerMonth;
+    const publicLevel3Monthly = (batterySize * 0.8 / 0.75) * publicLevel3Rate * chargesPerMonth;
     
-    // Calculate environmental impact
-    // Avg CO2 emissions from grid electricity: ~0.5 kg CO2 per kWh
-    // Natural gas emits ~0.2 kg CO2 per kWh, coal ~0.9 kg CO2 per kWh
-    const cleanEnergyFactor = 0.5; // Midpoint between clean and dirty grid
-    const monthlyCO2 = dailyEnergyNeeded * 30 * cleanEnergyFactor;
+    // Calculate environmental impact with more detailed factors
+    // Varying CO2 by energy source, time of day, etc.
+    const regionalCarbonIntensity = 0.4; // kg CO2 per kWh - varies by region
+    const solarChargingFactor = chargerType === "level1" ? 0.5 : 0.8; // Level 1 more likely during daylight
+    const effectiveCarbonIntensity = regionalCarbonIntensity * solarChargingFactor;
+    const monthlyCO2 = dailyEnergyNeeded * 30 * effectiveCarbonIntensity;
     
-    // Calculate gasoline equivalent savings
+    // Calculate gasoline equivalent with updated values
     // Average gas car: 25 MPG, produces ~8.89 kg CO2 per gallon
     const gasEquivalent = (dailyMiles * 30) / 25;
     const gasCO2 = gasEquivalent * 8.89;
     const co2Savings = gasCO2 - monthlyCO2;
+    const gasCostPerGallon = 3.5;
+    const gasMonthly = gasEquivalent * gasCostPerGallon;
+    const monthlySavings = gasMonthly - monthlyCost;
+    
+    // NEW: Calculate 5-year TCO (Total Cost of Ownership)
+    const fiveYearElectricityCost = monthlyCost * 60;
+    const fiveYearBatteryCost = additionalBatteryCostPerYear * 5;
+    const fiveYearGasCost = gasMonthly * 60;
+    const fiveYearEVTotalCost = fiveYearElectricityCost + fiveYearBatteryCost;
+    const fiveYearSavings = fiveYearGasCost - fiveYearEVTotalCost;
+    
+    // NEW: Calculate amortized charging infrastructure cost
+    const level1InfrastructureCost = 0; // standard outlet
+    const level2InfrastructureCost = 1200; // home charger + installation
+    const infrastructureCost = chargerType === "level1" ? level1InfrastructureCost : 
+                               chargerType === "level2" ? level2InfrastructureCost : 0;
+    const monthsToBreakEven = infrastructureCost > 0 ? infrastructureCost / monthlySavings : 0;
     
     const results = {
       chargingTimes,
@@ -87,33 +135,51 @@ export const EVChargeCalculator = () => {
       timeSavedVsLevel2: parseFloat(timeSavedVsLevel2.toFixed(2)),
       level3ExtraCost: parseFloat(level3ExtraCost.toFixed(2)),
       costPerHourSavedToLevel3: parseFloat(costPerHourSavedToLevel3.toFixed(2)),
-      chargeCyclesPerMonth: parseFloat(chargeCyclesPerMonth.toFixed(1)),
+      chargesPerMonth: parseFloat(chargesPerMonth.toFixed(1)),
+      daysPerCharge: parseFloat(daysPerCharge.toFixed(1)),
       monthlyCost: parseFloat(monthlyCost.toFixed(2)),
       monthlyCO2: parseFloat(monthlyCO2.toFixed(2)),
       co2Savings: parseFloat(co2Savings.toFixed(2)),
+      monthlyTimeCharging: parseFloat(monthlyTimeCharging.toFixed(1)),
+      homeVsPublicComparison: {
+        home: parseFloat(homeChargeMonthly.toFixed(2)),
+        publicLevel2: parseFloat(publicLevel2Monthly.toFixed(2)),
+        publicLevel3: parseFloat(publicLevel3Monthly.toFixed(2)),
+      },
+      savingsVsGas: {
+        monthly: parseFloat(monthlySavings.toFixed(2)),
+        fiveYear: parseFloat(fiveYearSavings.toFixed(2)),
+      },
+      batteryImpact: parseFloat(additionalBatteryCostPerYear.toFixed(2)),
+      infrastructureBreakeven: parseFloat(monthsToBreakEven.toFixed(1)),
       recommendation: ""
     };
     
-    // Generate recommendation
+    // Generate more insightful recommendation using all factors
     if (dailyMiles < 15) {
-      results.recommendation = "With your low daily mileage, Level 1 charging is sufficient and most cost-effective.";
+      results.recommendation = "With your low daily mileage of only " + dailyMiles + " miles, Level 1 charging is perfectly sufficient and most cost-effective. You'll only need to charge once every " + results.daysPerCharge.toFixed(1) + " days.";
     } else if (dailyMiles < 40) {
-      results.recommendation = "Level 2 charging offers a good balance of convenience and cost for your typical usage.";
+      results.recommendation = "For your moderate daily usage of " + dailyMiles + " miles, Level 2 charging offers an optimal balance of convenience and cost. You'll save " + results.timeSavedVsLevel1.toFixed(1) + " hours per charge compared to Level 1.";
     } else {
-      results.recommendation = "Your high daily mileage justifies faster charging. Level 2 at home with occasional Level 3 for long trips would be optimal.";
+      results.recommendation = "With your high daily mileage of " + dailyMiles + " miles, faster charging solutions are justified. Level 2 at home for overnight charging with occasional Level 3 for longer trips would be ideal.";
     }
     
     // Add cost-based recommendation
     if (results.costPerHourSavedToLevel3 > 20) {
-      results.recommendation += " Level 3 charging is relatively expensive for your situation, at $" + 
-        results.costPerHourSavedToLevel3.toFixed(2) + " per hour saved.";
+      results.recommendation += " While Level 3 charging is faster, it's relatively expensive for your situation at $" + 
+        results.costPerHourSavedToLevel3.toFixed(2) + " per hour saved, plus potential long-term battery degradation costs.";
+    }
+    
+    // Add infrastructure advice
+    if (chargerType === "level2" && monthsToBreakEven > 0) {
+      results.recommendation += " Your Level 2 charger installation will pay for itself in " + monthsToBreakEven.toFixed(1) + " months through gas savings.";
     }
     
     setResults(results);
     
     toast({
       title: "EV Charging Analysis Complete",
-      description: `Cost per full charge: $${results.costPerCharge}`,
+      description: `Save $${results.savingsVsGas.monthly.toFixed(2)} monthly vs. gasoline!`,
     });
   };
 
@@ -204,92 +270,158 @@ export const EVChargeCalculator = () => {
         
         {results && (
           <div className="mt-6 space-y-4">
-            <div className="rounded-lg bg-secondary p-4 space-y-4">
-              <div className="space-y-1">
-                <span className="text-sm font-medium">Charging Summary</span>
+            <div className="rounded-lg bg-gradient-to-br from-secondary to-secondary/70 p-4 space-y-4">
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold flex items-center">
+                  <Zap className="h-5 w-5 text-yellow-500 mr-2" />
+                  Charging Analysis
+                </h3>
                 
-                <div className="grid grid-cols-3 gap-1 text-sm mt-2">
-                  <div className="text-center p-2 bg-background rounded-md">
-                    <div className="font-medium mb-1">Level 1</div>
-                    <div>{results.chargingTimes.level1.toFixed(1)} hrs</div>
-                  </div>
-                  <div className="text-center p-2 bg-background rounded-md">
-                    <div className="font-medium mb-1">Level 2</div>
-                    <div>{results.chargingTimes.level2.toFixed(1)} hrs</div>
-                  </div>
-                  <div className="text-center p-2 bg-background rounded-md">
-                    <div className="font-medium mb-1">Level 3</div>
-                    <div>{results.chargingTimes.level3.toFixed(1)} hrs</div>
-                  </div>
-                </div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[120px] font-medium">Charger</TableHead>
+                      <TableHead className="font-medium">Time</TableHead>
+                      <TableHead className="text-right font-medium">Savings</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow className={chargerType === "level1" ? "bg-primary/10" : ""}>
+                      <TableCell>Level 1</TableCell>
+                      <TableCell>{results.chargingTimes.level1.toFixed(1)} hrs</TableCell>
+                      <TableCell className="text-right">Baseline</TableCell>
+                    </TableRow>
+                    <TableRow className={chargerType === "level2" ? "bg-primary/10" : ""}>
+                      <TableCell>Level 2</TableCell>
+                      <TableCell>{results.chargingTimes.level2.toFixed(1)} hrs</TableCell>
+                      <TableCell className="text-right">{(results.chargingTimes.level1 - results.chargingTimes.level2).toFixed(1)} hrs</TableCell>
+                    </TableRow>
+                    <TableRow className={chargerType === "level3" ? "bg-primary/10" : ""}>
+                      <TableCell>Level 3</TableCell>
+                      <TableCell>{results.chargingTimes.level3.toFixed(1)} hrs</TableCell>
+                      <TableCell className="text-right">{(results.chargingTimes.level1 - results.chargingTimes.level3).toFixed(1)} hrs</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
                 
-                <div className="flex justify-between mt-3 items-center">
-                  <span className="text-muted-foreground">Cost per full charge:</span>
-                  <div className="flex items-center">
-                    <DollarSign className="h-4 w-4 text-primary mr-1" />
-                    <span className="font-semibold">${results.costPerCharge}</span>
+                <div className="grid grid-cols-2 gap-3 mt-3">
+                  <div className="bg-background rounded-md p-3">
+                    <p className="text-sm text-muted-foreground">Days between charges</p>
+                    <p className="text-xl font-bold">{results.daysPerCharge.toFixed(1)}</p>
                   </div>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Monthly charging cost:</span>
-                  <span className="font-semibold">${results.monthlyCost}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Charge cycles per month:</span>
-                  <span className="font-semibold">{results.chargeCyclesPerMonth}</span>
+                  <div className="bg-background rounded-md p-3">
+                    <p className="text-sm text-muted-foreground">Charges per month</p>
+                    <p className="text-xl font-bold">{results.chargesPerMonth.toFixed(1)}</p>
+                  </div>
                 </div>
               </div>
               
               <Separator />
               
               <div className="space-y-3">
-                <span className="text-sm font-medium">Time vs. Money Tradeoff</span>
+                <h3 className="text-lg font-semibold flex items-center">
+                  <DollarSign className="h-5 w-5 text-green-500 mr-2" />
+                  Financial Impact
+                </h3>
                 
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Time saved with Level 2 vs Level 1:</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="bg-background rounded-md p-3">
+                    <p className="text-sm text-muted-foreground">Cost per charge</p>
+                    <p className="text-xl font-bold">${results.costPerCharge.toFixed(2)}</p>
+                  </div>
+                  <div className="bg-background rounded-md p-3">
+                    <p className="text-sm text-muted-foreground">Monthly cost</p>
+                    <p className="text-xl font-bold">${results.monthlyCost.toFixed(2)}</p>
+                  </div>
+                </div>
+                
+                <div className="bg-primary/10 p-3 rounded-md">
+                  <p className="text-sm font-medium mb-2">Monthly savings vs. gasoline</p>
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 text-yellow-500 mr-1" />
-                    <span>{results.timeSavedVsLevel1.toFixed(1)} hrs</span>
+                    <div className="h-4 bg-green-500 rounded" style={{ width: `${Math.min(100, results.savingsVsGas.monthly * 2)}%` }}></div>
+                    <span className="ml-2 font-bold">${results.savingsVsGas.monthly.toFixed(2)}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground mt-1">5-year savings: ${results.savingsVsGas.fiveYear.toFixed(2)}</p>
                 </div>
                 
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Extra cost for Level 3 vs Level 2:</span>
-                  <span>${results.level3ExtraCost.toFixed(2)}</span>
-                </div>
-                
-                {results.costPerHourSavedToLevel3 > 0 && (
-                  <div className="flex justify-between items-center font-medium">
-                    <span>Cost per hour saved (Level 3):</span>
-                    <span>${results.costPerHourSavedToLevel3.toFixed(2)}/hr</span>
+                <div className="space-y-2 mt-2">
+                  <p className="text-sm font-medium">Home vs Public Charging Comparison</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="p-2 bg-background/80 rounded text-center">
+                      <p className="text-xs text-muted-foreground">Home</p>
+                      <p className="font-medium">${results.homeVsPublicComparison.home}</p>
+                    </div>
+                    <div className="p-2 bg-background/80 rounded text-center">
+                      <p className="text-xs text-muted-foreground">Public L2</p>
+                      <p className="font-medium">${results.homeVsPublicComparison.publicLevel2}</p>
+                    </div>
+                    <div className="p-2 bg-background/80 rounded text-center">
+                      <p className="text-xs text-muted-foreground">Public L3</p>
+                      <p className="font-medium">${results.homeVsPublicComparison.publicLevel3}</p>
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
               
               <Separator />
               
-              <div className="space-y-1">
-                <span className="text-sm font-medium">Environmental Impact</span>
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold flex items-center">
+                  <Leaf className="h-5 w-5 text-green-500 mr-2" />
+                  Environmental Impact
+                </h3>
                 
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-muted-foreground">Monthly CO₂ from charging:</span>
-                  <span>{results.monthlyCO2} kg</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-background rounded-md p-3">
+                    <p className="text-sm text-muted-foreground">Monthly CO₂</p>
+                    <p className="text-xl font-bold">{results.monthlyCO2.toFixed(0)} kg</p>
+                  </div>
+                  <div className="bg-background rounded-md p-3">
+                    <p className="text-sm text-muted-foreground">CO₂ savings vs gas</p>
+                    <p className="text-xl font-bold text-green-500">{results.co2Savings.toFixed(0)} kg</p>
+                  </div>
                 </div>
                 
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">CO₂ savings vs. gasoline:</span>
-                  <div className="flex items-center">
-                    <Leaf className="h-4 w-4 text-green-500 mr-1" />
-                    <span className="font-medium">{results.co2Savings} kg</span>
+                <div className="flex items-center space-x-2">
+                  <div className="flex-1 h-2 bg-background rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-green-300 to-green-500 rounded-full" 
+                      style={{ width: `${(results.co2Savings / (results.co2Savings + results.monthlyCO2)) * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm">{((results.co2Savings / (results.co2Savings + results.monthlyCO2)) * 100).toFixed(0)}% reduction</span>
+                </div>
+                
+                <div className="text-sm">
+                  <p>Your EV usage saves the equivalent CO₂ of:</p>
+                  <div className="flex items-center mt-1 space-x-2">
+                    <Car className="h-4 w-4" />
+                    <span>{(results.co2Savings / 400).toFixed(1)} months of average car emissions</span>
+                  </div>
+                  <div className="flex items-center mt-1 space-x-2">
+                    <ThermometerSun className="h-4 w-4" />
+                    <span>{(results.co2Savings / 300).toFixed(1)} months of home heating</span>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-4 p-3 bg-primary/10 rounded-md">
-                <span className="font-medium">Recommendation:</span>
-                <p className="text-sm mt-1">{results.recommendation}</p>
+              <Separator />
+              
+              <div className="bg-primary/10 p-4 rounded-md">
+                <h3 className="font-medium mb-2">Expert Recommendation:</h3>
+                <p className="text-sm">{results.recommendation}</p>
+                
+                {results.infrastructureBreakeven > 0 && (
+                  <div className="mt-2 text-sm">
+                    <span className="font-medium">Infrastructure payoff:</span> Your Level 2 charger installation will pay for itself in {results.infrastructureBreakeven} months.
+                  </div>
+                )}
+                
+                {results.batteryImpact > 0 && (
+                  <div className="mt-2 text-sm">
+                    <span className="font-medium">Battery health note:</span> Consistent fast charging may add ~${results.batteryImpact}/year in battery degradation costs.
+                  </div>
+                )}
               </div>
             </div>
           </div>
