@@ -87,7 +87,7 @@ export const TimeCalculator = () => {
         toast({
           title: "Negative Result",
           description: "The result is negative. Showing absolute value.",
-          variant: "warning",
+          variant: "default",  // Changed from "warning" to "default"
         });
         resultInSeconds = Math.abs(resultInSeconds);
       }
