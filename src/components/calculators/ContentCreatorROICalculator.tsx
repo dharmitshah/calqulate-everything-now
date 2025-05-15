@@ -427,6 +427,13 @@ export const ContentCreatorROICalculator = () => {
     });
   };
 
+  const getTopRevenueSource = (revenueBreakdown: any) => {
+    const sorted = Object.entries(revenueBreakdown).sort((a: any, b: any) => b[1] - a[1]);
+    if (sorted[0][0] === "adRevenue") return "ad revenue";
+    if (sorted[0][0] === "sponsorRevenue") return "sponsorships";
+    return "affiliate marketing";
+  };
+
   return (
     <Card className="w-full max-w-lg">
       <CardHeader>
