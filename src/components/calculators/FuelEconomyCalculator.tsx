@@ -11,15 +11,27 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { ArrowRightLeft } from "lucide-react";
+import { Fuel } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+interface FuelEconomyResult {
+  mpg: number;
+  kml: number;
+  l100km: number;
+  tripCost: number | null;
+}
 
 export const FuelEconomyCalculator = () => {
   const [distance, setDistance] = useState<number>(0);
   const [fuel, setFuel] = useState<number>(0);
   const [unit, setUnit] = useState<"imperial" | "metric">("imperial");
-  const [tripCost, setTripCost] = useState<number | null>(null);
   const [fuelPrice, setFuelPrice] = useState<number>(0);
+  const [result, setResult] = useState<FuelEconomyResult>({
+    mpg: 0,
+    kml: 0,
+    l100km: 0,
+    tripCost: null
+  });
   const { toast } = useToast();
 
   const handleDistanceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,19 +49,20 @@ export const FuelEconomyCalculator = () => {
     setFuelPrice(isNaN(value) ? 0 : value);
   };
 
-  const calculateFuelEconomy = () => {
+  const handleCalculate = () => {
     if (distance <= 0 || fuel <= 0) {
       toast({
         title: "Invalid Input",
         description: "Both distance and fuel must be greater than zero.",
         variant: "destructive",
       });
-      return { mpg: 0, kml: 0, l100km: 0 };
+      return;
     }
 
     let mpg = 0;
     let kml = 0;
     let l100km = 0;
+    let tripCost = null;
 
     if (unit === "imperial") {
       // Miles per gallon
@@ -69,15 +82,16 @@ export const FuelEconomyCalculator = () => {
 
     // Calculate trip cost if fuel price is provided
     if (fuelPrice > 0) {
-      setTripCost(fuel * fuelPrice);
-    } else {
-      setTripCost(null);
+      tripCost = fuel * fuelPrice;
     }
 
-    return { mpg, kml, l100km };
-  };
+    setResult({ mpg, kml, l100km, tripCost });
 
-  const result = calculateFuelEconomy();
+    toast({
+      title: "Calculation Complete",
+      description: `Your vehicle's fuel economy is ${mpg.toFixed(2)} MPG.`,
+    });
+  };
 
   const getDistanceUnit = () => unit === "imperial" ? "miles" : "kilometers";
   const getFuelUnit = () => unit === "imperial" ? "gallons" : "liters";
@@ -86,7 +100,10 @@ export const FuelEconomyCalculator = () => {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle className="text-xl">Fuel Economy Calculator</CardTitle>
+        <div className="flex items-center gap-2">
+          <Fuel className="h-6 w-6 text-primary" />
+          <CardTitle className="text-xl">Fuel Economy Calculator</CardTitle>
+        </div>
         <CardDescription>Calculate your vehicle's fuel efficiency and costs</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -109,6 +126,7 @@ export const FuelEconomyCalculator = () => {
               step="0.1"
               value={distance || ''}
               onChange={handleDistanceChange}
+              placeholder={`Enter distance in ${getDistanceUnit()}`}
             />
           </div>
 
@@ -121,6 +139,7 @@ export const FuelEconomyCalculator = () => {
               step="0.1"
               value={fuel || ''}
               onChange={handleFuelChange}
+              placeholder={`Enter fuel in ${getFuelUnit()}`}
             />
           </div>
 
@@ -136,9 +155,17 @@ export const FuelEconomyCalculator = () => {
                 value={fuelPrice || ''}
                 onChange={handleFuelPriceChange}
                 className="pl-7"
+                placeholder="Optional"
               />
             </div>
           </div>
+
+          <Button 
+            className="w-full bg-gradient-to-r from-primary to-primary/80"
+            onClick={handleCalculate}
+          >
+            Calculate
+          </Button>
         </div>
 
         <div className="rounded-lg bg-secondary p-4 space-y-2">
@@ -154,10 +181,10 @@ export const FuelEconomyCalculator = () => {
             <span className="text-muted-foreground">L/100km:</span>
             <span className="font-semibold">{result.l100km.toFixed(2)}</span>
           </div>
-          {tripCost !== null && (
+          {result.tripCost !== null && (
             <div className="flex justify-between border-t pt-2 mt-2">
               <span className="text-muted-foreground">Trip Cost:</span>
-              <span className="font-semibold">${tripCost.toFixed(2)}</span>
+              <span className="font-semibold">${result.tripCost.toFixed(2)}</span>
             </div>
           )}
         </div>
