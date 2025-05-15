@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -424,7 +423,7 @@ export const ContentCreatorROICalculator = () => {
     
     toast({
       title: "Creator ROI Analysis Complete",
-      description: `Your content's hourly value: $${results.hourlyRate} (${results.benchmarkComparison.hourlyRate.difference >= 0 ? "+" : ""}${results.benchmarkComparison.hourlyRate.percentDifference}% vs benchmark)`,
+      description: `Your content's hourly value: $${results.hourlyRate} (${results.benchmarkComparison.hourlyRate.difference >= 0 ? "+" : ""}${results.benchmarkComparison.hourlyRate.percentDifference}% vs benchmark)`
     });
   };
 
@@ -799,7 +798,7 @@ export const ContentCreatorROICalculator = () => {
                   <p className="text-sm mb-2">12-Month Revenue Projection</p>
                   <div className="relative h-24">
                     <div className="absolute top-0 left-0 w-full h-full flex items-end">
-                      {results.projections.map((month: any, index: number) => (
+                      {results.projections.map((month, index) => (
                         <div 
                           key={index}
                           className="bg-primary/70 h-0 w-full transition-all duration-500 ease-out mx-0.5 rounded-t"
@@ -846,7 +845,7 @@ export const ContentCreatorROICalculator = () => {
                   <p className="text-sm">{results.recommendation}</p>
                 </div>
                 
-                {results.performanceInsights.map((insight: any, i: number) => (
+                {results.performanceInsights.map((insight, i) => (
                   <div key={i} className="bg-background p-3 rounded-md">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
