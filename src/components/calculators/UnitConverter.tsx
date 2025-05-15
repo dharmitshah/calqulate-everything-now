@@ -7,9 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
+// Define types for our conversion system
+type TemperatureConverter = (value: number) => number;
+
 type Unit = {
   name: string;
-  to: { [key: string]: number };
+  to: { [key: string]: number | TemperatureConverter };
 };
 
 type UnitCategory = {
@@ -24,6 +27,7 @@ export const UnitConverter = () => {
   const [category, setCategory] = useState<string>("length");
   const [result, setResult] = useState<number>(100);
 
+  // Define all unit categories and their conversion factors
   const categories: { [key: string]: UnitCategory } = {
     length: {
       name: "Length",
@@ -64,9 +68,30 @@ export const UnitConverter = () => {
     temperature: {
       name: "Temperature",
       units: {
-        c: { name: "Celsius", to: { c: 1, f: (c) => c * 9/5 + 32, k: (c) => c + 273.15 } },
-        f: { name: "Fahrenheit", to: { c: (f) => (f - 32) * 5/9, f: 1, k: (f) => (f - 32) * 5/9 + 273.15 } },
-        k: { name: "Kelvin", to: { c: (k) => k - 273.15, f: (k) => (k - 273.15) * 9/5 + 32, k: 1 } }
+        c: { 
+          name: "Celsius", 
+          to: { 
+            c: 1,
+            f: (c: number) => c * 9/5 + 32, 
+            k: (c: number) => c + 273.15 
+          } 
+        },
+        f: { 
+          name: "Fahrenheit", 
+          to: { 
+            c: (f: number) => (f - 32) * 5/9, 
+            f: 1, 
+            k: (f: number) => (f - 32) * 5/9 + 273.15 
+          } 
+        },
+        k: { 
+          name: "Kelvin", 
+          to: { 
+            c: (k: number) => k - 273.15, 
+            f: (k: number) => (k - 273.15) * 9/5 + 32, 
+            k: 1 
+          } 
+        }
       }
     }
   };
@@ -87,12 +112,12 @@ export const UnitConverter = () => {
       if (category === "temperature") {
         const converter = from.to[toUnit];
         if (typeof converter === "function") {
-          converted = converter(floatValue);
+          converted = (converter as TemperatureConverter)(floatValue);
         } else {
-          converted = floatValue;
+          converted = floatValue; // Same unit conversion
         }
       } else {
-        const conversionFactor = from.to[toUnit];
+        const conversionFactor = from.to[toUnit] as number;
         converted = floatValue * conversionFactor;
       }
 
@@ -204,3 +229,4 @@ export const UnitConverter = () => {
     </Card>
   );
 };
+
