@@ -6,6 +6,9 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+// Import Select and its related components
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 export const MortgageCalculator = () => {
   const [homePrice, setHomePrice] = useState<number>(300000);
   const [downPaymentPercent, setDownPaymentPercent] = useState<number>(20);
@@ -125,7 +128,10 @@ export const MortgageCalculator = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="loanTerm">Loan Term (years)</Label>
-                <Select value={loanTerm} onValueChange={(value) => setLoanTerm(Number(value))}>
+                <Select 
+                  value={String(loanTerm)} 
+                  onValueChange={(value) => setLoanTerm(Number(value))}
+                >
                   <SelectTrigger id="loanTerm">
                     <SelectValue placeholder="Select term" />
                   </SelectTrigger>
@@ -190,6 +196,3 @@ export const MortgageCalculator = () => {
     </Card>
   );
 };
-
-// I realized we need to import Select and its related components, so let's add them
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
