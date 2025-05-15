@@ -2,6 +2,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 
 interface CalculatorCardProps {
   title: string;
@@ -19,23 +20,23 @@ export const CalculatorCard = ({
   popular = false
 }: CalculatorCardProps) => {
   return (
-    <Card className={`h-full transition-all duration-300 hover:shadow-md flex flex-col ${popular ? 'border-blue-200 dark:border-blue-800' : ''}`}>
+    <Card className={`h-full flex flex-col hover-card ${popular ? 'border-primary/30 dark:border-primary/40' : ''}`}>
       <CardHeader className="pb-2">
-        <div className="mb-2 h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300">
-          {icon}
+        <div className="mb-3 h-14 w-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-primary dark:text-primary">
+          <div className="text-2xl">
+            {icon}
+          </div>
         </div>
-        <CardTitle className="text-xl">{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle className="text-xl font-heading">{title}</CardTitle>
+        <CardDescription className="text-sm">{description}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
         {popular && (
-          <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-blue-500 text-primary-foreground hover:bg-primary/80 mb-2">
-            Popular
-          </div>
+          <Badge variant="default" className="bg-accent hover:bg-accent/80">Popular</Badge>
         )}
       </CardContent>
       <CardFooter>
-        <Button asChild className="w-full">
+        <Button asChild className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90">
           <Link to={path}>
             Open Calculator
           </Link>

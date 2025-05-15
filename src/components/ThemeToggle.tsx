@@ -27,7 +27,12 @@ export const ThemeToggle = () => {
   };
   
   return (
-    <Button variant="ghost" size="icon" onClick={toggleTheme}>
+    <Button 
+      variant="outline" 
+      size="icon" 
+      onClick={toggleTheme}
+      className="rounded-xl border border-input bg-background/80 backdrop-blur-sm hover:bg-accent/10"
+    >
       <span className="sr-only">Toggle theme</span>
       {theme === "light" ? (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
