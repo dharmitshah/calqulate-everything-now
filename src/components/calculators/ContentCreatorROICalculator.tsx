@@ -27,6 +27,7 @@ export const ContentCreatorROICalculator = () => {
   const [contentCategory, setContentCategory] = useState<string>("entertainment");
   
   const [results, setResults] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<string>("input");
   const { toast } = useToast();
 
   const platformRates = {
@@ -91,6 +92,8 @@ export const ContentCreatorROICalculator = () => {
     };
     
     setResults(calculatedResults);
+    // Switch to results tab automatically
+    setActiveTab("results");
     
     toast({
       title: "ROI Analysis Complete",
@@ -108,7 +111,7 @@ export const ContentCreatorROICalculator = () => {
         <CardDescription>Analyze the return on investment for your content creation efforts</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <Tabs defaultValue="input" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="input">Input Data</TabsTrigger>
             <TabsTrigger value="results" disabled={!results}>Results</TabsTrigger>
@@ -243,8 +246,8 @@ export const ContentCreatorROICalculator = () => {
             </div>
           </TabsContent>
           
-          {results && (
-            <TabsContent value="results" className="pt-4">
+          <TabsContent value="results" className="pt-4">
+            {results && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="p-4 border rounded-md">
@@ -307,9 +310,17 @@ export const ContentCreatorROICalculator = () => {
                     )}
                   </div>
                 </div>
+                
+                <Button 
+                  onClick={() => setActiveTab("input")} 
+                  variant="outline" 
+                  className="w-full"
+                >
+                  Modify Inputs
+                </Button>
               </div>
-            </TabsContent>
-          )}
+            )}
+          </TabsContent>
         </Tabs>
       </CardContent>
     </Card>
