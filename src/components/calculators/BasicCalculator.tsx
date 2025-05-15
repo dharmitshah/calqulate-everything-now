@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Calculator, Backspace, RotateCcw, Plus, Minus, X, Divide, Equal } from "lucide-react";
 
 export const BasicCalculator = () => {
   const [display, setDisplay] = useState("0");
@@ -67,11 +68,23 @@ export const BasicCalculator = () => {
     setEquation("");
     setIsResult(false);
   };
+
+  const backspace = () => {
+    if (display.length === 1 || display === "Error" || isResult) {
+      setDisplay("0");
+      setIsResult(false);
+    } else {
+      setDisplay(display.slice(0, -1));
+    }
+  };
   
   const handleButtonPress = (value: string) => {
     switch (value) {
       case "C":
         clear();
+        break;
+      case "⌫":
+        backspace();
         break;
       case "=":
         calculateResult();
@@ -87,46 +100,75 @@ export const BasicCalculator = () => {
         break;
     }
   };
-  
+
+  // Define button types with custom styles
+  const getButtonClass = (btn: string) => {
+    if (btn === "=") {
+      return "col-span-1 row-span-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:opacity-90 transition-all";
+    }
+    if (btn === "C") {
+      return "bg-gradient-to-r from-red-400 to-pink-400 text-white hover:opacity-90 transition-all";
+    }
+    if (btn === "⌫") {
+      return "bg-gradient-to-r from-amber-400 to-orange-400 text-white hover:opacity-90 transition-all";
+    }
+    if (["+", "-", "×", "÷"].includes(btn)) {
+      return "bg-gradient-to-r from-cyan-400 to-blue-400 text-white hover:opacity-90 transition-all";
+    }
+    return "bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 hover:opacity-90 transition-all shadow";
+  };
+
   const buttons = [
-    "C", "÷", "×", "-",
-    "7", "8", "9", "+",
-    "4", "5", "6", "",
+    "C", "⌫", "÷", "×", 
+    "7", "8", "9", "-",
+    "4", "5", "6", "+",
     "1", "2", "3", "=",
     "0", ".", ""
   ];
 
+  const renderButtonIcon = (btn: string) => {
+    switch (btn) {
+      case "+": return <Plus className="size-4" />;
+      case "-": return <Minus className="size-4" />;
+      case "×": return <X className="size-4" />;
+      case "÷": return <Divide className="size-4" />;
+      case "=": return <Equal className="size-4" />;
+      case "C": return <RotateCcw className="size-4" />;
+      case "⌫": return <Backspace className="size-4" />;
+      default: return btn;
+    }
+  };
+
   return (
-    <Card className="w-full max-w-md shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-blue-500/20 to-cyan-400/20 pb-2">
-        <CardTitle className="text-xl">Basic Calculator</CardTitle>
+    <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
+      <CardHeader className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 dark:from-purple-600/30 dark:to-blue-600/30 pb-2 flex flex-row items-center gap-2">
+        <Calculator className="size-5 text-purple-600 dark:text-purple-400" />
+        <CardTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">Basic Calculator</CardTitle>
       </CardHeader>
-      <CardContent className="p-4">
-        <div className="bg-calculator-display rounded-md p-4 mb-4 text-right">
-          <div className="text-sm text-gray-500 h-5">
+      <CardContent className="p-5">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 mb-5 text-right shadow-inner">
+          <div className="text-sm text-gray-500 dark:text-gray-400 h-5 font-mono overflow-hidden">
             {equation}
           </div>
-          <div className="text-3xl font-mono font-semibold overflow-x-auto">
+          <div className="text-3xl font-mono font-bold overflow-x-auto scrollbar-none text-gray-900 dark:text-gray-100 min-h-12 flex items-center justify-end">
             {display}
           </div>
         </div>
         
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-3">
           {buttons.map((btn, index) => (
             <button
               key={index}
               onClick={() => btn && handleButtonPress(btn)}
               className={`
-                h-14 rounded-md font-semibold text-lg flex items-center justify-center
-                active:animate-button-press transition-colors
+                h-16 rounded-xl font-bold text-lg flex items-center justify-center
+                active:scale-95 transition-all duration-150
                 ${!btn ? "invisible" : ""}
-                ${btn === "=" ? "col-span-1 row-span-2 bg-calculator-equals text-white hover:bg-blue-600" : ""}
-                ${["C"].includes(btn) ? "bg-red-200 hover:bg-red-300" : ""}
-                ${["+", "-", "×", "÷"].includes(btn) ? "bg-calculator-operation hover:bg-blue-200" : ""}
-                ${!["=", "C", "+", "-", "×", "÷"].includes(btn) && btn ? "bg-calculator-button hover:bg-slate-300" : ""}
+                ${getButtonClass(btn)}
               `}
+              aria-label={btn || "empty"}
             >
-              {btn}
+              {renderButtonIcon(btn)}
             </button>
           ))}
         </div>
