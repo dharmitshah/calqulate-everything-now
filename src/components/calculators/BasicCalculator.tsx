@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calculator, Backspace, RotateCcw, Plus, Minus, X, Divide, Equal } from "lucide-react";
+import { Calculator, Delete, RotateCcw, Plus, Minus, X, Divide, Equal } from "lucide-react";
 
 export const BasicCalculator = () => {
   const [display, setDisplay] = useState("0");
@@ -104,18 +104,18 @@ export const BasicCalculator = () => {
   // Define button types with custom styles
   const getButtonClass = (btn: string) => {
     if (btn === "=") {
-      return "col-span-1 row-span-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:opacity-90 transition-all";
+      return "col-span-1 row-span-2 bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:opacity-90 transition-all";
     }
     if (btn === "C") {
-      return "bg-gradient-to-r from-red-400 to-pink-400 text-white hover:opacity-90 transition-all";
+      return "bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:opacity-90 transition-all";
     }
     if (btn === "⌫") {
-      return "bg-gradient-to-r from-amber-400 to-orange-400 text-white hover:opacity-90 transition-all";
+      return "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90 transition-all";
     }
     if (["+", "-", "×", "÷"].includes(btn)) {
-      return "bg-gradient-to-r from-cyan-400 to-blue-400 text-white hover:opacity-90 transition-all";
+      return "bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:opacity-90 transition-all";
     }
-    return "bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 hover:opacity-90 transition-all shadow";
+    return "bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 hover:opacity-90 transition-all shadow text-foreground";
   };
 
   const buttons = [
@@ -134,16 +134,16 @@ export const BasicCalculator = () => {
       case "÷": return <Divide className="size-4" />;
       case "=": return <Equal className="size-4" />;
       case "C": return <RotateCcw className="size-4" />;
-      case "⌫": return <Backspace className="size-4" />;
+      case "⌫": return <Delete className="size-4" />;
       default: return btn;
     }
   };
 
   return (
     <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
-      <CardHeader className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 dark:from-purple-600/30 dark:to-blue-600/30 pb-2 flex flex-row items-center gap-2">
-        <Calculator className="size-5 text-purple-600 dark:text-purple-400" />
-        <CardTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-400 dark:to-blue-400">Basic Calculator</CardTitle>
+      <CardHeader className="bg-gradient-to-r from-primary/20 to-accent/20 dark:from-primary/30 dark:to-accent/30 pb-2 flex flex-row items-center gap-2">
+        <Calculator className="size-5 text-primary dark:text-primary" />
+        <CardTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent dark:from-primary dark:to-accent">Basic Calculator</CardTitle>
       </CardHeader>
       <CardContent className="p-5">
         <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 mb-5 text-right shadow-inner">
@@ -162,7 +162,7 @@ export const BasicCalculator = () => {
               onClick={() => btn && handleButtonPress(btn)}
               className={`
                 h-16 rounded-xl font-bold text-lg flex items-center justify-center
-                active:scale-95 transition-all duration-150
+                active:scale-95 transition-all duration-150 animate-button-press
                 ${!btn ? "invisible" : ""}
                 ${getButtonClass(btn)}
               `}

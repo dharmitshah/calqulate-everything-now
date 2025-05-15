@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 221.2 83% 53%;
+    --primary: 250 95% 65%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -31,7 +31,7 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83% 53%;
+    --ring: 250 95% 65%;
 
     --radius: 0.75rem;
 
@@ -43,6 +43,13 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --calculator-display: 210 40% 98%;
+    --calculator-button: 220 14% 96%;
+    --calculator-operation: 210 100% 66%;
+    --calculator-equals: 250 95% 65%;
+    --calculator-clear: 350 95% 65%;
+    --calculator-backspace: 35 95% 65%;
   }
 
   .dark {
@@ -55,7 +62,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 250 95% 65%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -72,7 +79,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --ring: 250 95% 65%;
     
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
@@ -82,6 +89,13 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --calculator-display: 217 33% 17%;
+    --calculator-button: 215 28% 17%;
+    --calculator-operation: 210 100% 66%;
+    --calculator-equals: 250 95% 65%;
+    --calculator-clear: 350 95% 65%;
+    --calculator-backspace: 35 95% 65%;
   }
 }
 

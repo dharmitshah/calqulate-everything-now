@@ -68,10 +68,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				calculator: {
-					display: '#f1f5f9',
-					button: '#e2e8f0',
-					operation: '#90cdf4',
-					equals: '#3b82f6',
+					display: 'hsl(var(--calculator-display))',
+					button: 'hsl(var(--calculator-button))',
+					operation: 'hsl(var(--calculator-operation))',
+					equals: 'hsl(var(--calculator-equals))',
+					clear: 'hsl(var(--calculator-clear))',
+					backspace: 'hsl(var(--calculator-backspace))',
 				}
 			},
 			borderRadius: {
