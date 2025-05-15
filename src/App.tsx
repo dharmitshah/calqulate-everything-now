@@ -17,6 +17,11 @@ import PercentageCalculatorPage from "./pages/PercentageCalculatorPage";
 import TimezoneConverterPage from "./pages/TimezoneConverterPage";
 import DateCalculatorPage from "./pages/DateCalculatorPage";
 import RandomGeneratorPage from "./pages/RandomGeneratorPage";
+import TipCalculatorPage from "./pages/TipCalculatorPage";
+import DiscountCalculatorPage from "./pages/DiscountCalculatorPage";
+import CurrencyConverterPage from "./pages/CurrencyConverterPage";
+import FuelEconomyCalculatorPage from "./pages/FuelEconomyCalculatorPage";
+import TimeCalculatorPage from "./pages/TimeCalculatorPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +44,11 @@ const App = () => (
           <Route path="/calculator/timezone" element={<TimezoneConverterPage />} />
           <Route path="/calculator/date" element={<DateCalculatorPage />} />
           <Route path="/calculator/random" element={<RandomGeneratorPage />} />
+          <Route path="/calculator/tip" element={<TipCalculatorPage />} />
+          <Route path="/calculator/discount" element={<DiscountCalculatorPage />} />
+          <Route path="/calculator/currency" element={<CurrencyConverterPage />} />
+          <Route path="/calculator/fuel-economy" element={<FuelEconomyCalculatorPage />} />
+          <Route path="/calculator/time" element={<TimeCalculatorPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
