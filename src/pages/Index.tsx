@@ -1,12 +1,274 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { CalculatorCard } from "@/components/CalculatorCard";
+import { BasicCalculator } from "@/components/calculators/BasicCalculator";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index = () => {
+  const featuredCalculators = [
+    {
+      title: "BMI Calculator",
+      description: "Calculate your Body Mass Index and check your weight category.",
+      path: "/calculator/bmi",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
+        </svg>
+      ),
+      popular: true
+    },
+    {
+      title: "Age Calculator",
+      description: "Find out your exact age in years, months, and days.",
+      path: "/calculator/age",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+        </svg>
+      )
+    },
+    {
+      title: "Loan Calculator",
+      description: "Calculate monthly payments, total interest, and view amortization schedule.",
+      path: "/calculator/loan",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+        </svg>
+      ),
+      popular: true
+    },
+    {
+      title: "Unit Converter",
+      description: "Convert between different units of measurement.",
+      path: "/calculator/unit-converter",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+        </svg>
+      )
+    }
+  ];
+  
+  const popularCategories = [
+    {
+      name: "Finance",
+      count: 12,
+      path: "/category/finance",
+    },
+    {
+      name: "Health",
+      count: 8,
+      path: "/category/health",
+    },
+    {
+      name: "Math",
+      count: 15,
+      path: "/category/math",
+    },
+    {
+      name: "Tech",
+      count: 7,
+      path: "/category/tech",
+    }
+  ];
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-800 py-16 md:py-24">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
+              <div className="space-y-4">
+                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                    CalcVerse
+                  </span>
+                  <br />
+                  The Universe of Calculators
+                </h1>
+                <p className="text-muted-foreground md:text-xl">
+                  Fast, accurate, and beautifully designed calculators for everything you need.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button size="lg" asChild>
+                    <Link to="/calculators">
+                      Explore All Calculators
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+              <div className="mx-auto w-full max-w-md lg:max-w-none flex justify-center">
+                <BasicCalculator />
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Featured Calculators */}
+        <section className="py-12 md:py-16">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  Featured Calculators
+                </h2>
+                <p className="text-muted-foreground md:text-xl">
+                  Explore our most popular and useful calculators.
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+              {featuredCalculators.map((calculator) => (
+                <CalculatorCard
+                  key={calculator.title}
+                  title={calculator.title}
+                  description={calculator.description}
+                  icon={calculator.icon}
+                  path={calculator.path}
+                  popular={calculator.popular}
+                />
+              ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <Button variant="outline" asChild>
+                <Link to="/calculators">View All Calculators</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+        
+        {/* Categories */}
+        <section className="py-12 md:py-16 bg-slate-50 dark:bg-slate-900">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  Calculator Categories
+                </h2>
+                <p className="text-muted-foreground md:text-xl">
+                  Find exactly what you need, organized by category.
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
+              {popularCategories.map((category) => (
+                <Link 
+                  key={category.name}
+                  to={category.path}
+                  className="group relative overflow-hidden rounded-lg bg-white dark:bg-slate-800 p-6 shadow-md transition-shadow hover:shadow-lg"
+                >
+                  <div className="flex flex-col items-center justify-center text-center">
+                    <h3 className="text-xl font-bold">{category.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-2">{category.count} calculators</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+        
+        {/* SEO-rich content section */}
+        <section className="py-12 md:py-16">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tighter">
+                  Why Use Our Calculators?
+                </h2>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <svg className="h-6 w-6 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Fast & Accurate</strong> - Get instant results with precision.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-6 w-6 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Modern Design</strong> - Clean, intuitive interface on any device.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-6 w-6 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Free to Use</strong> - All calculators are 100% free with no ads.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg className="h-6 w-6 mr-2 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span><strong>Privacy Focused</strong> - No data collection or tracking.</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tighter">
+                  Popular Calculations
+                </h2>
+                <p>
+                  Our most frequently used calculators help with everyday tasks:
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">1</span>
+                    <span><strong>BMI Calculation</strong> - Understanding your Body Mass Index.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">2</span>
+                    <span><strong>Loan Payments</strong> - Planning your financial commitments.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">3</span>
+                    <span><strong>Age Calculation</strong> - Finding your exact age in years, months, and days.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">4</span>
+                    <span><strong>Unit Conversion</strong> - Converting between different measurement systems.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* CTA */}
+        <section className="py-12 md:py-16 bg-blue-50 dark:bg-slate-800/50">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  Ready to Calculate?
+                </h2>
+                <p className="text-muted-foreground md:text-xl">
+                  Explore our full range of calculators and tools.
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button size="lg" asChild>
+                  <Link to="/calculators">
+                    Get Started
+                  </Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                  <Link to="/info">
+                    Learn More
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
