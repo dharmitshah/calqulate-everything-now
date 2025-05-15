@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -14,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Cpu, DollarSign, Tokens, Brain } from "lucide-react";
+import { Cpu, DollarSign, GanttChart, Brain } from "lucide-react";
 
 export const AICostEstimator = () => {
   const [aiModel, setAiModel] = useState<string>("gpt-4o");
@@ -333,7 +332,7 @@ export const AICostEstimator = () => {
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Monthly tokens processed:</span>
                   <div className="flex items-center">
-                    <Tokens className="h-4 w-4 text-primary mr-1" />
+                    <GanttChart className="h-4 w-4 text-primary mr-1" />
                     <span>{(results.totalMonthlyTokens / 1000000).toFixed(2)}M</span>
                   </div>
                 </div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -14,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Leaf, Coffee, Earth, FastFashion, ChartPie } from "lucide-react";
+import { Leaf, Coffee, Earth, ShoppingBag, ChartPie } from "lucide-react";
 
 export const SustainabilityCalculator = () => {
   // Streaming habits
@@ -229,7 +228,7 @@ export const SustainabilityCalculator = () => {
                   <span>Fast Fashion</span>
                 </div>
                 <div className="text-xs text-muted-foreground mt-1">
-                  <FastFashion className="inline-block h-3 w-3 mr-1" />
+                  <ShoppingBag className="inline-block h-3 w-3 mr-1" />
                   Fast fashion brands: H&M, Zara, Shein, Forever 21, Primark, etc.
                 </div>
               </div>

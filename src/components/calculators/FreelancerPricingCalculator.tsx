@@ -15,7 +15,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { HandHelping, DollarSign, TrendingUp, TrendingDown, Fiverr, Upwork, HandCoins } from "lucide-react";
+import { HandHelping, DollarSign, TrendingUp, TrendingDown, ExternalLink, Briefcase, HandCoins } from "lucide-react";
 
 export const FreelancerPricingCalculator = () => {
   // Core pricing factors
@@ -50,8 +50,8 @@ export const FreelancerPricingCalculator = () => {
   
   // Platform/marketplace data
   const platformData = {
-    "upwork": { name: "Upwork", factor: 1.0, icon: Upwork },
-    "fiverr": { name: "Fiverr", factor: 0.85, icon: Fiverr },
+    "upwork": { name: "Upwork", factor: 1.0, icon: Briefcase },
+    "fiverr": { name: "Fiverr", factor: 0.85, icon: ExternalLink },
     "freelancer": { name: "Freelancer.com", factor: 0.9, icon: HandHelping },
     "direct": { name: "Direct Clients", factor: 1.2, icon: HandCoins }
   };

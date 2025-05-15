@@ -25,11 +25,11 @@ import {
   HandCoins, 
   PencilLine, 
   Home, 
-  Piggy,
-  ChartLineUp,
+  PiggyBank,
+  ChartLine,
   Brain,
   TrendingUp,
-  EvChargingIcon,
+  BatteryCharging,
   Cpu,
   Earth,
   HandHelping
@@ -171,13 +171,13 @@ const AllCalculatorsPage = () => {
     {
       title: "Savings Calculator",
       description: "Calculate savings growth over time",
-      icon: <Piggy />,
+      icon: <PiggyBank />,
       path: "/calculator/savings"
     },
     {
       title: "Compound Interest",
       description: "Calculate investment growth with compound interest",
-      icon: <ChartLineUp />,
+      icon: <ChartLine />,
       path: "/calculator/compound-interest"
     },
     // New calculators
@@ -197,7 +197,7 @@ const AllCalculatorsPage = () => {
     {
       title: "EV Charging Cost",
       description: "Compare EV charging costs and time tradeoffs",
-      icon: <EvChargingIcon />,
+      icon: <BatteryCharging />,
       path: "/calculator/ev-charge"
     },
     {

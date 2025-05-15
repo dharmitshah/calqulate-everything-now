@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -13,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { EvChargingIcon, Leaf, Clock, DollarSign } from "lucide-react";
+import { BatteryCharging, Leaf, Clock, DollarSign } from "lucide-react";
 
 // Define charger types and their charging rates
 const chargerTypes = {
@@ -122,7 +121,7 @@ export const EVChargeCalculator = () => {
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="flex items-center">
-          <EvChargingIcon className="mr-2 text-primary" size={24} />
+          <BatteryCharging className="mr-2 text-primary" size={24} />
           EV Charging Cost vs. Time Calculator
         </CardTitle>
         <CardDescription>Compare charging costs, times, and environmental impact</CardDescription>
