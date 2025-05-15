@@ -18,7 +18,7 @@ export const SEO = ({
 }: SEOProps) => {
   useEffect(() => {
     // Update document title
-    document.title = `${title} | CalcVerse`;
+    document.title = `${title} | Quickulus`;
     
     // Find meta tags
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -31,7 +31,7 @@ export const SEO = ({
     // Update meta tags if they exist
     if (metaDescription) metaDescription.setAttribute("content", description);
     if (metaKeywords && keywords) metaKeywords.setAttribute("content", keywords);
-    if (ogTitle) ogTitle.setAttribute("content", `${title} | CalcVerse`);
+    if (ogTitle) ogTitle.setAttribute("content", `${title} | Quickulus`);
     if (ogDesc) ogDesc.setAttribute("content", description);
     if (ogImg) ogImg.setAttribute("content", ogImage);
     if (twitterImg) twitterImg.setAttribute("content", ogImage);

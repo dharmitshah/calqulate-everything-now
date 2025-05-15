@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://calcverse.com/sitemap.xml
+Sitemap: https://quickulus.com/sitemap.xml

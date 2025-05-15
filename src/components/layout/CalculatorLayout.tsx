@@ -20,7 +20,7 @@ export const CalculatorLayout = ({
 }: CalculatorLayoutProps) => {
   // Update document title for SEO
   React.useEffect(() => {
-    document.title = `${title} | CalcVerse`;
+    document.title = `${title} | Quickulus`;
     
     // Update meta description for SEO
     const metaDescription = document.querySelector('meta[name="description"]');
@@ -31,7 +31,7 @@ export const CalculatorLayout = ({
     // Update meta keywords for SEO
     const metaKeywords = document.querySelector('meta[name="keywords"]');
     if (metaKeywords && keywords) {
-      metaKeywords.setAttribute("content", `calculator, ${keywords}, online calculator, CalcVerse`);
+      metaKeywords.setAttribute("content", `calculator, ${keywords}, online calculator, Quickulus`);
     }
   }, [title, description, keywords]);
 

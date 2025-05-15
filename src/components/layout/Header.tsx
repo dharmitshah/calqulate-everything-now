@@ -21,9 +21,9 @@ export const Header = () => {
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/50">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link to="/" className="flex items-center space-x-2" aria-label="CalcVerse Home">
+          <Link to="/" className="flex items-center space-x-2" aria-label="Quickulus Home">
             <span className="text-2xl font-heading font-bold gradient-heading">
-              CalcVerse
+              Quickulus
             </span>
           </Link>
         </div>
