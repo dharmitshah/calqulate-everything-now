@@ -12,7 +12,7 @@ const InfoFaqPage = () => {
     <div className="min-h-screen flex flex-col">
       <SEO 
         title="Information & FAQ" 
-        description="Learn more about CalcVerse calculators, how they work, and get answers to frequently asked questions."
+        description="Learn more about Quickulus calculators, how they work, and get answers to frequently asked questions."
         keywords="calculator information, calculator FAQ, online calculators, BMI calculator, loan calculator" 
       />
       
@@ -27,7 +27,7 @@ const InfoFaqPage = () => {
         <div className="max-w-3xl mx-auto">
           <AnimatedSection>
             <div className="mb-8">
-              <h1 className="text-3xl font-bold mb-2">About CalcVerse</h1>
+              <h1 className="text-3xl font-bold mb-2">About Quickulus</h1>
               <p className="text-muted-foreground text-lg">
                 Information about our calculators, how we build them, and answers to common questions.
               </p>
@@ -38,7 +38,7 @@ const InfoFaqPage = () => {
             <section className="mb-12">
               <h2 className="text-2xl font-bold mb-4">About Our Calculators</h2>
               <p className="mb-4">
-                CalcVerse is a comprehensive collection of calculators designed to help you make informed decisions in various aspects of life. Whether you need to calculate your BMI, plan your finances, or solve a mathematical problem, we have a calculator for you.
+                Quickulus is a comprehensive collection of calculators designed to help you make informed decisions in various aspects of life. Whether you need to calculate your BMI, plan your finances, or solve a mathematical problem, we have a calculator for you.
               </p>
               <p className="mb-4">
                 Our calculators are built with accuracy, speed, and user experience in mind. We prioritize:
@@ -60,7 +60,7 @@ const InfoFaqPage = () => {
                 <div className="p-5 border rounded-lg hover:shadow-sm transition-shadow">
                   <h3 className="text-lg font-medium mb-2">Are your calculators free to use?</h3>
                   <p className="text-muted-foreground">
-                    Yes, all calculators on CalcVerse are completely free to use with no hidden charges or subscription requirements.
+                    Yes, all calculators on Quickulus are completely free to use with no hidden charges or subscription requirements.
                   </p>
                 </div>
                 
@@ -106,7 +106,7 @@ const InfoFaqPage = () => {
             <section className="mb-12" id="privacy">
               <h2 className="text-2xl font-bold mb-4">Privacy Policy</h2>
               <p className="mb-4">
-                At CalcVerse, we take your privacy seriously. Here's what you should know about how we handle your data:
+                At Quickulus, we take your privacy seriously. Here's what you should know about how we handle your data:
               </p>
               <ul className="list-disc list-inside space-y-2 pl-4">
                 <li><strong>Calculator Data</strong> - All calculation inputs are processed entirely in your browser. We never receive, store, or have access to the data you enter.</li>
@@ -136,13 +136,13 @@ const InfoFaqPage = () => {
                     <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                     </svg>
-                    <span>Email: <a href="mailto:contact@calcverse.com" className="text-blue-500 hover:underline">contact@calcverse.com</a></span>
+                    <span>Email: <a href="mailto:contact@quickulus.com" className="text-blue-500 hover:underline">contact@quickulus.com</a></span>
                   </li>
                   <li className="flex items-start">
                     <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    <span>Support: <a href="mailto:support@calcverse.com" className="text-blue-500 hover:underline">support@calcverse.com</a></span>
+                    <span>Support: <a href="mailto:support@quickulus.com" className="text-blue-500 hover:underline">support@quickulus.com</a></span>
                   </li>
                   <li className="flex items-start">
                     <svg className="h-6 w-6 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
