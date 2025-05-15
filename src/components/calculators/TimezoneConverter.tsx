@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
+import { ExternalLink } from "lucide-react";
 
 interface Timezone {
   name: string;
@@ -70,7 +71,17 @@ export const TimezoneConverter = () => {
     <Card className="w-full max-w-md shadow-lg">
       <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10">
         <CardTitle className="text-xl">Time Zone Converter</CardTitle>
-        <CardDescription>Convert times between different time zones</CardDescription>
+        <CardDescription className="flex items-center gap-1">
+          Convert times between different time zones
+          <a 
+            href="https://syncmyclock.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center text-primary hover:underline ml-2"
+          >
+            Visit SyncMyClock.com <ExternalLink className="h-3 w-3 ml-1" />
+          </a>
+        </CardDescription>
       </CardHeader>
       
       <CardContent className="p-6">
