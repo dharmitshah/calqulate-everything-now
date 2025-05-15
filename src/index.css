@@ -114,27 +114,38 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-medium;
+    @apply font-heading font-medium tracking-tight;
   }
   
   h1 {
-    @apply text-3xl md:text-4xl;
+    @apply text-3xl md:text-4xl lg:text-5xl;
   }
   
   h2 {
-    @apply text-2xl md:text-3xl;
+    @apply text-2xl md:text-3xl lg:text-4xl;
   }
   
   h3 {
     @apply text-xl md:text-2xl;
   }
+  
+  img {
+    @apply max-w-full h-auto;
+  }
+  
+  /* Focus styles for accessibility */
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
 
   /* Modern scrollbar styling */
   ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
   }
   
   ::-webkit-scrollbar-track {
@@ -150,19 +161,53 @@
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--muted-foreground) / 0.8);
   }
+  
+  /* Skip to content link for accessibility */
+  .skip-to-content {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md;
+  }
 }
 
 @layer components {
   .gradient-heading {
-    @apply bg-gradient-to-r from-primary to-primary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent;
   }
   
   .glass-card {
-    @apply bg-white/70 dark:bg-black/50 backdrop-blur-lg border border-white/20 dark:border-white/10;
+    @apply bg-white/70 dark:bg-black/50 backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-lg shadow-sm;
   }
   
   .hover-card {
     @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .calculator-key {
+    @apply flex items-center justify-center h-12 md:h-14 rounded-xl text-lg font-medium cursor-pointer select-none transition-all active:scale-95;
+  }
+  
+  .interactive-input {
+    @apply transition-all focus:ring-2 focus:ring-primary focus:ring-offset-1 focus:ring-offset-background;
+  }
+  
+  .btn-animated {
+    @apply relative overflow-hidden transition-all hover:shadow-md 
+      before:absolute before:inset-0 before:bg-white/10 before:opacity-0 
+      before:transition-opacity hover:before:opacity-100 
+      active:scale-[0.98] active:transition-transform;
+  }
+  
+  .section-heading {
+    @apply text-2xl md:text-3xl font-bold mb-6 pb-2 border-b;
+  }
+  
+  /* Card grid for responsive layouts */
+  .card-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+  
+  /* Result display styling */
+  .result-display {
+    @apply p-4 rounded-lg bg-calculator-display border text-xl md:text-2xl font-mono text-right overflow-x-auto;
   }
 }
 
@@ -174,5 +219,33 @@
   
   .scrollbar-none::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
+  }
+  
+  /* Touch target size for better mobile experience */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* For animating elements as they enter the viewport */
+  .animate-on-scroll {
+    @apply opacity-0 translate-y-8 transition-all duration-700;
+  }
+  
+  .animate-on-scroll.visible {
+    @apply opacity-100 translate-y-0;
+  }
+  
+  /* Responsive text utilities */
+  .text-responsive {
+    @apply text-base md:text-lg lg:text-xl;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Generate skeleton loading animation */
+  .skeleton-pulse {
+    @apply animate-pulse bg-muted rounded;
   }
 }
