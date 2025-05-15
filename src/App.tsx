@@ -31,6 +31,12 @@ import GPACalculatorPage from "./pages/GPACalculatorPage";
 import MortgageCalculatorPage from "./pages/MortgageCalculatorPage";
 import SavingsCalculatorPage from "./pages/SavingsCalculatorPage";
 import CompoundInterestCalculatorPage from "./pages/CompoundInterestCalculatorPage";
+import MentalBurnoutCalculatorPage from "./pages/MentalBurnoutCalculatorPage";
+import ContentCreatorROICalculatorPage from "./pages/ContentCreatorROICalculatorPage";
+import EVChargeCalculatorPage from "./pages/EVChargeCalculatorPage";
+import AICostEstimatorPage from "./pages/AICostEstimatorPage";
+import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
+import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +73,12 @@ const App = () => (
           <Route path="/calculator/mortgage" element={<MortgageCalculatorPage />} />
           <Route path="/calculator/savings" element={<SavingsCalculatorPage />} />
           <Route path="/calculator/compound-interest" element={<CompoundInterestCalculatorPage />} />
+          <Route path="/calculator/mental-burnout" element={<MentalBurnoutCalculatorPage />} />
+          <Route path="/calculator/content-creator-roi" element={<ContentCreatorROICalculatorPage />} />
+          <Route path="/calculator/ev-charge" element={<EVChargeCalculatorPage />} />
+          <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
+          <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
+          <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
