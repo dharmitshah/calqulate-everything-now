@@ -1,6 +1,6 @@
 
 import { CalculatorLayout } from "@/components/layout/CalculatorLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ContentCreatorROICalculator } from "@/components/calculators/ContentCreatorROICalculator";
 
 const ContentCreatorROICalculatorPage = () => {
   return (
@@ -28,14 +28,7 @@ const ContentCreatorROICalculatorPage = () => {
       ]}
     >
       <div className="flex justify-center my-8">
-        <Card className="w-full max-w-lg">
-          <CardHeader>
-            <CardTitle>Content Creator ROI Calculator</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>The calculator functionality is currently under maintenance. Please check back later.</p>
-          </CardContent>
-        </Card>
+        <ContentCreatorROICalculator />
       </div>
     </CalculatorLayout>
   );
