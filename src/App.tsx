@@ -25,6 +25,11 @@ import TimeCalculatorPage from "./pages/TimeCalculatorPage";
 import ScientificCalculatorPage from "./pages/ScientificCalculatorPage";
 import PregnancyDueCalculatorPage from "./pages/PregnancyDueCalculatorPage";
 import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
+import WeightConverterPage from "./pages/WeightConverterPage";
+import RetirementCalculatorPage from "./pages/RetirementCalculatorPage";
+import GPACalculatorPage from "./pages/GPACalculatorPage";
+import MortgageCalculatorPage from "./pages/MortgageCalculatorPage";
+import SavingsCalculatorPage from "./pages/SavingsCalculatorPage";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +60,12 @@ const App = () => (
           <Route path="/calculator/scientific" element={<ScientificCalculatorPage />} />
           <Route path="/calculator/pregnancy-due" element={<PregnancyDueCalculatorPage />} />
           <Route path="/calculator/calorie" element={<CalorieCalculatorPage />} />
+          {/* New calculator routes */}
+          <Route path="/calculator/weight-converter" element={<WeightConverterPage />} />
+          <Route path="/calculator/retirement" element={<RetirementCalculatorPage />} />
+          <Route path="/calculator/gpa" element={<GPACalculatorPage />} />
+          <Route path="/calculator/mortgage" element={<MortgageCalculatorPage />} />
+          <Route path="/calculator/savings" element={<SavingsCalculatorPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
