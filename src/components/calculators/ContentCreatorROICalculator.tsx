@@ -30,6 +30,17 @@ export const ContentCreatorROICalculator = () => {
   const [activeTab, setActiveTab] = useState<string>("input");
   const { toast } = useToast();
 
+  // Handle numeric input changes with proper validation
+  const handleNumericInputChange = (
+    value: string, 
+    setter: React.Dispatch<React.SetStateAction<number>>
+  ) => {
+    // Accept empty string (will convert to 0), numbers, and decimal point
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setter(value === "" ? 0 : parseFloat(value));
+    }
+  };
+
   const platformRates = {
     youtube: 2.50,
     tiktok: 0.03,
@@ -165,11 +176,10 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="contentHours">Content Creation (hours)</Label>
                   <Input
                     id="contentHours"
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={contentHours}
-                    onChange={(e) => setContentHours(Number(e.target.value))}
+                    type="text"
+                    inputMode="decimal"
+                    value={contentHours.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setContentHours)}
                   />
                 </div>
                 
@@ -177,11 +187,10 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="editingHours">Editing Hours</Label>
                   <Input
                     id="editingHours"
-                    type="number"
-                    min="0"
-                    step="0.5"
-                    value={editingHours}
-                    onChange={(e) => setEditingHours(Number(e.target.value))}
+                    type="text"
+                    inputMode="decimal"
+                    value={editingHours.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setEditingHours)}
                   />
                 </div>
               </div>
@@ -191,10 +200,10 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="views">Views</Label>
                   <Input
                     id="views"
-                    type="number"
-                    min="0"
-                    value={views}
-                    onChange={(e) => setViews(Number(e.target.value))}
+                    type="text"
+                    inputMode="decimal"
+                    value={views.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setViews)}
                   />
                 </div>
                 
@@ -221,10 +230,10 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="sponsorships">Sponsorship Revenue ($)</Label>
                   <Input
                     id="sponsorships"
-                    type="number"
-                    min="0"
-                    value={sponsorships}
-                    onChange={(e) => setSponsorships(Number(e.target.value))}
+                    type="text"
+                    inputMode="decimal"
+                    value={sponsorships.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setSponsorships)}
                   />
                 </div>
                 
@@ -232,10 +241,10 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="affiliateRevenue">Affiliate Revenue ($)</Label>
                   <Input
                     id="affiliateRevenue"
-                    type="number"
-                    min="0"
-                    value={affiliateRevenue}
-                    onChange={(e) => setAffiliateRevenue(Number(e.target.value))}
+                    type="text"
+                    inputMode="decimal"
+                    value={affiliateRevenue.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setAffiliateRevenue)}
                   />
                 </div>
               </div>
