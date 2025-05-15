@@ -22,6 +22,9 @@ import DiscountCalculatorPage from "./pages/DiscountCalculatorPage";
 import CurrencyConverterPage from "./pages/CurrencyConverterPage";
 import FuelEconomyCalculatorPage from "./pages/FuelEconomyCalculatorPage";
 import TimeCalculatorPage from "./pages/TimeCalculatorPage";
+import ScientificCalculatorPage from "./pages/ScientificCalculatorPage";
+import PregnancyDueCalculatorPage from "./pages/PregnancyDueCalculatorPage";
+import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +52,9 @@ const App = () => (
           <Route path="/calculator/currency" element={<CurrencyConverterPage />} />
           <Route path="/calculator/fuel-economy" element={<FuelEconomyCalculatorPage />} />
           <Route path="/calculator/time" element={<TimeCalculatorPage />} />
+          <Route path="/calculator/scientific" element={<ScientificCalculatorPage />} />
+          <Route path="/calculator/pregnancy-due" element={<PregnancyDueCalculatorPage />} />
+          <Route path="/calculator/calorie" element={<CalorieCalculatorPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

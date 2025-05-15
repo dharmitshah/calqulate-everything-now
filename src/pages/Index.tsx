@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CalculatorCard } from "@/components/CalculatorCard";
@@ -19,9 +20,20 @@ const Index = () => {
       popular: true
     },
     {
-      title: "Age Calculator",
-      description: "Find out your exact age in years, months, and days.",
-      path: "/calculator/age",
+      title: "Scientific Calculator",
+      description: "Advanced calculator with trigonometric functions, logarithms, and more.",
+      path: "/calculator/scientific",
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V13.5Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25V18Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V13.5Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007V18Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V18Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V13.5ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
+        </svg>
+      ),
+      popular: true
+    },
+    {
+      title: "Pregnancy Due Date",
+      description: "Calculate your expected due date and track your pregnancy progress.",
+      path: "/calculator/pregnancy-due",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 0 12 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 0 1-2.031.352 5.988 5.988 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971Zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0 2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 0 1-2.031.352 5.989 5.989 0 0 1-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971Z" />
@@ -29,25 +41,15 @@ const Index = () => {
       )
     },
     {
-      title: "Loan Calculator",
-      description: "Calculate monthly payments, total interest, and view amortization schedule.",
-      path: "/calculator/loan",
+      title: "Calorie Calculator",
+      description: "Calculate daily calorie needs and macronutrients based on your goals.",
+      path: "/calculator/calorie",
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
         </svg>
       ),
       popular: true
-    },
-    {
-      title: "Unit Converter",
-      description: "Convert between different units of measurement.",
-      path: "/calculator/unit-converter",
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-        </svg>
-      )
     }
   ];
   
@@ -218,19 +220,19 @@ const Index = () => {
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">1</span>
-                    <span><strong>BMI Calculation</strong> - Understanding your Body Mass Index.</span>
+                    <span><strong>Scientific Calculations</strong> - Advanced math functions for students and professionals.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">2</span>
-                    <span><strong>Loan Payments</strong> - Planning your financial commitments.</span>
+                    <span><strong>Pregnancy Due Dates</strong> - Planning for your new arrival with accurate estimates.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">3</span>
-                    <span><strong>Age Calculation</strong> - Finding your exact age in years, months, and days.</span>
+                    <span><strong>Calorie Requirements</strong> - Personalized nutrition calculations for your goals.</span>
                   </li>
                   <li className="flex items-start">
                     <span className="h-6 w-6 mr-2 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0">4</span>
-                    <span><strong>Unit Conversion</strong> - Converting between different measurement systems.</span>
+                    <span><strong>Financial Planning</strong> - Tools to help manage your money and investments.</span>
                   </li>
                 </ul>
               </div>
