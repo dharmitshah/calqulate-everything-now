@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -8,7 +8,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -19,6 +18,7 @@ export const DiscountCalculator = () => {
   const [originalPrice, setOriginalPrice] = useState<number>(0);
   const [discountValue, setDiscountValue] = useState<number>(0);
   const [discountType, setDiscountType] = useState<"percentage" | "amount">("percentage");
+  const [result, setResult] = useState({ discountAmount: 0, finalPrice: 0, savedPercentage: 0 });
   const { toast } = useToast();
 
   const handleOriginalPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,51 +31,55 @@ export const DiscountCalculator = () => {
     setDiscountValue(isNaN(value) ? 0 : value);
   };
 
+  useEffect(() => {
+    calculateDiscount();
+  }, [originalPrice, discountValue, discountType]);
+
   const calculateDiscount = () => {
     if (originalPrice <= 0) {
-      toast({
-        title: "Invalid Price",
-        description: "Please enter a valid original price greater than zero.",
-        variant: "destructive",
-      });
-      return { discountAmount: 0, finalPrice: 0, savedPercentage: 0 };
+      setResult({ discountAmount: 0, finalPrice: 0, savedPercentage: 0 });
+      return;
     }
 
     let discountAmount = 0;
     
     if (discountType === "percentage") {
       if (discountValue < 0 || discountValue > 100) {
-        toast({
-          title: "Invalid Discount",
-          description: "Percentage discount must be between 0 and 100.",
-          variant: "destructive",
-        });
-        return { discountAmount: 0, finalPrice: originalPrice, savedPercentage: 0 };
+        if (discountValue > 100) {
+          toast({
+            title: "Invalid Discount",
+            description: "Percentage discount cannot exceed 100%.",
+            variant: "destructive",
+          });
+        }
+        discountAmount = Math.max(0, Math.min(discountValue, 100)) / 100 * originalPrice;
+      } else {
+        discountAmount = originalPrice * (discountValue / 100);
       }
-      discountAmount = originalPrice * (discountValue / 100);
     } else {
       if (discountValue < 0 || discountValue > originalPrice) {
-        toast({
-          title: "Invalid Discount",
-          description: "Amount discount cannot be negative or greater than the original price.",
-          variant: "destructive",
-        });
-        return { discountAmount: 0, finalPrice: originalPrice, savedPercentage: 0 };
+        if (discountValue > originalPrice) {
+          toast({
+            title: "Invalid Discount",
+            description: "Discount amount cannot exceed original price.",
+            variant: "destructive",
+          });
+        }
+        discountAmount = Math.max(0, Math.min(discountValue, originalPrice));
+      } else {
+        discountAmount = discountValue;
       }
-      discountAmount = discountValue;
     }
     
     const finalPrice = originalPrice - discountAmount;
-    const savedPercentage = (discountAmount / originalPrice) * 100;
+    const savedPercentage = originalPrice > 0 ? (discountAmount / originalPrice) * 100 : 0;
     
-    return {
+    setResult({
       discountAmount,
       finalPrice,
       savedPercentage
-    };
+    });
   };
-
-  const result = calculateDiscount();
 
   return (
     <Card className="w-full max-w-md">

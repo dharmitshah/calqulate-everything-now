@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -19,6 +19,7 @@ export const TipCalculator = () => {
   const [tipPercentage, setTipPercentage] = useState<number>(15);
   const [numberOfPeople, setNumberOfPeople] = useState<number>(1);
   const [customTipAmount, setCustomTipAmount] = useState<number | null>(null);
+  const [result, setResult] = useState({ tipAmount: 0, totalAmount: 0, perPerson: 0 });
   const { toast } = useToast();
 
   const handleBillAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,28 +42,26 @@ export const TipCalculator = () => {
     setCustomTipAmount(isNaN(value) ? null : value);
   };
 
+  useEffect(() => {
+    calculateTip();
+  }, [billAmount, tipPercentage, numberOfPeople, customTipAmount]);
+
   const calculateTip = () => {
     if (billAmount <= 0) {
-      toast({
-        title: "Invalid Bill Amount",
-        description: "Please enter a valid bill amount greater than zero.",
-        variant: "destructive",
-      });
-      return { tipAmount: 0, totalAmount: 0, perPerson: 0 };
+      setResult({ tipAmount: 0, totalAmount: 0, perPerson: 0 });
+      return;
     }
     
     const effectiveTipAmount = customTipAmount !== null ? customTipAmount : billAmount * (tipPercentage / 100);
     const total = billAmount + effectiveTipAmount;
     const perPerson = total / numberOfPeople;
     
-    return {
+    setResult({
       tipAmount: effectiveTipAmount,
       totalAmount: total,
       perPerson: perPerson
-    };
+    });
   };
-
-  const result = calculateTip();
 
   return (
     <Card className="w-full max-w-md">
