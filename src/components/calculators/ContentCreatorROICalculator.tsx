@@ -329,13 +329,12 @@ export const ContentCreatorROICalculator = () => {
       });
     } else if (roi < 50) {
       recommendation = `Your ROI is positive at ${roi.toFixed(1)}%, but below the ${experienceLevel} creator average of ${benchmarkROI}%.`;
+      
+      // Fix the syntax error in the template literal by using a helper function
+      const topSource = getTopRevenueSource(revenueBreakdown);
       performanceInsights.push({
         title: "Optimize Revenue Streams",
-        description: `Your top revenue source (${
-          Object.entries(revenueBreakdown).sort((a, b) => b[1] - a[1])[0][0] === "adRevenue" ? "ad revenue" :
-          Object.entries(revenueBreakdown).sort((a, b) => b[1] - a[1])[0][0] === "sponsorRevenue" ? "sponsorships" : 
-          "affiliate marketing"
-        }) could be scaled further.`,
+        description: `Your top revenue source (${topSource}) could be scaled further.`,
         impact: "Medium"
       });
     } else if (roi < 200) {
