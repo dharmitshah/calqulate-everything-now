@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -330,7 +331,7 @@ export const ContentCreatorROICalculator = () => {
     } else if (roi < 50) {
       recommendation = `Your ROI is positive at ${roi.toFixed(1)}%, but below the ${experienceLevel} creator average of ${benchmarkROI}%.`;
       
-      // Fix the syntax error in the template literal by using a helper function
+      // Use getTopRevenueSource helper instead of inline logic that was causing the error
       const topSource = getTopRevenueSource(revenueBreakdown);
       performanceInsights.push({
         title: "Optimize Revenue Streams",
