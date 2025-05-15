@@ -101,21 +101,21 @@ export const BasicCalculator = () => {
     }
   };
 
-  // Define button types with custom styles
+  // Define button types with custom styles using consistent color scheme
   const getButtonClass = (btn: string) => {
     if (btn === "=") {
-      return "col-span-1 row-span-2 bg-gradient-to-r from-primary to-accent text-white shadow-lg hover:opacity-90 transition-all";
+      return "col-span-1 row-span-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-all";
     }
     if (btn === "C") {
-      return "bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:opacity-90 transition-all";
+      return "bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-all";
     }
     if (btn === "⌫") {
-      return "bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90 transition-all";
+      return "bg-calculator-backspace text-primary-foreground hover:opacity-90 transition-all";
     }
     if (["+", "-", "×", "÷"].includes(btn)) {
-      return "bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:opacity-90 transition-all";
+      return "bg-primary text-primary-foreground hover:bg-primary/90 transition-all";
     }
-    return "bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 hover:opacity-90 transition-all shadow text-foreground";
+    return "bg-muted hover:bg-muted/80 transition-all text-foreground";
   };
 
   const buttons = [
@@ -140,17 +140,17 @@ export const BasicCalculator = () => {
   };
 
   return (
-    <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
-      <CardHeader className="bg-gradient-to-r from-primary/20 to-accent/20 dark:from-primary/30 dark:to-accent/30 pb-2 flex flex-row items-center gap-2">
-        <Calculator className="size-5 text-primary dark:text-primary" />
-        <CardTitle className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent dark:from-primary dark:to-accent">Basic Calculator</CardTitle>
+    <Card className="w-full max-w-md shadow-xl rounded-2xl overflow-hidden border-0 bg-card backdrop-blur-sm">
+      <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10 pb-2 flex flex-row items-center gap-2">
+        <Calculator className="size-5 text-primary" />
+        <CardTitle className="text-xl font-bold text-primary">Basic Calculator</CardTitle>
       </CardHeader>
       <CardContent className="p-5">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5 mb-5 text-right shadow-inner">
-          <div className="text-sm text-gray-500 dark:text-gray-400 h-5 font-mono overflow-hidden">
+        <div className="bg-muted rounded-xl p-5 mb-5 text-right shadow-inner">
+          <div className="text-sm text-muted-foreground h-5 font-mono overflow-hidden">
             {equation}
           </div>
-          <div className="text-3xl font-mono font-bold overflow-x-auto scrollbar-none text-gray-900 dark:text-gray-100 min-h-12 flex items-center justify-end">
+          <div className="text-3xl font-mono font-bold overflow-x-auto scrollbar-none text-foreground min-h-12 flex items-center justify-end">
             {display}
           </div>
         </div>

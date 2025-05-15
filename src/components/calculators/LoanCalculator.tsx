@@ -26,14 +26,18 @@ export const LoanCalculator = () => {
   const [interestRate, setInterestRate] = useState<number>(5);
   const [loanTerm, setLoanTerm] = useState<number>(36);
   const [loanType, setLoanType] = useState<string>("personal");
+  const [downPayment, setDownPayment] = useState<number>(0);
   const [result, setResult] = useState<LoanResult | null>(null);
+  
+  // Calculate the actual loan amount after down payment
+  const actualLoanAmount = Math.max(0, loanAmount - downPayment);
   
   useEffect(() => {
     calculateLoan();
-  }, [loanAmount, interestRate, loanTerm]);
+  }, [loanAmount, interestRate, loanTerm, downPayment]);
   
   const calculateLoan = () => {
-    if (loanAmount <= 0 || interestRate <= 0 || loanTerm <= 0) {
+    if (actualLoanAmount <= 0 || interestRate <= 0 || loanTerm <= 0) {
       return;
     }
     
@@ -42,15 +46,15 @@ export const LoanCalculator = () => {
     
     // Calculate monthly payment using amortization formula
     const monthlyPayment = 
-      (loanAmount * monthlyRate) / 
+      (actualLoanAmount * monthlyRate) / 
       (1 - Math.pow(1 + monthlyRate, -loanTerm));
     
     const totalPayment = monthlyPayment * loanTerm;
-    const totalInterest = totalPayment - loanAmount;
+    const totalInterest = totalPayment - actualLoanAmount;
     
     // Generate amortization schedule
     const amortization = [];
-    let remainingBalance = loanAmount;
+    let remainingBalance = actualLoanAmount;
     
     for (let month = 1; month <= loanTerm; month++) {
       const interestPayment = remainingBalance * monthlyRate;
@@ -89,28 +93,32 @@ export const LoanCalculator = () => {
         setLoanAmount(25000);
         setInterestRate(4.5);
         setLoanTerm(60);
+        setDownPayment(5000);
         break;
       case "home":
         setLoanAmount(300000);
         setInterestRate(3.5);
         setLoanTerm(360);
+        setDownPayment(60000);
         break;
       case "student":
         setLoanAmount(30000);
         setInterestRate(4.0);
         setLoanTerm(120);
+        setDownPayment(0);
         break;
       default: // personal
         setLoanAmount(10000);
         setInterestRate(5.0);
         setLoanTerm(36);
+        setDownPayment(0);
         break;
     }
   };
 
   return (
     <Card className="w-full max-w-2xl shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-blue-500/20 to-cyan-400/20">
+      <CardHeader className="bg-gradient-to-r from-primary/20 to-primary/10">
         <CardTitle className="text-xl">Loan Calculator</CardTitle>
         <CardDescription>
           Calculate monthly payments, total interest, and amortization schedule
@@ -137,7 +145,7 @@ export const LoanCalculator = () => {
           <div className="space-y-6">
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label htmlFor="loan-amount">Loan Amount</Label>
+                <Label htmlFor="loan-amount">Total Amount</Label>
                 <div className="text-sm font-medium">{formatCurrency(loanAmount)}</div>
               </div>
               <div className="flex gap-2">
@@ -157,6 +165,35 @@ export const LoanCalculator = () => {
                   className="flex-[2]"
                 />
               </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="down-payment">Down Payment</Label>
+                <div className="text-sm font-medium">{formatCurrency(downPayment)}</div>
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  id="down-payment"
+                  type="number"
+                  value={downPayment}
+                  onChange={(e) => setDownPayment(parseFloat(e.target.value) || 0)}
+                  className="flex-1"
+                />
+                <Slider
+                  value={[downPayment]}
+                  min={0}
+                  max={loanAmount * 0.5}
+                  step={500}
+                  onValueChange={(value) => setDownPayment(value[0])}
+                  className="flex-[2]"
+                />
+              </div>
+              {downPayment > 0 && (
+                <div className="text-sm text-muted-foreground">
+                  Loan amount after down payment: {formatCurrency(actualLoanAmount)} ({Math.round(downPayment / loanAmount * 100)}% down)
+                </div>
+              )}
             </div>
             
             <div className="space-y-2">
@@ -221,19 +258,19 @@ export const LoanCalculator = () => {
         {result && (
           <div className="mt-8 space-y-6">
             <div className="grid grid-cols-3 gap-4">
-              <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg text-center">
+              <div className="p-4 bg-muted rounded-lg text-center">
                 <div className="text-sm text-muted-foreground">Monthly Payment</div>
                 <div className="text-xl font-bold mt-1">
                   {formatCurrency(result.monthlyPayment)}
                 </div>
               </div>
-              <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg text-center">
+              <div className="p-4 bg-muted rounded-lg text-center">
                 <div className="text-sm text-muted-foreground">Total Payment</div>
                 <div className="text-xl font-bold mt-1">
                   {formatCurrency(result.totalPayment)}
                 </div>
               </div>
-              <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg text-center">
+              <div className="p-4 bg-muted rounded-lg text-center">
                 <div className="text-sm text-muted-foreground">Total Interest</div>
                 <div className="text-xl font-bold mt-1">
                   {formatCurrency(result.totalInterest)}
@@ -263,8 +300,8 @@ export const LoanCalculator = () => {
                   <Area 
                     type="monotone" 
                     dataKey="balance" 
-                    stroke="#3b82f6" 
-                    fill="#93c5fd" 
+                    stroke="hsl(var(--primary))" 
+                    fill="hsl(var(--primary)/30)" 
                     name="Remaining Balance"
                   />
                 </AreaChart>
