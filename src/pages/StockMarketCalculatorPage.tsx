@@ -13,8 +13,8 @@ const StockMarketCalculatorPage = () => {
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold mb-2">Stock Market Calculator</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Calculate profit/loss for trades, determine position sizes based on risk, analyze portfolio performance metrics,
-              plan trades effectively, and monitor your trading psychology.
+              Calculate profit/loss for trades, position sizes, brokerage costs, portfolio metrics,
+              and plan trades effectively with detailed analysis for both Indian and U.S. markets.
             </p>
           </div>
           

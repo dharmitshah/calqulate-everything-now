@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -13,7 +14,20 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Calculator, TrendingUp, CircleDollarSign, ChartLine, CircleCheck } from "lucide-react";
+import { 
+  Calculator, 
+  TrendingUp, 
+  CircleDollarSign, 
+  ChartLine, 
+  CircleCheck, 
+  Coins,
+  BadgeDollarSign,
+  BadgeIndianRupee,
+  BadgeEuro,
+  BadgePoundSterling,
+  Currency,
+  FileText
+} from "lucide-react";
 import { 
   Accordion,
   AccordionContent,
@@ -23,7 +37,7 @@ import {
 
 export const StockMarketCalculator = () => {
   const { toast } = useToast();
-  const [calculatorType, setCalculatorType] = useState<string>("profit-loss");
+  const [calculatorTab, setCalculatorTab] = useState<string>("profit-loss");
   
   // Profit/Loss Calculator
   const [buyPrice, setBuyPrice] = useState<number>(100);
@@ -77,6 +91,17 @@ export const StockMarketCalculator = () => {
   const [mentalRecoveryRate, setMentalRecoveryRate] = useState<number>(50);
   const [dailyTradeCount, setDailyTradeCount] = useState<number>(10);
   const [capitalDeployedPercent, setCapitalDeployedPercent] = useState<number>(70);
+  
+  // Brokerage & Transaction Cost Calculator States
+  const [country, setCountry] = useState<string>("india");
+  const [brokerType, setBrokerType] = useState<string>("discount");
+  const [tradeValue, setTradeValue] = useState<number>(100000);
+  const [tradeType, setTradeType] = useState<string>("equity");
+  const [transactionType, setTransactionType] = useState<string>("buy");
+  const [deliveryType, setDeliveryType] = useState<string>("intraday");
+  const [brokerName, setBrokerName] = useState<string>("zerodha");
+  const [turnoverValue, setTurnoverValue] = useState<number>(1000000);
+  const [compareMode, setCompareMode] = useState<boolean>(false);
   
   // Results
   const [results, setResults] = useState<any>(null);
@@ -379,8 +404,222 @@ export const StockMarketCalculator = () => {
     });
   };
   
+  // Calculate Brokerage & Transaction Costs
+  const calculateBrokerageCosts = () => {
+    let brokerageFee = 0;
+    let stt = 0;
+    let exchangeFee = 0;
+    let gst = 0;
+    let sebi = 0;
+    let stampDuty = 0;
+    let secFee = 0;
+    let tafFee = 0;
+    let finraFee = 0;
+    let totalCharges = 0;
+    let netAmount = tradeValue;
+    
+    if (country === "india") {
+      // India calculations
+      if (brokerType === "discount") {
+        if (brokerName === "zerodha") {
+          // Zerodha charges
+          brokerageFee = deliveryType === "intraday" ? Math.min(0.03 * tradeValue / 100, 20) : 0;
+          stt = tradeType === "equity" ? 
+            (transactionType === "buy" ? 0 : (deliveryType === "intraday" ? 0.025 : 0.1) * tradeValue / 100) : 
+            (transactionType === "buy" ? 0 : 0.017 * tradeValue / 100);
+          exchangeFee = 0.00325 * tradeValue / 100;
+          gst = 18 * (brokerageFee + exchangeFee) / 100;
+          sebi = 0.0001 * tradeValue / 100;
+          stampDuty = transactionType === "buy" ? 0.015 * tradeValue / 100 : 0;
+        } else if (brokerName === "upstox") {
+          // Upstox charges
+          brokerageFee = deliveryType === "intraday" ? Math.min(0.05 * tradeValue / 100, 20) : 0;
+          stt = tradeType === "equity" ? 
+            (transactionType === "buy" ? 0 : (deliveryType === "intraday" ? 0.025 : 0.1) * tradeValue / 100) :
+            (transactionType === "buy" ? 0 : 0.017 * tradeValue / 100);
+          exchangeFee = 0.00325 * tradeValue / 100;
+          gst = 18 * (brokerageFee + exchangeFee) / 100;
+          sebi = 0.0001 * tradeValue / 100;
+          stampDuty = transactionType === "buy" ? 0.015 * tradeValue / 100 : 0;
+        }
+      } else {
+        // Full-service broker charges (higher)
+        brokerageFee = 0.5 * tradeValue / 100;
+        stt = tradeType === "equity" ? 
+          (transactionType === "buy" ? 0 : (deliveryType === "intraday" ? 0.025 : 0.1) * tradeValue / 100) :
+          (transactionType === "buy" ? 0 : 0.017 * tradeValue / 100);
+        exchangeFee = 0.00325 * tradeValue / 100;
+        gst = 18 * (brokerageFee + exchangeFee) / 100;
+        sebi = 0.0001 * tradeValue / 100;
+        stampDuty = transactionType === "buy" ? 0.015 * tradeValue / 100 : 0;
+      }
+      
+      totalCharges = brokerageFee + stt + exchangeFee + gst + sebi + stampDuty;
+    } else {
+      // US calculations
+      if (brokerName === "robinhood") {
+        // Robinhood - commission-free
+        brokerageFee = 0;
+      } else if (brokerName === "schwab") {
+        // Charles Schwab - commission-free for stock trades
+        brokerageFee = 0;
+      } else if (brokerName === "etrade") {
+        // E*TRADE charges
+        brokerageFee = 0; // Now commission-free for stock trades
+      } else if (brokerName === "td") {
+        // TD Ameritrade charges
+        brokerageFee = 0; // Now commission-free for stock trades
+      } else {
+        // Generic broker fees
+        brokerageFee = 4.95; // Flat fee
+      }
+      
+      // Regulatory fees (apply to all US brokers)
+      secFee = transactionType === "sell" ? (0.0000229 * tradeValue) : 0;
+      tafFee = 0.000119 * tradeValue;
+      finraFee = transactionType === "sell" ? 0.000119 * tradeValue : 0;
+      
+      totalCharges = brokerageFee + secFee + tafFee + finraFee;
+    }
+    
+    // Calculate net amount
+    if (transactionType === "buy") {
+      netAmount = tradeValue + totalCharges;
+    } else {
+      netAmount = tradeValue - totalCharges;
+    }
+    
+    const calculatedResults = {
+      type: "brokerage-costs",
+      country: country,
+      brokerName: brokerName,
+      brokerageFee: parseFloat(brokerageFee.toFixed(2)),
+      totalCharges: parseFloat(totalCharges.toFixed(2)),
+      netAmount: parseFloat(netAmount.toFixed(2)),
+      chargePercentage: parseFloat((totalCharges / tradeValue * 100).toFixed(3)),
+      breakdown: country === "india" ? {
+        stt: parseFloat(stt.toFixed(2)),
+        exchangeFee: parseFloat(exchangeFee.toFixed(2)),
+        gst: parseFloat(gst.toFixed(2)),
+        sebi: parseFloat(sebi.toFixed(2)),
+        stampDuty: parseFloat(stampDuty.toFixed(2))
+      } : {
+        secFee: parseFloat(secFee.toFixed(2)),
+        tafFee: parseFloat(tafFee.toFixed(2)),
+        finraFee: parseFloat(finraFee.toFixed(2))
+      }
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: "Brokerage Costs Calculated",
+      description: `Total charges: ${country === "india" ? "₹" : "$"}${totalCharges.toFixed(2)} (${(totalCharges / tradeValue * 100).toFixed(3)}%)`,
+    });
+  };
+  
+  // Calculate Turnover for Audit
+  const calculateTurnover = () => {
+    // In India, trading turnover above ₹10 crore requires tax audit
+    const auditThreshold = 100000000; // ₹10 crore in rupees
+    const requiresAudit = turnoverValue >= auditThreshold;
+    
+    // Calculate estimated filing charges
+    const estimatedFilingCharges = requiresAudit ? 10000 : 2500; // ₹10,000 for audit, ₹2,500 for simple filing
+    
+    const calculatedResults = {
+      type: "turnover",
+      turnoverValue: parseFloat(turnoverValue.toFixed(2)),
+      requiresAudit: requiresAudit,
+      auditThreshold: auditThreshold,
+      estimatedFilingCharges: estimatedFilingCharges,
+      filingType: requiresAudit ? "ITR-3 with audit" : "ITR-2 without audit"
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: "Turnover Analysis Completed",
+      description: `${requiresAudit ? "Audit required" : "No audit required"} for turnover of ₹${(turnoverValue / 10000000).toFixed(2)} crore`,
+    });
+  };
+  
+  // Compare brokers
+  const compareBrokers = () => {
+    const brokers = [
+      { 
+        name: "Zerodha", 
+        country: "India",
+        equityDelivery: "0% (max ₹20 per order)",
+        equityIntraday: "0.03% or ₹20 per order (whichever is lower)",
+        fAndO: "0.03% or ₹20 per order (whichever is lower)",
+        accountMaintenance: "₹300 per year",
+        marginFunding: "0.05% per day (18.25% per annum)"
+      },
+      { 
+        name: "ICICI Direct", 
+        country: "India",
+        equityDelivery: "0.55% for delivery trades",
+        equityIntraday: "0.275% for intraday trades",
+        fAndO: "0.05% for F&O trades",
+        accountMaintenance: "₹975 per year",
+        marginFunding: "0.055% per day (20.1% per annum)"
+      },
+      { 
+        name: "Robinhood", 
+        country: "U.S.",
+        equityDelivery: "0% commission",
+        equityIntraday: "0% commission",
+        fAndO: "$0 per contract",
+        accountMaintenance: "$0",
+        marginFunding: "5.75% for margin above $1,000"
+      },
+      { 
+        name: "Charles Schwab", 
+        country: "U.S.",
+        equityDelivery: "0% commission",
+        equityIntraday: "0% commission",
+        fAndO: "$0.65 per contract",
+        accountMaintenance: "$0",
+        marginFunding: "9.075% for margin below $25,000"
+      },
+      { 
+        name: "TD Ameritrade", 
+        country: "U.S.",
+        equityDelivery: "0% commission",
+        equityIntraday: "0% commission",
+        fAndO: "$0.65 per contract",
+        accountMaintenance: "$0",
+        marginFunding: "9.5% for margin below $25,000"
+      }
+    ];
+    
+    // Filter brokers by country if needed
+    const filteredBrokers = country !== "both" ? 
+      brokers.filter((broker) => broker.country.toLowerCase() === country) : 
+      brokers;
+    
+    const calculatedResults = {
+      type: "broker-comparison",
+      brokers: filteredBrokers,
+      recommendedFor: {
+        beginners: "Robinhood (U.S.) / Zerodha (India)",
+        highVolume: "Zerodha (India) / Charles Schwab (U.S.)",
+        delivery: "Zerodha (India) / Robinhood (U.S.)",
+        options: "Robinhood (U.S.) / Zerodha (India)"
+      }
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: "Broker Comparison Completed",
+      description: `Compared ${filteredBrokers.length} brokers in ${country === "both" ? "India and U.S." : country === "india" ? "India" : "U.S."}`,
+    });
+  };
+  
   const handleCalculate = () => {
-    switch (calculatorType) {
+    switch (calculatorTab) {
       case "profit-loss":
         calculateProfitLoss();
         break;
@@ -399,6 +638,15 @@ export const StockMarketCalculator = () => {
       case "sentiment-psychology":
         calculateSentimentMetrics();
         break;
+      case "brokerage-costs":
+        calculateBrokerageCosts();
+        break;
+      case "turnover":
+        calculateTurnover();
+        break;
+      case "broker-comparison":
+        compareBrokers();
+        break;
       default:
         break;
     }
@@ -415,577 +663,777 @@ export const StockMarketCalculator = () => {
       </CardHeader>
       
       <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="calculator-type">Calculator Type</Label>
-          <Select 
-            value={calculatorType} 
-            onValueChange={setCalculatorType}
-          >
-            <SelectTrigger id="calculator-type">
-              <SelectValue placeholder="Select calculator type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="profit-loss">Profit/Loss Calculator</SelectItem>
-              <SelectItem value="position-size">Position Size Calculator</SelectItem>
-              <SelectItem value="f-and-o">Futures & Options Calculator</SelectItem>
-              <SelectItem value="portfolio-metrics">Portfolio Performance Metrics</SelectItem>
-              <SelectItem value="trade-planning">Trade Planning Tools</SelectItem>
-              <SelectItem value="sentiment-psychology">Sentiment & Psychology Tools</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        {calculatorType === "profit-loss" && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="buy-price">Buy Price ($)</Label>
-                <Input
-                  id="buy-price"
-                  numeric
-                  value={buyPrice.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setBuyPrice)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="sell-price">Sell Price ($)</Label>
-                <Input
-                  id="sell-price"
-                  numeric
-                  value={sellPrice.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setSellPrice)}
-                />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="quantity">Quantity</Label>
-                <Input
-                  id="quantity"
-                  numeric
-                  value={quantity.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setQuantity)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="brokerage">Brokerage (%)</Label>
-                <Input
-                  id="brokerage"
-                  numeric
-                  value={brokerage.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setBrokerage)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {calculatorType === "position-size" && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="account-size">Account Size ($)</Label>
-                <Input
-                  id="account-size"
-                  numeric
-                  value={accountSize.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setAccountSize)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="risk-percentage">Risk Percentage (%)</Label>
-                <Input
-                  id="risk-percentage"
-                  numeric
-                  value={riskPercentage.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setRiskPercentage)}
-                />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="entry-price">Entry Price ($)</Label>
-                <Input
-                  id="entry-price"
-                  numeric
-                  value={entryPrice.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setEntryPrice)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="stop-loss">Stop Loss Price ($)</Label>
-                <Input
-                  id="stop-loss"
-                  numeric
-                  value={stopLossPrice.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setStopLossPrice)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {calculatorType === "f-and-o" && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="contract-type">Contract Type</Label>
-              <Select 
-                value={contractType} 
-                onValueChange={setContractType}
-              >
-                <SelectTrigger id="contract-type">
-                  <SelectValue placeholder="Select contract type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="options">Options</SelectItem>
-                  <SelectItem value="futures">Futures</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {contractType === "options" && (
-              <>
+        <Tabs value={calculatorTab} onValueChange={setCalculatorTab} className="w-full">
+          <TabsList className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9">
+            <TabsTrigger value="profit-loss" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Profit/Loss</span>
+              <span className="inline md:hidden">P/L</span>
+            </TabsTrigger>
+            <TabsTrigger value="position-size" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Position Size</span>
+              <span className="inline md:hidden">Size</span>
+            </TabsTrigger>
+            <TabsTrigger value="f-and-o" className="text-xs md:text-sm">
+              <span className="hidden md:inline">F&O</span>
+              <span className="inline md:hidden">F&O</span>
+            </TabsTrigger>
+            <TabsTrigger value="portfolio-metrics" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Portfolio</span>
+              <span className="inline md:hidden">Port</span>
+            </TabsTrigger>
+            <TabsTrigger value="trade-planning" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Planning</span>
+              <span className="inline md:hidden">Plan</span>
+            </TabsTrigger>
+            <TabsTrigger value="sentiment-psychology" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Psychology</span>
+              <span className="inline md:hidden">Psych</span>
+            </TabsTrigger>
+            <TabsTrigger value="brokerage-costs" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Brokerage</span>
+              <span className="inline md:hidden">Brkg</span>
+            </TabsTrigger>
+            <TabsTrigger value="turnover" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Turnover</span>
+              <span className="inline md:hidden">Turn</span>
+            </TabsTrigger>
+            <TabsTrigger value="broker-comparison" className="text-xs md:text-sm">
+              <span className="hidden md:inline">Compare</span>
+              <span className="inline md:hidden">Comp</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="profit-loss" className="mt-4">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="option-type">Option Type</Label>
-                  <Select 
-                    value={optionType} 
-                    onValueChange={setOptionType}
-                  >
-                    <SelectTrigger id="option-type">
-                      <SelectValue placeholder="Select option type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="call">Call Option</SelectItem>
-                      <SelectItem value="put">Put Option</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="buy-price">Buy Price ($)</Label>
+                  <Input
+                    id="buy-price"
+                    numeric
+                    value={buyPrice.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setBuyPrice)}
+                  />
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="strike-price">Strike Price ($)</Label>
-                    <Input
-                      id="strike-price"
-                      numeric
-                      value={strikePrice.toString()}
-                      onChange={(e) => handleNumericInputChange(e.target.value, setStrikePrice)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="spot-price">Current Spot Price ($)</Label>
-                    <Input
-                      id="spot-price"
-                      numeric
-                      value={spotPrice.toString()}
-                      onChange={(e) => handleNumericInputChange(e.target.value, setSpotPrice)}
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sell-price">Sell Price ($)</Label>
+                  <Input
+                    id="sell-price"
+                    numeric
+                    value={sellPrice.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setSellPrice)}
+                  />
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="quantity">Quantity</Label>
+                  <Input
+                    id="quantity"
+                    numeric
+                    value={quantity.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setQuantity)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="brokerage">Brokerage (%)</Label>
+                  <Input
+                    id="brokerage"
+                    numeric
+                    value={brokerage.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setBrokerage)}
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="position-size" className="mt-4">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="account-size">Account Size ($)</Label>
+                  <Input
+                    id="account-size"
+                    numeric
+                    value={accountSize.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setAccountSize)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="risk-percentage">Risk Percentage (%)</Label>
+                  <Input
+                    id="risk-percentage"
+                    numeric
+                    value={riskPercentage.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setRiskPercentage)}
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="entry-price">Entry Price ($)</Label>
+                  <Input
+                    id="entry-price"
+                    numeric
+                    value={entryPrice.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setEntryPrice)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="stop-loss">Stop Loss Price ($)</Label>
+                  <Input
+                    id="stop-loss"
+                    numeric
+                    value={stopLossPrice.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setStopLossPrice)}
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="f-and-o" className="mt-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="contract-type">Contract Type</Label>
+                <Select 
+                  value={contractType} 
+                  onValueChange={setContractType}
+                >
+                  <SelectTrigger id="contract-type">
+                    <SelectValue placeholder="Select contract type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="options">Options</SelectItem>
+                    <SelectItem value="futures">Futures</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {contractType === "options" && (
+                <>
                   <div className="space-y-2">
-                    <Label htmlFor="premium">Premium/Option Price ($)</Label>
-                    <Input
-                      id="premium"
-                      numeric
-                      value={premium.toString()}
-                      onChange={(e) => handleNumericInputChange(e.target.value, setPremium)}
-                    />
+                    <Label htmlFor="option-type">Option Type</Label>
+                    <Select 
+                      value={optionType} 
+                      onValueChange={setOptionType}
+                    >
+                      <SelectTrigger id="option-type">
+                        <SelectValue placeholder="Select option type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="call">Call Option</SelectItem>
+                        <SelectItem value="put">Put Option</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="strike-price">Strike Price ($)</Label>
+                      <Input
+                        id="strike-price"
+                        numeric
+                        value={strikePrice.toString()}
+                        onChange={(e) => handleNumericInputChange(e.target.value, setStrikePrice)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="spot-price">Current Spot Price ($)</Label>
+                      <Input
+                        id="spot-price"
+                        numeric
+                        value={spotPrice.toString()}
+                        onChange={(e) => handleNumericInputChange(e.target.value, setSpotPrice)}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="premium">Premium/Option Price ($)</Label>
+                      <Input
+                        id="premium"
+                        numeric
+                        value={premium.toString()}
+                        onChange={(e) => handleNumericInputChange(e.target.value, setPremium)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lot-size">Lot Size</Label>
+                      <Input
+                        id="lot-size"
+                        numeric
+                        value={lotSize.toString()}
+                        onChange={(e) => handleNumericInputChange(e.target.value, setLotSize)}
+                      />
+                    </div>
+                  </div>
+                  
+                  <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="advanced-options">
+                      <AccordionTrigger>Advanced Options (Greeks)</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-4 pt-2">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="expiry-days">Days to Expiry</Label>
+                              <Input
+                                id="expiry-days"
+                                numeric
+                                value={expiryDays.toString()}
+                                onChange={(e) => handleNumericInputChange(e.target.value, setExpiryDays)}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="implied-volatility">Implied Volatility (%)</Label>
+                              <Input
+                                id="implied-volatility"
+                                numeric
+                                value={impliedVolatility.toString()}
+                                onChange={(e) => handleNumericInputChange(e.target.value, setImpliedVolatility)}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="interest-rate">Risk-Free Interest Rate (%)</Label>
+                            <Input
+                              id="interest-rate"
+                              numeric
+                              value={interestRate.toString()}
+                              onChange={(e) => handleNumericInputChange(e.target.value, setInterestRate)}
+                            />
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </>
+              )}
+              
+              {contractType === "futures" && (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="entry-price-futures">Entry Price ($)</Label>
+                      <Input
+                        id="entry-price-futures"
+                        numeric
+                        value={entryPrice.toString()}
+                        onChange={(e) => handleNumericInputChange(e.target.value, setEntryPrice)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="spot-price-futures">Current Price ($)</Label>
+                      <Input
+                        id="spot-price-futures"
+                        numeric
+                        value={spotPrice.toString()}
+                        onChange={(e) => handleNumericInputChange(e.target.value, setSpotPrice)}
+                      />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lot-size">Lot Size</Label>
+                    <Label htmlFor="lot-size-futures">Lot/Contract Size</Label>
                     <Input
-                      id="lot-size"
+                      id="lot-size-futures"
                       numeric
                       value={lotSize.toString()}
                       onChange={(e) => handleNumericInputChange(e.target.value, setLotSize)}
                     />
                   </div>
+                </>
+              )}
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="portfolio-metrics" className="mt-4">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="initial-investment">Initial Investment ($)</Label>
+                  <Input
+                    id="initial-investment"
+                    numeric
+                    value={initialInvestment.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setInitialInvestment)}
+                  />
                 </div>
-                
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="advanced-options">
-                    <AccordionTrigger>Advanced Options (Greeks)</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-4 pt-2">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="expiry-days">Days to Expiry</Label>
-                            <Input
-                              id="expiry-days"
-                              numeric
-                              value={expiryDays.toString()}
-                              onChange={(e) => handleNumericInputChange(e.target.value, setExpiryDays)}
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="implied-volatility">Implied Volatility (%)</Label>
-                            <Input
-                              id="implied-volatility"
-                              numeric
-                              value={impliedVolatility.toString()}
-                              onChange={(e) => handleNumericInputChange(e.target.value, setImpliedVolatility)}
-                            />
-                          </div>
+                <div className="space-y-2">
+                  <Label htmlFor="final-value">Current Portfolio Value ($)</Label>
+                  <Input
+                    id="final-value"
+                    numeric
+                    value={finalValue.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setFinalValue)}
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="investment-period">Investment Period (Years)</Label>
+                  <Input
+                    id="investment-period"
+                    numeric
+                    value={investmentPeriodYears.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setInvestmentPeriodYears)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="benchmark-return">Benchmark Return (%)</Label>
+                  <Input
+                    id="benchmark-return"
+                    numeric
+                    value={benchmarkReturn.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setBenchmarkReturn)}
+                  />
+                </div>
+              </div>
+              
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="advanced-metrics">
+                  <AccordionTrigger>Advanced Metrics Settings</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="portfolio-stddev">Portfolio Std. Deviation (%)</Label>
+                          <Input
+                            id="portfolio-stddev"
+                            numeric
+                            value={portfolioStdDev.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setPortfolioStdDev)}
+                          />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="interest-rate">Risk-Free Interest Rate (%)</Label>
+                          <Label htmlFor="risk-free-rate">Risk-Free Rate (%)</Label>
                           <Input
-                            id="interest-rate"
+                            id="risk-free-rate"
                             numeric
-                            value={interestRate.toString()}
-                            onChange={(e) => handleNumericInputChange(e.target.value, setInterestRate)}
+                            value={riskFreeRate.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setRiskFreeRate)}
                           />
                         </div>
                       </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </>
-            )}
-            
-            {contractType === "futures" && (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="entry-price-futures">Entry Price ($)</Label>
-                    <Input
-                      id="entry-price-futures"
-                      numeric
-                      value={entryPrice.toString()}
-                      onChange={(e) => handleNumericInputChange(e.target.value, setEntryPrice)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="spot-price-futures">Current Price ($)</Label>
-                    <Input
-                      id="spot-price-futures"
-                      numeric
-                      value={spotPrice.toString()}
-                      onChange={(e) => handleNumericInputChange(e.target.value, setSpotPrice)}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lot-size-futures">Lot/Contract Size</Label>
-                  <Input
-                    id="lot-size-futures"
-                    numeric
-                    value={lotSize.toString()}
-                    onChange={(e) => handleNumericInputChange(e.target.value, setLotSize)}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        )}
-        
-        {calculatorType === "portfolio-metrics" && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="initial-investment">Initial Investment ($)</Label>
-                <Input
-                  id="initial-investment"
-                  numeric
-                  value={initialInvestment.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setInitialInvestment)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="final-value">Current Portfolio Value ($)</Label>
-                <Input
-                  id="final-value"
-                  numeric
-                  value={finalValue.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setFinalValue)}
-                />
-              </div>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="max-portfolio-value">Max Portfolio Value ($)</Label>
+                          <Input
+                            id="max-portfolio-value"
+                            numeric
+                            value={maxPortfolioValue.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setMaxPortfolioValue)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="min-portfolio-value">Min Portfolio Value ($)</Label>
+                          <Input
+                            id="min-portfolio-value"
+                            numeric
+                            value={minPortfolioValue.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setMinPortfolioValue)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="investment-period">Investment Period (Years)</Label>
-                <Input
-                  id="investment-period"
-                  numeric
-                  value={investmentPeriodYears.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setInvestmentPeriodYears)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="benchmark-return">Benchmark Return (%)</Label>
-                <Input
-                  id="benchmark-return"
-                  numeric
-                  value={benchmarkReturn.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setBenchmarkReturn)}
-                />
-              </div>
-            </div>
-            
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="advanced-metrics">
-                <AccordionTrigger>Advanced Metrics Settings</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="portfolio-stddev">Portfolio Std. Deviation (%)</Label>
-                        <Input
-                          id="portfolio-stddev"
-                          numeric
-                          value={portfolioStdDev.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setPortfolioStdDev)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="risk-free-rate">Risk-Free Rate (%)</Label>
-                        <Input
-                          id="risk-free-rate"
-                          numeric
-                          value={riskFreeRate.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setRiskFreeRate)}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="max-portfolio-value">Max Portfolio Value ($)</Label>
-                        <Input
-                          id="max-portfolio-value"
-                          numeric
-                          value={maxPortfolioValue.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setMaxPortfolioValue)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="min-portfolio-value">Min Portfolio Value ($)</Label>
-                        <Input
-                          id="min-portfolio-value"
-                          numeric
-                          value={minPortfolioValue.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setMinPortfolioValue)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        )}
-        
-        {calculatorType === "trade-planning" && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="win-probability">Win Probability (%)</Label>
-                <Input
-                  id="win-probability"
-                  numeric
-                  value={winProbability.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setWinProbability)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="potential-profit">Potential Profit ($)</Label>
-                <Input
-                  id="potential-profit"
-                  numeric
-                  value={potentialProfit.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setPotentialProfit)}
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="potential-loss">Potential Loss ($)</Label>
-              <Input
-                id="potential-loss"
-                numeric
-                value={potentialLoss.toString()}
-                onChange={(e) => handleNumericInputChange(e.target.value, setPotentialLoss)}
-              />
-            </div>
-            
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="win-rate-edge">
-                <AccordionTrigger>Win Rate & Edge Settings</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="total-trades">Total Trades</Label>
-                        <Input
-                          id="total-trades"
-                          numeric
-                          value={totalTrades.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setTotalTrades)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="winning-trades">Winning Trades</Label>
-                        <Input
-                          id="winning-trades"
-                          numeric
-                          value={winningTrades.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setWinningTrades)}
-                        />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="average-win">Average Win ($)</Label>
-                        <Input
-                          id="average-win"
-                          numeric
-                          value={averageWin.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setAverageWin)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="average-loss">Average Loss ($)</Label>
-                        <Input
-                          id="average-loss"
-                          numeric
-                          value={averageLoss.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setAverageLoss)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-              
-              <AccordionItem value="r-multiple">
-                <AccordionTrigger>R-Multiple Settings</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="risk-amount">Risk Amount ($)</Label>
-                        <Input
-                          id="risk-amount"
-                          numeric
-                          value={riskAmount.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setRiskAmount)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="reward-amount">Reward Amount ($)</Label>
-                        <Input
-                          id="reward-amount"
-                          numeric
-                          value={rewardAmount.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setRewardAmount)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        )}
-        
-        {calculatorType === "sentiment-psychology" && (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Burnout Index Factors</Label>
+          </TabsContent>
+          
+          <TabsContent value="trade-planning" className="mt-4">
+            <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="trading-hours">Trading Hours per Day</Label>
+                  <Label htmlFor="win-probability">Win Probability (%)</Label>
                   <Input
-                    id="trading-hours"
+                    id="win-probability"
                     numeric
-                    value={tradingHoursPerDay.toString()}
-                    onChange={(e) => handleNumericInputChange(e.target.value, setTradingHoursPerDay)}
+                    value={winProbability.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setWinProbability)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="consecutive-losses">Consecutive Losses</Label>
+                  <Label htmlFor="potential-profit">Potential Profit ($)</Label>
                   <Input
-                    id="consecutive-losses"
+                    id="potential-profit"
                     numeric
-                    value={consecutiveLosses.toString()}
-                    onChange={(e) => handleNumericInputChange(e.target.value, setConsecutiveLosses)}
+                    value={potentialProfit.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setPotentialProfit)}
                   />
                 </div>
               </div>
+              
               <div className="space-y-2">
-                <Label htmlFor="revenge-trades">Revenge Trades</Label>
+                <Label htmlFor="potential-loss">Potential Loss ($)</Label>
                 <Input
-                  id="revenge-trades"
+                  id="potential-loss"
                   numeric
-                  value={revengeTrades.toString()}
-                  onChange={(e) => handleNumericInputChange(e.target.value, setRevengeTrades)}
+                  value={potentialLoss.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setPotentialLoss)}
                 />
               </div>
-            </div>
-            
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="emotional-recovery">
-                <AccordionTrigger>Emotional Recovery Calculator</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="biggest-loss">Biggest Loss ($)</Label>
-                        <Input
-                          id="biggest-loss"
-                          numeric
-                          value={biggestLoss.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setBiggestLoss)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="mental-recovery-rate">Mental Recovery Rate ($/day)</Label>
-                        <Input
-                          id="mental-recovery-rate"
-                          numeric
-                          value={mentalRecoveryRate.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setMentalRecoveryRate)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
               
-              <AccordionItem value="overtrading-risk">
-                <AccordionTrigger>Overtrading Risk Checker</AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-4 pt-2">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="daily-trade-count">Daily Trade Count</Label>
-                        <Input
-                          id="daily-trade-count"
-                          numeric
-                          value={dailyTradeCount.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setDailyTradeCount)}
-                        />
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="win-rate-edge">
+                  <AccordionTrigger>Win Rate & Edge Settings</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="total-trades">Total Trades</Label>
+                          <Input
+                            id="total-trades"
+                            numeric
+                            value={totalTrades.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setTotalTrades)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="winning-trades">Winning Trades</Label>
+                          <Input
+                            id="winning-trades"
+                            numeric
+                            value={winningTrades.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setWinningTrades)}
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="capital-deployed">Capital Deployed (%)</Label>
-                        <Input
-                          id="capital-deployed"
-                          numeric
-                          value={capitalDeployedPercent.toString()}
-                          onChange={(e) => handleNumericInputChange(e.target.value, setCapitalDeployedPercent)}
-                        />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="average-win">Average Win ($)</Label>
+                          <Input
+                            id="average-win"
+                            numeric
+                            value={averageWin.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setAverageWin)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="average-loss">Average Loss ($)</Label>
+                          <Input
+                            id="average-loss"
+                            numeric
+                            value={averageLoss.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setAverageLoss)}
+                          />
+                        </div>
                       </div>
                     </div>
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="r-multiple">
+                  <AccordionTrigger>R-Multiple Settings</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="risk-amount">Risk Amount ($)</Label>
+                          <Input
+                            id="risk-amount"
+                            numeric
+                            value={riskAmount.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setRiskAmount)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="reward-amount">Reward Amount ($)</Label>
+                          <Input
+                            id="reward-amount"
+                            numeric
+                            value={rewardAmount.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setRewardAmount)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="sentiment-psychology" className="mt-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Burnout Index Factors</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="trading-hours">Trading Hours per Day</Label>
+                    <Input
+                      id="trading-hours"
+                      numeric
+                      value={tradingHoursPerDay.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setTradingHoursPerDay)}
+                    />
                   </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-        )}
+                  <div className="space-y-2">
+                    <Label htmlFor="consecutive-losses">Consecutive Losses</Label>
+                    <Input
+                      id="consecutive-losses"
+                      numeric
+                      value={consecutiveLosses.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setConsecutiveLosses)}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="revenge-trades">Revenge Trades</Label>
+                  <Input
+                    id="revenge-trades"
+                    numeric
+                    value={revengeTrades.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setRevengeTrades)}
+                  />
+                </div>
+              </div>
+              
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="emotional-recovery">
+                  <AccordionTrigger>Emotional Recovery Calculator</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="biggest-loss">Biggest Loss ($)</Label>
+                          <Input
+                            id="biggest-loss"
+                            numeric
+                            value={biggestLoss.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setBiggestLoss)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="mental-recovery-rate">Mental Recovery Rate ($/day)</Label>
+                          <Input
+                            id="mental-recovery-rate"
+                            numeric
+                            value={mentalRecoveryRate.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setMentalRecoveryRate)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                
+                <AccordionItem value="overtrading-risk">
+                  <AccordionTrigger>Overtrading Risk Checker</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pt-2">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="daily-trade-count">Daily Trade Count</Label>
+                          <Input
+                            id="daily-trade-count"
+                            numeric
+                            value={dailyTradeCount.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setDailyTradeCount)}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="capital-deployed">Capital Deployed (%)</Label>
+                          <Input
+                            id="capital-deployed"
+                            numeric
+                            value={capitalDeployedPercent.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setCapitalDeployedPercent)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="brokerage-costs" className="mt-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="country">Country</Label>
+                <Select 
+                  value={country} 
+                  onValueChange={setCountry}
+                >
+                  <SelectTrigger id="country">
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="india">India</SelectItem>
+                    <SelectItem value="us">United States</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {country === "india" && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="broker-type">Broker Type</Label>
+                    <Select 
+                      value={brokerType} 
+                      onValueChange={setBrokerType}
+                    >
+                      <SelectTrigger id="broker-type">
+                        <SelectValue placeholder="Select broker type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="discount">Discount Broker</SelectItem>
+                        <SelectItem value="full">Full Service Broker</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {brokerType === "discount" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="broker-name">Broker Name</Label>
+                      <Select 
+                        value={brokerName} 
+                        onValueChange={setBrokerName}
+                      >
+                        <SelectTrigger id="broker-name">
+                          <SelectValue placeholder="Select broker" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="zerodha">Zerodha</SelectItem>
+                          <SelectItem value="upstox">Upstox</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  )}
+                </>
+              )}
+              
+              {country === "us" && (
+                <div className="space-y-2">
+                  <Label htmlFor="broker-name-us">Broker Name</Label>
+                  <Select 
+                    value={brokerName} 
+                    onValueChange={setBrokerName}
+                  >
+                    <SelectTrigger id="broker-name-us">
+                      <SelectValue placeholder="Select broker" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="robinhood">Robinhood</SelectItem>
+                      <SelectItem value="schwab">Charles Schwab</SelectItem>
+                      <SelectItem value="etrade">E*TRADE</SelectItem>
+                      <SelectItem value="td">TD Ameritrade</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="trade-value">Trade Value ({country === "india" ? "₹" : "$"})</Label>
+                  <Input
+                    id="trade-value"
+                    numeric
+                    value={tradeValue.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setTradeValue)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="trade-type">Trade Type</Label>
+                  <Select 
+                    value={tradeType} 
+                    onValueChange={setTradeType}
+                  >
+                    <SelectTrigger id="trade-type">
+                      <SelectValue placeholder="Select trade type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="equity">Equity</SelectItem>
+                      <SelectItem value="futures">Futures</SelectItem>
+                      <SelectItem value="options">Options</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="transaction-type">Transaction Type</Label>
+                  <Select 
+                    value={transactionType} 
+                    onValueChange={setTransactionType}
+                  >
+                    <SelectTrigger id="transaction-type">
+                      <SelectValue placeholder="Select transaction type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="buy">Buy</SelectItem>
+                      <SelectItem value="sell">Sell</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {tradeType === "equity" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="delivery-type">Delivery Type</Label>
+                    <Select 
+                      value={deliveryType} 
+                      onValueChange={setDeliveryType}
+                    >
+                      <SelectTrigger id="delivery-type">
+                        <SelectValue placeholder="Select delivery type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="intraday">Intraday</SelectItem>
+                        <SelectItem value="delivery">Delivery</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="turnover" className="mt-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="turnover-value">Annual Trading Turnover (₹)</Label>
+                <Input
+                  id="turnover-value"
+                  numeric
+                  value={turnoverValue.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setTurnoverValue)}
+                />
+                <p className="text-xs text-muted-foreground mt-1">For Indian tax audit requirement calculation</p>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="broker-comparison" className="mt-4">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="compare-country">Countries to Compare</Label>
+                <Select 
+                  value={country} 
+                  onValueChange={setCountry}
+                >
+                  <SelectTrigger id="compare-country">
+                    <SelectValue placeholder="Select countries" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="india">India Only</SelectItem>
+                    <SelectItem value="us">U.S. Only</SelectItem>
+                    <SelectItem value="both">Both India & U.S.</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
         
         <Button onClick={handleCalculate} className="w-full">
           Calculate
@@ -1274,6 +1722,182 @@ export const StockMarketCalculator = () => {
                         • Your current trading psychology metrics are healthy
                       </div>
                     )}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "brokerage-costs" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <Coins className="mr-2" size={20} />
+                  Brokerage & Fees {results.country === "india" ? "(India)" : "(U.S.)"}
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between font-bold">
+                    <span>Total Charges:</span>
+                    <span className="text-amber-600">
+                      {results.country === "india" ? "₹" : "$"}{results.totalCharges.toFixed(2)} ({results.chargePercentage}%)
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Brokerage Fee:</span>
+                    <span>{results.country === "india" ? "₹" : "$"}{results.brokerageFee.toFixed(2)}</span>
+                  </div>
+                  
+                  {results.country === "india" && (
+                    <>
+                      <div className="flex justify-between">
+                        <span>Securities Transaction Tax (STT):</span>
+                        <span>₹{results.breakdown.stt.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Exchange Transaction Charges:</span>
+                        <span>₹{results.breakdown.exchangeFee.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>GST (18%):</span>
+                        <span>₹{results.breakdown.gst.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>SEBI Charges:</span>
+                        <span>₹{results.breakdown.sebi.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Stamp Duty:</span>
+                        <span>₹{results.breakdown.stampDuty.toFixed(2)}</span>
+                      </div>
+                    </>
+                  )}
+                  
+                  {results.country === "us" && (
+                    <>
+                      <div className="flex justify-between">
+                        <span>SEC Fee:</span>
+                        <span>${results.breakdown.secFee.toFixed(4)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>TAF Fee:</span>
+                        <span>${results.breakdown.tafFee.toFixed(4)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>FINRA Trading Activity Fee:</span>
+                        <span>${results.breakdown.finraFee.toFixed(4)}</span>
+                      </div>
+                    </>
+                  )}
+                  
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="flex justify-between font-bold">
+                      <span>Net {results.transactionType === "buy" ? "Payment" : "Proceeds"}:</span>
+                      <span className={results.transactionType === "buy" ? "text-red-600" : "text-green-600"}>
+                        {results.country === "india" ? "₹" : "$"}{results.netAmount.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "turnover" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <FileText className="mr-2" size={20} />
+                  Trading Turnover Analysis
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Annual Trading Turnover:</span>
+                    <span>₹{results.turnoverValue.toFixed(2)} ({(results.turnoverValue / 10000000).toFixed(2)} crore)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Audit Threshold:</span>
+                    <span>₹{results.auditThreshold} (10 crore)</span>
+                  </div>
+                  <div className="flex justify-between font-bold">
+                    <span>Tax Audit Requirement:</span>
+                    <span className={results.requiresAudit ? "text-red-600" : "text-green-600"}>
+                      {results.requiresAudit ? "Required" : "Not Required"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Required Filing Type:</span>
+                    <span>{results.filingType}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Estimated Filing Charges:</span>
+                    <span>₹{results.estimatedFilingCharges}</span>
+                  </div>
+                  
+                  <div className="mt-3 pt-3 border-t text-sm text-muted-foreground">
+                    <p>Note: In India, if your total turnover from intraday trading exceeds ₹10 crore in a financial year, you're required to get your accounts audited.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "broker-comparison" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <BadgeDollarSign className="mr-2" size={20} />
+                  Broker Comparison
+                </div>
+                <div className="space-y-4">
+                  {results.brokers.map((broker: any, index: number) => (
+                    <div key={index} className="p-3 border rounded-md">
+                      <div className="font-semibold text-lg mb-1 flex items-center">
+                        {broker.country === "India" ? (
+                          <BadgeIndianRupee className="mr-2" size={16} />
+                        ) : (
+                          <BadgeDollarSign className="mr-2" size={16} />
+                        )}
+                        {broker.name} ({broker.country})
+                      </div>
+                      <div className="space-y-1 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Equity Delivery:</span>
+                          <span>{broker.equityDelivery}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Equity Intraday:</span>
+                          <span>{broker.equityIntraday}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">F&O Trading:</span>
+                          <span>{broker.fAndO}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Account Maintenance:</span>
+                          <span>{broker.accountMaintenance}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Margin Funding Rate:</span>
+                          <span>{broker.marginFunding}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="text-base font-semibold mb-2">Recommendations</div>
+                    <div className="space-y-1 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Best for Beginners:</span>
+                        <span>{results.recommendedFor.beginners}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Best for High-Volume Traders:</span>
+                        <span>{results.recommendedFor.highVolume}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Best for Delivery Trading:</span>
+                        <span>{results.recommendedFor.delivery}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-muted-foreground">Best for Options Trading:</span>
+                        <span>{results.recommendedFor.options}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
