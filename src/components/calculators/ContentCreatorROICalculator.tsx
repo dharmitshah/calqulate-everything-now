@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -176,8 +175,7 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="contentHours">Content Creation (hours)</Label>
                   <Input
                     id="contentHours"
-                    type="text"
-                    inputMode="decimal"
+                    numeric
                     value={contentHours.toString()}
                     onChange={(e) => handleNumericInputChange(e.target.value, setContentHours)}
                   />
@@ -187,8 +185,7 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="editingHours">Editing Hours</Label>
                   <Input
                     id="editingHours"
-                    type="text"
-                    inputMode="decimal"
+                    numeric
                     value={editingHours.toString()}
                     onChange={(e) => handleNumericInputChange(e.target.value, setEditingHours)}
                   />
@@ -200,8 +197,7 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="views">Views</Label>
                   <Input
                     id="views"
-                    type="text"
-                    inputMode="decimal"
+                    numeric
                     value={views.toString()}
                     onChange={(e) => handleNumericInputChange(e.target.value, setViews)}
                   />
@@ -230,8 +226,7 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="sponsorships">Sponsorship Revenue ($)</Label>
                   <Input
                     id="sponsorships"
-                    type="text"
-                    inputMode="decimal"
+                    numeric
                     value={sponsorships.toString()}
                     onChange={(e) => handleNumericInputChange(e.target.value, setSponsorships)}
                   />
@@ -241,8 +236,7 @@ export const ContentCreatorROICalculator = () => {
                   <Label htmlFor="affiliateRevenue">Affiliate Revenue ($)</Label>
                   <Input
                     id="affiliateRevenue"
-                    type="text"
-                    inputMode="decimal"
+                    numeric
                     value={affiliateRevenue.toString()}
                     onChange={(e) => handleNumericInputChange(e.target.value, setAffiliateRevenue)}
                   />
