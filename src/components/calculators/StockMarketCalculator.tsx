@@ -15,6 +15,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Calculator, TrendingUp, CircleDollarSign } from "lucide-react";
+import { 
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const StockMarketCalculator = () => {
   const { toast } = useToast();
@@ -31,6 +37,17 @@ export const StockMarketCalculator = () => {
   const [riskPercentage, setRiskPercentage] = useState<number>(2);
   const [entryPrice, setEntryPrice] = useState<number>(50);
   const [stopLossPrice, setStopLossPrice] = useState<number>(48);
+
+  // F&O Specific States
+  const [optionType, setOptionType] = useState<string>("call");
+  const [strikePrice, setStrikePrice] = useState<number>(100);
+  const [spotPrice, setSpotPrice] = useState<number>(98);
+  const [premium, setPremium] = useState<number>(2.5);
+  const [lotSize, setLotSize] = useState<number>(100);
+  const [contractType, setContractType] = useState<string>("options");
+  const [expiryDays, setExpiryDays] = useState<number>(30);
+  const [impliedVolatility, setImpliedVolatility] = useState<number>(30);
+  const [interestRate, setInterestRate] = useState<number>(5);
   
   // Results
   const [results, setResults] = useState<any>(null);
@@ -100,6 +117,127 @@ export const StockMarketCalculator = () => {
       description: `You can buy/sell ${positionSize} shares based on your risk tolerance`,
     });
   };
+
+  // Calculate F&O Results
+  const calculateFAndO = () => {
+    if (contractType === "options") {
+      calculateOptionsResult();
+    } else {
+      calculateFuturesResult();
+    }
+  };
+
+  // Calculate Options P&L
+  const calculateOptionsResult = () => {
+    let intrinsicValue = 0;
+    let profitLoss = 0;
+    let breakEvenPrice = 0;
+    
+    if (optionType === "call") {
+      intrinsicValue = Math.max(0, spotPrice - strikePrice);
+      breakEvenPrice = strikePrice + premium;
+      profitLoss = (Math.max(0, spotPrice - strikePrice) - premium) * lotSize;
+    } else { // put
+      intrinsicValue = Math.max(0, strikePrice - spotPrice);
+      breakEvenPrice = strikePrice - premium;
+      profitLoss = (Math.max(0, strikePrice - spotPrice) - premium) * lotSize;
+    }
+
+    const extrinsicValue = premium - intrinsicValue;
+    
+    // Calculate simple Greeks (these are simplified approximations)
+    let delta = calculateDelta(optionType, spotPrice, strikePrice, expiryDays, impliedVolatility, interestRate);
+    let gamma = calculateGamma(spotPrice, strikePrice, expiryDays, impliedVolatility);
+    let theta = calculateTheta(optionType, spotPrice, strikePrice, expiryDays, impliedVolatility, interestRate);
+    let vega = calculateVega(spotPrice, strikePrice, expiryDays, impliedVolatility);
+    let rho = calculateRho(optionType, spotPrice, strikePrice, expiryDays, impliedVolatility, interestRate);
+
+    const calculatedResults = {
+      type: "options",
+      profitLoss: parseFloat(profitLoss.toFixed(2)),
+      intrinsicValue: parseFloat(intrinsicValue.toFixed(2)),
+      extrinsicValue: parseFloat(extrinsicValue.toFixed(2)),
+      breakEvenPrice: parseFloat(breakEvenPrice.toFixed(2)),
+      isProfit: profitLoss > 0,
+      greeks: {
+        delta: parseFloat(delta.toFixed(4)),
+        gamma: parseFloat(gamma.toFixed(4)),
+        theta: parseFloat(theta.toFixed(4)),
+        vega: parseFloat(vega.toFixed(4)),
+        rho: parseFloat(rho.toFixed(4)),
+      }
+    };
+
+    setResults(calculatedResults);
+
+    toast({
+      title: profitLoss > 0 ? "Option Profit Calculated" : "Option Loss Calculated",
+      description: `${optionType.toUpperCase()} option ${profitLoss > 0 ? "profit" : "loss"}: $${Math.abs(profitLoss).toFixed(2)}`,
+    });
+  };
+
+  // Calculate Futures P&L
+  const calculateFuturesResult = () => {
+    const buyValue = entryPrice * lotSize;
+    const currentValue = spotPrice * lotSize;
+    const profitLoss = currentValue - buyValue;
+    
+    const marginRequired = buyValue * 0.1; // Simplified margin calculation (10%)
+    const leverageRatio = buyValue / marginRequired;
+    
+    const calculatedResults = {
+      type: "futures",
+      profitLoss: parseFloat(profitLoss.toFixed(2)),
+      marginRequired: parseFloat(marginRequired.toFixed(2)),
+      leverageRatio: parseFloat(leverageRatio.toFixed(2)),
+      isProfit: profitLoss > 0
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: profitLoss > 0 ? "Futures Profit Calculated" : "Futures Loss Calculated",
+      description: `Futures ${profitLoss > 0 ? "profit" : "loss"}: $${Math.abs(profitLoss).toFixed(2)}`,
+    });
+  };
+  
+  // Greek calculation helper functions
+  const calculateDelta = (optType: string, spot: number, strike: number, days: number, vol: number, rate: number) => {
+    // Simple delta approximation
+    const timeToExpiry = days / 365;
+    const moneyness = (spot / strike) - 1;
+    let delta = 0.5 + 0.5 * (moneyness / (vol * Math.sqrt(timeToExpiry)));
+    
+    // Bound between 0 and 1
+    delta = Math.max(0, Math.min(1, delta));
+    
+    return optType === "put" ? -delta : delta;
+  };
+  
+  const calculateGamma = (spot: number, strike: number, days: number, vol: number) => {
+    // Simple gamma approximation
+    const timeToExpiry = days / 365;
+    return 0.4 * Math.exp(-Math.pow((spot - strike) / (vol * spot * Math.sqrt(timeToExpiry)), 2) / 2) / (spot * vol * Math.sqrt(timeToExpiry));
+  };
+  
+  const calculateTheta = (optType: string, spot: number, strike: number, days: number, vol: number, rate: number) => {
+    // Simple theta approximation (rough estimate)
+    const timeToExpiry = days / 365;
+    return -spot * vol * 0.4 * Math.exp(-Math.pow((spot - strike) / (vol * spot * Math.sqrt(timeToExpiry)), 2) / 2) / (2 * Math.sqrt(timeToExpiry)) / 365;
+  };
+  
+  const calculateVega = (spot: number, strike: number, days: number, vol: number) => {
+    // Simple vega approximation
+    const timeToExpiry = days / 365;
+    return 0.1 * spot * Math.sqrt(timeToExpiry) * 0.4 * Math.exp(-Math.pow((spot - strike) / (vol * spot * Math.sqrt(timeToExpiry)), 2) / 2) / 100;
+  };
+  
+  const calculateRho = (optType: string, spot: number, strike: number, days: number, vol: number, rate: number) => {
+    // Simple rho approximation
+    const timeToExpiry = days / 365;
+    const sign = optType === "call" ? 1 : -1;
+    return sign * strike * timeToExpiry * 0.01;
+  };
   
   const handleCalculate = () => {
     switch (calculatorType) {
@@ -108,6 +246,9 @@ export const StockMarketCalculator = () => {
         break;
       case "position-size":
         calculatePositionSize();
+        break;
+      case "f-and-o":
+        calculateFAndO();
         break;
       default:
         break;
@@ -137,6 +278,7 @@ export const StockMarketCalculator = () => {
             <SelectContent>
               <SelectItem value="profit-loss">Profit/Loss Calculator</SelectItem>
               <SelectItem value="position-size">Position Size Calculator</SelectItem>
+              <SelectItem value="f-and-o">Futures & Options Calculator</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -232,6 +374,161 @@ export const StockMarketCalculator = () => {
             </div>
           </div>
         )}
+
+        {calculatorType === "f-and-o" && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="contract-type">Contract Type</Label>
+              <Select 
+                value={contractType} 
+                onValueChange={setContractType}
+              >
+                <SelectTrigger id="contract-type">
+                  <SelectValue placeholder="Select contract type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="options">Options</SelectItem>
+                  <SelectItem value="futures">Futures</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {contractType === "options" && (
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="option-type">Option Type</Label>
+                  <Select 
+                    value={optionType} 
+                    onValueChange={setOptionType}
+                  >
+                    <SelectTrigger id="option-type">
+                      <SelectValue placeholder="Select option type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="call">Call Option</SelectItem>
+                      <SelectItem value="put">Put Option</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="strike-price">Strike Price ($)</Label>
+                    <Input
+                      id="strike-price"
+                      numeric
+                      value={strikePrice.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setStrikePrice)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="spot-price">Current Spot Price ($)</Label>
+                    <Input
+                      id="spot-price"
+                      numeric
+                      value={spotPrice.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setSpotPrice)}
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="premium">Premium/Option Price ($)</Label>
+                    <Input
+                      id="premium"
+                      numeric
+                      value={premium.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setPremium)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lot-size">Lot Size</Label>
+                    <Input
+                      id="lot-size"
+                      numeric
+                      value={lotSize.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setLotSize)}
+                    />
+                  </div>
+                </div>
+                
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="advanced-options">
+                    <AccordionTrigger>Advanced Options (Greeks)</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-4 pt-2">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="expiry-days">Days to Expiry</Label>
+                            <Input
+                              id="expiry-days"
+                              numeric
+                              value={expiryDays.toString()}
+                              onChange={(e) => handleNumericInputChange(e.target.value, setExpiryDays)}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="implied-volatility">Implied Volatility (%)</Label>
+                            <Input
+                              id="implied-volatility"
+                              numeric
+                              value={impliedVolatility.toString()}
+                              onChange={(e) => handleNumericInputChange(e.target.value, setImpliedVolatility)}
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="interest-rate">Risk-Free Interest Rate (%)</Label>
+                          <Input
+                            id="interest-rate"
+                            numeric
+                            value={interestRate.toString()}
+                            onChange={(e) => handleNumericInputChange(e.target.value, setInterestRate)}
+                          />
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </>
+            )}
+            
+            {contractType === "futures" && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="entry-price-futures">Entry Price ($)</Label>
+                    <Input
+                      id="entry-price-futures"
+                      numeric
+                      value={entryPrice.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setEntryPrice)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="spot-price-futures">Current Price ($)</Label>
+                    <Input
+                      id="spot-price-futures"
+                      numeric
+                      value={spotPrice.toString()}
+                      onChange={(e) => handleNumericInputChange(e.target.value, setSpotPrice)}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lot-size-futures">Lot/Contract Size</Label>
+                  <Input
+                    id="lot-size-futures"
+                    numeric
+                    value={lotSize.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setLotSize)}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        )}
         
         <Button onClick={handleCalculate} className="w-full">
           Calculate
@@ -294,6 +591,86 @@ export const StockMarketCalculator = () => {
                   <div className="flex justify-between">
                     <span>Maximum Loss:</span>
                     <span className="text-red-600">${results.maxLoss.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "options" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <CircleDollarSign className="mr-2" size={20} />
+                  Options Result
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between font-bold">
+                    <span>Profit/Loss:</span>
+                    <span className={results.profitLoss >= 0 ? "text-green-600" : "text-red-600"}>
+                      ${Math.abs(results.profitLoss).toFixed(2)} {results.profitLoss >= 0 ? "Profit" : "Loss"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Intrinsic Value:</span>
+                    <span>${results.intrinsicValue.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Extrinsic Value:</span>
+                    <span>${results.extrinsicValue.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Break Even Price:</span>
+                    <span>${results.breakEvenPrice.toFixed(2)}</span>
+                  </div>
+                  
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="text-base font-semibold mb-2">Greeks (Option Sensitivities)</div>
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-2">
+                      <div className="flex justify-between">
+                        <span>Delta:</span>
+                        <span>{results.greeks.delta}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Gamma:</span>
+                        <span>{results.greeks.gamma}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Theta:</span>
+                        <span>{results.greeks.theta}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Vega:</span>
+                        <span>{results.greeks.vega}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Rho:</span>
+                        <span>{results.greeks.rho}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "futures" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <CircleDollarSign className="mr-2" size={20} />
+                  Futures Result
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between font-bold">
+                    <span>Profit/Loss:</span>
+                    <span className={results.profitLoss >= 0 ? "text-green-600" : "text-red-600"}>
+                      ${Math.abs(results.profitLoss).toFixed(2)} {results.profitLoss >= 0 ? "Profit" : "Loss"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Estimated Margin Required:</span>
+                    <span>${results.marginRequired.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Leverage Ratio:</span>
+                    <span>{results.leverageRatio.toFixed(2)}x</span>
                   </div>
                 </div>
               </div>
