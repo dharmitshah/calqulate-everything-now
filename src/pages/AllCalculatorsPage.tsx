@@ -32,7 +32,8 @@ import {
   BatteryCharging,
   Cpu,
   Earth,
-  HandHelping
+  HandHelping,
+  TrendingUp as TrendingUpIcon
 } from "lucide-react";
 
 const AllCalculatorsPage = () => {
@@ -218,6 +219,14 @@ const AllCalculatorsPage = () => {
       description: "Analyze your freelance rates against market benchmarks",
       icon: <HandHelping />,
       path: "/calculator/freelancer-pricing",
+      popular: true
+    },
+    // Stock Market Calculator
+    {
+      title: "Stock Market",
+      description: "Calculate profit/loss and position sizing for trading",
+      icon: <ChartLine />,
+      path: "/calculator/stock-market",
       popular: true
     }
   ];

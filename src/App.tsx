@@ -37,6 +37,7 @@ import EVChargeCalculatorPage from "./pages/EVChargeCalculatorPage";
 import AICostEstimatorPage from "./pages/AICostEstimatorPage";
 import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
 import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
+import StockMarketCalculatorPage from "./pages/StockMarketCalculatorPage";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,7 @@ const App = () => (
           <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
           <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
           <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
+          <Route path="/calculator/stock-market" element={<StockMarketCalculatorPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
