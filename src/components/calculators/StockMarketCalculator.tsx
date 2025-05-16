@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -14,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Calculator, TrendingUp, CircleDollarSign } from "lucide-react";
+import { Calculator, TrendingUp, CircleDollarSign, ChartLine, CircleCheck } from "lucide-react";
 import { 
   Accordion,
   AccordionContent,
@@ -48,6 +47,36 @@ export const StockMarketCalculator = () => {
   const [expiryDays, setExpiryDays] = useState<number>(30);
   const [impliedVolatility, setImpliedVolatility] = useState<number>(30);
   const [interestRate, setInterestRate] = useState<number>(5);
+  
+  // Portfolio Performance Metrics States
+  const [initialInvestment, setInitialInvestment] = useState<number>(10000);
+  const [finalValue, setFinalValue] = useState<number>(15000);
+  const [investmentPeriodYears, setInvestmentPeriodYears] = useState<number>(3);
+  const [benchmarkReturn, setBenchmarkReturn] = useState<number>(10);
+  const [portfolioStdDev, setPortfolioStdDev] = useState<number>(15);
+  const [riskFreeRate, setRiskFreeRate] = useState<number>(4);
+  const [maxPortfolioValue, setMaxPortfolioValue] = useState<number>(16000);
+  const [minPortfolioValue, setMinPortfolioValue] = useState<number>(9000);
+  
+  // Trade Planning Tools States
+  const [winProbability, setWinProbability] = useState<number>(60);
+  const [potentialProfit, setPotentialProfit] = useState<number>(1000);
+  const [potentialLoss, setPotentialLoss] = useState<number>(500);
+  const [totalTrades, setTotalTrades] = useState<number>(100);
+  const [winningTrades, setWinningTrades] = useState<number>(60);
+  const [averageWin, setAverageWin] = useState<number>(800);
+  const [averageLoss, setAverageLoss] = useState<number>(400);
+  const [riskAmount, setRiskAmount] = useState<number>(500);
+  const [rewardAmount, setRewardAmount] = useState<number>(1500);
+  
+  // Sentiment & Psychology Tools States
+  const [tradingHoursPerDay, setTradingHoursPerDay] = useState<number>(6);
+  const [consecutiveLosses, setConsecutiveLosses] = useState<number>(3);
+  const [revengeTrades, setRevengeTrades] = useState<number>(2);
+  const [biggestLoss, setBiggestLoss] = useState<number>(2000);
+  const [mentalRecoveryRate, setMentalRecoveryRate] = useState<number>(50);
+  const [dailyTradeCount, setDailyTradeCount] = useState<number>(10);
+  const [capitalDeployedPercent, setCapitalDeployedPercent] = useState<number>(70);
   
   // Results
   const [results, setResults] = useState<any>(null);
@@ -239,6 +268,117 @@ export const StockMarketCalculator = () => {
     return sign * strike * timeToExpiry * 0.01;
   };
   
+  // Calculate Portfolio Performance Metrics
+  const calculatePortfolioMetrics = () => {
+    // Calculate CAGR
+    const cagr = ((Math.pow((finalValue / initialInvestment), 1 / investmentPeriodYears) - 1) * 100);
+    
+    // Sharpe Ratio = (Portfolio Return - Risk Free Rate) / Portfolio Standard Deviation
+    const portfolioReturn = ((finalValue - initialInvestment) / initialInvestment) * 100;
+    const sharpeRatio = (portfolioReturn - riskFreeRate) / portfolioStdDev;
+    
+    // Max Drawdown (percentage)
+    const maxDrawdown = ((maxPortfolioValue - minPortfolioValue) / maxPortfolioValue) * 100;
+    
+    // Alpha (outperformance vs benchmark)
+    const alpha = portfolioReturn - benchmarkReturn;
+    
+    // Beta (approximation - would need more data for accurate calculation)
+    // Using a placeholder value between 0.8 and 1.2
+    const beta = alpha > 0 ? 
+      0.8 + (0.4 * (alpha / Math.max(10, alpha * 2))) : 
+      1.2 - (0.4 * (Math.abs(alpha) / Math.max(10, Math.abs(alpha) * 2)));
+    
+    const calculatedResults = {
+      type: "portfolio-metrics",
+      cagr: parseFloat(cagr.toFixed(2)),
+      sharpeRatio: parseFloat(sharpeRatio.toFixed(2)),
+      maxDrawdown: parseFloat(maxDrawdown.toFixed(2)),
+      alpha: parseFloat(alpha.toFixed(2)),
+      beta: parseFloat(beta.toFixed(2)),
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: "Portfolio Metrics Calculated",
+      description: `CAGR: ${cagr.toFixed(2)}%, Sharpe Ratio: ${sharpeRatio.toFixed(2)}`,
+    });
+  };
+  
+  // Calculate Trade Planning Metrics
+  const calculateTradePlanning = () => {
+    // Expected Value (EV) = (Win Probability × Potential Profit) - ((1 - Win Probability) × Potential Loss)
+    const winProbabilityDecimal = winProbability / 100;
+    const expectedValue = (winProbabilityDecimal * potentialProfit) - ((1 - winProbabilityDecimal) * potentialLoss);
+    
+    // Win Rate
+    const winRate = (winningTrades / totalTrades) * 100;
+    
+    // Edge = ((Win Rate × Average Win) - ((100 - Win Rate) × Average Loss)) / 100
+    const winRateDecimal = winRate / 100;
+    const edge = (winRateDecimal * averageWin) - ((1 - winRateDecimal) * averageLoss);
+    
+    // R-Multiple (reward-to-risk ratio)
+    const rMultiple = rewardAmount / riskAmount;
+    
+    // Simple Expiry Probability (uses win probability as proxy)
+    const expiryProbability = winProbabilityDecimal * 100;
+    
+    const calculatedResults = {
+      type: "trade-planning",
+      expectedValue: parseFloat(expectedValue.toFixed(2)),
+      winRate: parseFloat(winRate.toFixed(2)),
+      edge: parseFloat(edge.toFixed(2)),
+      rMultiple: parseFloat(rMultiple.toFixed(2)),
+      expiryProbability: parseFloat(expiryProbability.toFixed(2)),
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: "Trade Planning Metrics Calculated",
+      description: `Expected Value: $${expectedValue.toFixed(2)}, Edge: $${edge.toFixed(2)}`,
+    });
+  };
+  
+  // Calculate Sentiment & Psychology Metrics
+  const calculateSentimentMetrics = () => {
+    // Burnout Index (0-100)
+    // Factors: Trading hours (>8 hours high risk), consecutive losses (>5 high risk), revenge trades (>0 high risk)
+    const hoursFactor = Math.min(10, tradingHoursPerDay) / 10 * 33.33; // Max 33.33 points
+    const lossesFactor = Math.min(10, consecutiveLosses) / 10 * 33.33; // Max 33.33 points
+    const revengeFactor = Math.min(5, revengeTrades) / 5 * 33.33; // Max 33.33 points
+    const burnoutIndex = hoursFactor + lossesFactor + revengeFactor;
+    
+    // Emotional Loss Recovery Time (in days)
+    // Formula: (Biggest Loss / Mental Recovery Rate) * 7
+    // The bigger the loss and lower the recovery rate, the longer it takes
+    const recoveryDays = (biggestLoss / mentalRecoveryRate) * 7;
+    
+    // Overtrading Risk (0-100)
+    // Factors: Daily trade count (>15 high risk), Capital deployed % (>80% high risk)
+    const tradeCountFactor = Math.min(30, dailyTradeCount) / 30 * 50; // Max 50 points
+    const capitalFactor = capitalDeployedPercent / 100 * 50; // Max 50 points
+    const overtradingRisk = tradeCountFactor + capitalFactor;
+    
+    const calculatedResults = {
+      type: "sentiment-psychology",
+      burnoutIndex: parseFloat(burnoutIndex.toFixed(2)),
+      recoveryDays: parseFloat(recoveryDays.toFixed(1)),
+      overtradingRisk: parseFloat(overtradingRisk.toFixed(2)),
+      burnoutLevel: burnoutIndex < 33 ? "Low" : burnoutIndex < 66 ? "Moderate" : "High",
+      overtradingLevel: overtradingRisk < 33 ? "Low" : overtradingRisk < 66 ? "Moderate" : "High"
+    };
+    
+    setResults(calculatedResults);
+    
+    toast({
+      title: "Sentiment & Psychology Metrics Calculated",
+      description: `Burnout Index: ${burnoutIndex.toFixed(2)}/100, Recovery: ${recoveryDays.toFixed(1)} days`,
+    });
+  };
+  
   const handleCalculate = () => {
     switch (calculatorType) {
       case "profit-loss":
@@ -249,6 +389,15 @@ export const StockMarketCalculator = () => {
         break;
       case "f-and-o":
         calculateFAndO();
+        break;
+      case "portfolio-metrics":
+        calculatePortfolioMetrics();
+        break;
+      case "trade-planning":
+        calculateTradePlanning();
+        break;
+      case "sentiment-psychology":
+        calculateSentimentMetrics();
         break;
       default:
         break;
@@ -262,7 +411,7 @@ export const StockMarketCalculator = () => {
           <TrendingUp className="mr-2 text-primary" size={24} />
           Stock Market Calculator
         </CardTitle>
-        <CardDescription>Calculate profit/loss and position sizing for stock trades</CardDescription>
+        <CardDescription>Calculate profit/loss, position sizing, and advanced metrics for stock trades</CardDescription>
       </CardHeader>
       
       <CardContent className="space-y-6">
@@ -279,6 +428,9 @@ export const StockMarketCalculator = () => {
               <SelectItem value="profit-loss">Profit/Loss Calculator</SelectItem>
               <SelectItem value="position-size">Position Size Calculator</SelectItem>
               <SelectItem value="f-and-o">Futures & Options Calculator</SelectItem>
+              <SelectItem value="portfolio-metrics">Portfolio Performance Metrics</SelectItem>
+              <SelectItem value="trade-planning">Trade Planning Tools</SelectItem>
+              <SelectItem value="sentiment-psychology">Sentiment & Psychology Tools</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -530,6 +682,311 @@ export const StockMarketCalculator = () => {
           </div>
         )}
         
+        {calculatorType === "portfolio-metrics" && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="initial-investment">Initial Investment ($)</Label>
+                <Input
+                  id="initial-investment"
+                  numeric
+                  value={initialInvestment.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setInitialInvestment)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="final-value">Current Portfolio Value ($)</Label>
+                <Input
+                  id="final-value"
+                  numeric
+                  value={finalValue.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setFinalValue)}
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="investment-period">Investment Period (Years)</Label>
+                <Input
+                  id="investment-period"
+                  numeric
+                  value={investmentPeriodYears.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setInvestmentPeriodYears)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="benchmark-return">Benchmark Return (%)</Label>
+                <Input
+                  id="benchmark-return"
+                  numeric
+                  value={benchmarkReturn.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setBenchmarkReturn)}
+                />
+              </div>
+            </div>
+            
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="advanced-metrics">
+                <AccordionTrigger>Advanced Metrics Settings</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="portfolio-stddev">Portfolio Std. Deviation (%)</Label>
+                        <Input
+                          id="portfolio-stddev"
+                          numeric
+                          value={portfolioStdDev.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setPortfolioStdDev)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="risk-free-rate">Risk-Free Rate (%)</Label>
+                        <Input
+                          id="risk-free-rate"
+                          numeric
+                          value={riskFreeRate.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setRiskFreeRate)}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="max-portfolio-value">Max Portfolio Value ($)</Label>
+                        <Input
+                          id="max-portfolio-value"
+                          numeric
+                          value={maxPortfolioValue.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setMaxPortfolioValue)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="min-portfolio-value">Min Portfolio Value ($)</Label>
+                        <Input
+                          id="min-portfolio-value"
+                          numeric
+                          value={minPortfolioValue.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setMinPortfolioValue)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        )}
+        
+        {calculatorType === "trade-planning" && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="win-probability">Win Probability (%)</Label>
+                <Input
+                  id="win-probability"
+                  numeric
+                  value={winProbability.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setWinProbability)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="potential-profit">Potential Profit ($)</Label>
+                <Input
+                  id="potential-profit"
+                  numeric
+                  value={potentialProfit.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setPotentialProfit)}
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="potential-loss">Potential Loss ($)</Label>
+              <Input
+                id="potential-loss"
+                numeric
+                value={potentialLoss.toString()}
+                onChange={(e) => handleNumericInputChange(e.target.value, setPotentialLoss)}
+              />
+            </div>
+            
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="win-rate-edge">
+                <AccordionTrigger>Win Rate & Edge Settings</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="total-trades">Total Trades</Label>
+                        <Input
+                          id="total-trades"
+                          numeric
+                          value={totalTrades.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setTotalTrades)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="winning-trades">Winning Trades</Label>
+                        <Input
+                          id="winning-trades"
+                          numeric
+                          value={winningTrades.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setWinningTrades)}
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="average-win">Average Win ($)</Label>
+                        <Input
+                          id="average-win"
+                          numeric
+                          value={averageWin.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setAverageWin)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="average-loss">Average Loss ($)</Label>
+                        <Input
+                          id="average-loss"
+                          numeric
+                          value={averageLoss.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setAverageLoss)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="r-multiple">
+                <AccordionTrigger>R-Multiple Settings</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="risk-amount">Risk Amount ($)</Label>
+                        <Input
+                          id="risk-amount"
+                          numeric
+                          value={riskAmount.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setRiskAmount)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="reward-amount">Reward Amount ($)</Label>
+                        <Input
+                          id="reward-amount"
+                          numeric
+                          value={rewardAmount.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setRewardAmount)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        )}
+        
+        {calculatorType === "sentiment-psychology" && (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Burnout Index Factors</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="trading-hours">Trading Hours per Day</Label>
+                  <Input
+                    id="trading-hours"
+                    numeric
+                    value={tradingHoursPerDay.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setTradingHoursPerDay)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="consecutive-losses">Consecutive Losses</Label>
+                  <Input
+                    id="consecutive-losses"
+                    numeric
+                    value={consecutiveLosses.toString()}
+                    onChange={(e) => handleNumericInputChange(e.target.value, setConsecutiveLosses)}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="revenge-trades">Revenge Trades</Label>
+                <Input
+                  id="revenge-trades"
+                  numeric
+                  value={revengeTrades.toString()}
+                  onChange={(e) => handleNumericInputChange(e.target.value, setRevengeTrades)}
+                />
+              </div>
+            </div>
+            
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="emotional-recovery">
+                <AccordionTrigger>Emotional Recovery Calculator</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="biggest-loss">Biggest Loss ($)</Label>
+                        <Input
+                          id="biggest-loss"
+                          numeric
+                          value={biggestLoss.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setBiggestLoss)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="mental-recovery-rate">Mental Recovery Rate ($/day)</Label>
+                        <Input
+                          id="mental-recovery-rate"
+                          numeric
+                          value={mentalRecoveryRate.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setMentalRecoveryRate)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+              
+              <AccordionItem value="overtrading-risk">
+                <AccordionTrigger>Overtrading Risk Checker</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="daily-trade-count">Daily Trade Count</Label>
+                        <Input
+                          id="daily-trade-count"
+                          numeric
+                          value={dailyTradeCount.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setDailyTradeCount)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="capital-deployed">Capital Deployed (%)</Label>
+                        <Input
+                          id="capital-deployed"
+                          numeric
+                          value={capitalDeployedPercent.toString()}
+                          onChange={(e) => handleNumericInputChange(e.target.value, setCapitalDeployedPercent)}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        )}
+        
         <Button onClick={handleCalculate} className="w-full">
           Calculate
         </Button>
@@ -671,6 +1128,152 @@ export const StockMarketCalculator = () => {
                   <div className="flex justify-between">
                     <span>Leverage Ratio:</span>
                     <span>{results.leverageRatio.toFixed(2)}x</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "portfolio-metrics" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <ChartLine className="mr-2" size={20} />
+                  Portfolio Performance Metrics
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>CAGR (Compound Annual Growth Rate):</span>
+                    <span className={results.cagr >= 0 ? "text-green-600" : "text-red-600"}>
+                      {results.cagr.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Sharpe Ratio:</span>
+                    <span className={results.sharpeRatio >= 1 ? "text-green-600" : results.sharpeRatio >= 0 ? "text-amber-600" : "text-red-600"}>
+                      {results.sharpeRatio.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Maximum Drawdown:</span>
+                    <span className="text-amber-600">
+                      {results.maxDrawdown.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Alpha (vs. Benchmark):</span>
+                    <span className={results.alpha >= 0 ? "text-green-600" : "text-red-600"}>
+                      {results.alpha >= 0 ? "+" : ""}{results.alpha.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Beta:</span>
+                    <span className={results.beta < 1 ? "text-amber-600" : results.beta > 1.2 ? "text-red-600" : "text-green-600"}>
+                      {results.beta.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "trade-planning" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <Calculator className="mr-2" size={20} />
+                  Trade Planning Analysis
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between font-bold">
+                    <span>Expected Value (EV):</span>
+                    <span className={results.expectedValue >= 0 ? "text-green-600" : "text-red-600"}>
+                      ${Math.abs(results.expectedValue).toFixed(2)} {results.expectedValue >= 0 ? "Profit" : "Loss"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Win Rate:</span>
+                    <span className={results.winRate > 50 ? "text-green-600" : "text-amber-600"}>
+                      {results.winRate.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Statistical Edge:</span>
+                    <span className={results.edge >= 0 ? "text-green-600" : "text-red-600"}>
+                      ${Math.abs(results.edge).toFixed(2)} per trade {results.edge >= 0 ? "profit" : "loss"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>R-Multiple (Reward:Risk):</span>
+                    <span className={results.rMultiple >= 2 ? "text-green-600" : results.rMultiple >= 1 ? "text-amber-600" : "text-red-600"}>
+                      {results.rMultiple.toFixed(2)}:1
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Option Expiry Probability:</span>
+                    <span>
+                      {results.expiryProbability.toFixed(2)}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {results.type === "sentiment-psychology" && (
+              <div className="space-y-3">
+                <div className="text-xl font-bold flex items-center">
+                  <CircleCheck className="mr-2" size={20} />
+                  Trading Psychology Analysis
+                </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Burnout Index:</span>
+                    <span className={
+                      results.burnoutIndex < 33 ? "text-green-600" : 
+                      results.burnoutIndex < 66 ? "text-amber-600" : 
+                      "text-red-600"
+                    }>
+                      {results.burnoutIndex.toFixed(2)}/100 ({results.burnoutLevel} Risk)
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Emotional Recovery Time:</span>
+                    <span className={
+                      results.recoveryDays < 7 ? "text-green-600" : 
+                      results.recoveryDays < 21 ? "text-amber-600" : 
+                      "text-red-600"
+                    }>
+                      {results.recoveryDays.toFixed(1)} days
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Overtrading Risk:</span>
+                    <span className={
+                      results.overtradingRisk < 33 ? "text-green-600" : 
+                      results.overtradingRisk < 66 ? "text-amber-600" : 
+                      "text-red-600"
+                    }>
+                      {results.overtradingRisk.toFixed(2)}/100 ({results.overtradingLevel} Risk)
+                    </span>
+                  </div>
+                  <div className="mt-3 pt-3 border-t">
+                    <div className="text-base font-semibold mb-2">Recommendations</div>
+                    {results.burnoutIndex >= 66 && (
+                      <div className="text-sm text-red-600 mb-1">
+                        • Consider taking a trading break to prevent burnout
+                      </div>
+                    )}
+                    {results.recoveryDays >= 21 && (
+                      <div className="text-sm text-red-600 mb-1">
+                        • Large loss detected - consider smaller position sizes
+                      </div>
+                    )}
+                    {results.overtradingRisk >= 66 && (
+                      <div className="text-sm text-red-600 mb-1">
+                        • High overtrading risk - reduce trading frequency or size
+                      </div>
+                    )}
+                    {(results.burnoutIndex < 66 && results.recoveryDays < 21 && results.overtradingRisk < 66) && (
+                      <div className="text-sm text-green-600">
+                        • Your current trading psychology metrics are healthy
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
