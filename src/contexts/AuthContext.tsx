@@ -16,8 +16,8 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 // Admin credentials - in a real app, these would be stored securely
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_USERNAME = "dns";
+const ADMIN_PASSWORD = "$Tat1@pet";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
