@@ -4,8 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import LoginPage from "./pages/LoginPage";
+import AdminPage from "./pages/AdminPage";
 import BasicCalculatorPage from "./pages/BasicCalculatorPage";
 import BMICalculatorPage from "./pages/BMICalculatorPage";
 import AgeCalculatorPage from "./pages/AgeCalculatorPage";
@@ -38,7 +42,6 @@ import AICostEstimatorPage from "./pages/AICostEstimatorPage";
 import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
 import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
 import StockMarketCalculatorPage from "./pages/StockMarketCalculatorPage";
-import AdminPage from "./pages/AdminPage";
 
 const queryClient = new QueryClient();
 
@@ -48,43 +51,50 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/calculators" element={<AllCalculatorsPage />} />
-          <Route path="/info" element={<InfoFaqPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/calculator/basic" element={<BasicCalculatorPage />} />
-          <Route path="/calculator/bmi" element={<BMICalculatorPage />} />
-          <Route path="/calculator/age" element={<AgeCalculatorPage />} />
-          <Route path="/calculator/loan" element={<LoanCalculatorPage />} />
-          <Route path="/calculator/unit-converter" element={<UnitConverterPage />} />
-          <Route path="/calculator/percentage" element={<PercentageCalculatorPage />} />
-          <Route path="/calculator/timezone" element={<TimezoneConverterPage />} />
-          <Route path="/calculator/date" element={<DateCalculatorPage />} />
-          <Route path="/calculator/random" element={<RandomGeneratorPage />} />
-          <Route path="/calculator/tip" element={<TipCalculatorPage />} />
-          <Route path="/calculator/discount" element={<DiscountCalculatorPage />} />
-          <Route path="/calculator/currency" element={<CurrencyConverterPage />} />
-          <Route path="/calculator/fuel-economy" element={<FuelEconomyCalculatorPage />} />
-          <Route path="/calculator/time" element={<TimeCalculatorPage />} />
-          <Route path="/calculator/scientific" element={<ScientificCalculatorPage />} />
-          <Route path="/calculator/pregnancy-due" element={<PregnancyDueCalculatorPage />} />
-          <Route path="/calculator/calorie" element={<CalorieCalculatorPage />} />
-          <Route path="/calculator/weight-converter" element={<WeightConverterPage />} />
-          <Route path="/calculator/retirement" element={<RetirementCalculatorPage />} />
-          <Route path="/calculator/gpa" element={<GPACalculatorPage />} />
-          <Route path="/calculator/mortgage" element={<MortgageCalculatorPage />} />
-          <Route path="/calculator/savings" element={<SavingsCalculatorPage />} />
-          <Route path="/calculator/compound-interest" element={<CompoundInterestCalculatorPage />} />
-          <Route path="/calculator/mental-burnout" element={<MentalBurnoutCalculatorPage />} />
-          <Route path="/calculator/content-creator-roi" element={<ContentCreatorROICalculatorPage />} />
-          <Route path="/calculator/ev-charge" element={<EVChargeCalculatorPage />} />
-          <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
-          <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
-          <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
-          <Route path="/calculator/stock-market" element={<StockMarketCalculatorPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/calculators" element={<AllCalculatorsPage />} />
+            <Route path="/info" element={<InfoFaqPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/calculator/basic" element={<BasicCalculatorPage />} />
+            <Route path="/calculator/bmi" element={<BMICalculatorPage />} />
+            <Route path="/calculator/age" element={<AgeCalculatorPage />} />
+            <Route path="/calculator/loan" element={<LoanCalculatorPage />} />
+            <Route path="/calculator/unit-converter" element={<UnitConverterPage />} />
+            <Route path="/calculator/percentage" element={<PercentageCalculatorPage />} />
+            <Route path="/calculator/timezone" element={<TimezoneConverterPage />} />
+            <Route path="/calculator/date" element={<DateCalculatorPage />} />
+            <Route path="/calculator/random" element={<RandomGeneratorPage />} />
+            <Route path="/calculator/tip" element={<TipCalculatorPage />} />
+            <Route path="/calculator/discount" element={<DiscountCalculatorPage />} />
+            <Route path="/calculator/currency" element={<CurrencyConverterPage />} />
+            <Route path="/calculator/fuel-economy" element={<FuelEconomyCalculatorPage />} />
+            <Route path="/calculator/time" element={<TimeCalculatorPage />} />
+            <Route path="/calculator/scientific" element={<ScientificCalculatorPage />} />
+            <Route path="/calculator/pregnancy-due" element={<PregnancyDueCalculatorPage />} />
+            <Route path="/calculator/calorie" element={<CalorieCalculatorPage />} />
+            <Route path="/calculator/weight-converter" element={<WeightConverterPage />} />
+            <Route path="/calculator/retirement" element={<RetirementCalculatorPage />} />
+            <Route path="/calculator/gpa" element={<GPACalculatorPage />} />
+            <Route path="/calculator/mortgage" element={<MortgageCalculatorPage />} />
+            <Route path="/calculator/savings" element={<SavingsCalculatorPage />} />
+            <Route path="/calculator/compound-interest" element={<CompoundInterestCalculatorPage />} />
+            <Route path="/calculator/mental-burnout" element={<MentalBurnoutCalculatorPage />} />
+            <Route path="/calculator/content-creator-roi" element={<ContentCreatorROICalculatorPage />} />
+            <Route path="/calculator/ev-charge" element={<EVChargeCalculatorPage />} />
+            <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
+            <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
+            <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
+            <Route path="/calculator/stock-market" element={<StockMarketCalculatorPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
