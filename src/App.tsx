@@ -1,23 +1,23 @@
 
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ThemeProvider } from "@/components/theme-provider"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "./components/theme-provider"
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { Toaster } from "sonner";
 
 // Lazy load components
-const HomePage = lazy(() => import("@/pages/HomePage"));
-const StockMarketCalculatorPage = lazy(() => import("@/pages/StockMarketCalculatorPage"));
-const MortgageCalculatorPage = lazy(() => import("@/pages/MortgageCalculatorPage"));
-const LoanCalculatorPage = lazy(() => import("@/pages/LoanCalculatorPage"));
-const CompoundInterestCalculatorPage = lazy(() => import("@/pages/CompoundInterestCalculatorPage"));
-const RetirementCalculatorPage = lazy(() => import("@/pages/RetirementCalculatorPage"));
-const EmbedCodePage = lazy(() => import("@/pages/EmbedCodePage"));
-const AdminPage = lazy(() => import("@/pages/AdminPage"));
-const LoginPage = lazy(() => import("@/pages/LoginPage"));
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const StockMarketCalculatorPage = lazy(() => import("./pages/StockMarketCalculatorPage"));
+const MortgageCalculatorPage = lazy(() => import("./pages/MortgageCalculatorPage"));
+const LoanCalculatorPage = lazy(() => import("./pages/LoanCalculatorPage"));
+const CompoundInterestCalculatorPage = lazy(() => import("./pages/CompoundInterestCalculatorPage"));
+const RetirementCalculatorPage = lazy(() => import("./pages/RetirementCalculatorPage"));
+const EmbedCodePage = lazy(() => import("./pages/EmbedCodePage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const queryClient = new QueryClient();
 
