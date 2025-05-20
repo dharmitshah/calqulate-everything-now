@@ -38,6 +38,7 @@ import AICostEstimatorPage from "./pages/AICostEstimatorPage";
 import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
 import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
 import StockMarketCalculatorPage from "./pages/StockMarketCalculatorPage";
+import AdminPage from "./pages/AdminPage";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/calculators" element={<AllCalculatorsPage />} />
           <Route path="/info" element={<InfoFaqPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="/calculator/basic" element={<BasicCalculatorPage />} />
           <Route path="/calculator/bmi" element={<BMICalculatorPage />} />
           <Route path="/calculator/age" element={<AgeCalculatorPage />} />
