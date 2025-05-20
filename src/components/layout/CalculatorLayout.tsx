@@ -9,6 +9,8 @@ import { useSearchParams } from "react-router-dom";
 interface CalculatorLayoutProps {
   title: string;
   description?: string;
+  keywords?: string; // Added optional keywords property
+  faqItems?: { question: string; answer: string }[]; // Added optional faqItems property
   children: React.ReactNode;
 }
 
@@ -16,6 +18,8 @@ export const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
   title,
   description,
   children,
+  // We don't need to use keywords and faqItems in the component logic,
+  // but they need to be in the props interface to prevent TypeScript errors
 }) => {
   const [searchParams] = useSearchParams();
   const isEmbedded = searchParams.get("embed") === "true";
