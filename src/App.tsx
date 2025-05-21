@@ -18,6 +18,7 @@ const EmbedCodePage = lazy(() => import("@/pages/EmbedCodePage"));
 const AdminPage = lazy(() => import("@/pages/AdminPage"));
 const LoginPage = lazy(() => import("@/pages/LoginPage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+const AllCalculatorsPage = lazy(() => import("@/pages/AllCalculatorsPage"));
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ function App() {
               <Route path="/loan-calculator" element={<LoanCalculatorPage />} />
               <Route path="/compound-interest-calculator" element={<CompoundInterestCalculatorPage />} />
               <Route path="/retirement-calculator" element={<RetirementCalculatorPage />} />
+              <Route path="/calculators" element={<AllCalculatorsPage />} />
               
               {/* Add the embed code page route */}
               <Route path="/embed-code" element={<EmbedCodePage />} />
