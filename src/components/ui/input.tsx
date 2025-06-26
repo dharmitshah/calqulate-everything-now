@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputProps = numeric
       ? {
           type: "text",
-          inputMode: "decimal" as React.HTMLAttributes<HTMLInputElement>["inputMode"],
+          inputMode: "decimal",
           pattern: "[0-9]*\\.?[0-9]*",
         }
       : { type };

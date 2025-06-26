@@ -1,5 +1,5 @@
+
 import { Link } from "react-router-dom";
-import { NewsletterForm } from "@/components/NewsletterForm";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -76,11 +76,24 @@ export const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-sm font-medium mb-3">Newsletter</h3>
-            <NewsletterForm />
-            <div className="mt-4">
-              <Link to="/admin" className="text-sm text-muted-foreground hover:underline">Admin Access</Link>
-            </div>
+            <h3 className="text-sm font-medium mb-3">Info</h3>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>
+                <Link to="/info" className="hover:underline hover:text-primary transition-colors">About</Link>
+              </li>
+              <li>
+                <Link to="/info#faq" className="hover:underline hover:text-primary transition-colors">FAQ</Link>
+              </li>
+              <li>
+                <Link to="/info#privacy" className="hover:underline hover:text-primary transition-colors">Privacy</Link>
+              </li>
+              <li>
+                <Link to="/info#contact" className="hover:underline hover:text-primary transition-colors">Contact</Link>
+              </li>
+              <li>
+                <Link to="/sitemap" className="hover:underline hover:text-primary transition-colors">Sitemap</Link>
+              </li>
+            </ul>
           </div>
         </div>
         
