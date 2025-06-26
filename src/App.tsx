@@ -1,76 +1,91 @@
 
-import React, { useState, useEffect, lazy, Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "./components/theme-provider"
-import { AuthProvider } from "@/contexts/AuthContext";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { Toaster } from "sonner";
-
-// Lazy load components
-const HomePage = lazy(() => import("@/pages/HomePage"));
-const StockMarketCalculatorPage = lazy(() => import("@/pages/StockMarketCalculatorPage"));
-const MortgageCalculatorPage = lazy(() => import("@/pages/MortgageCalculatorPage"));
-const LoanCalculatorPage = lazy(() => import("@/pages/LoanCalculatorPage"));
-const CompoundInterestCalculatorPage = lazy(() => import("@/pages/CompoundInterestCalculatorPage"));
-const RetirementCalculatorPage = lazy(() => import("@/pages/RetirementCalculatorPage"));
-const EmbedCodePage = lazy(() => import("@/pages/EmbedCodePage"));
-const AdminPage = lazy(() => import("@/pages/AdminPage"));
-const LoginPage = lazy(() => import("@/pages/LoginPage"));
-const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
-const AllCalculatorsPage = lazy(() => import("@/pages/AllCalculatorsPage"));
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import BasicCalculatorPage from "./pages/BasicCalculatorPage";
+import BMICalculatorPage from "./pages/BMICalculatorPage";
+import AgeCalculatorPage from "./pages/AgeCalculatorPage";
+import LoanCalculatorPage from "./pages/LoanCalculatorPage";
+import AllCalculatorsPage from "./pages/AllCalculatorsPage";
+import InfoFaqPage from "./pages/InfoFaqPage";
+import UnitConverterPage from "./pages/UnitConverterPage";
+import PercentageCalculatorPage from "./pages/PercentageCalculatorPage";
+import TimezoneConverterPage from "./pages/TimezoneConverterPage";
+import DateCalculatorPage from "./pages/DateCalculatorPage";
+import RandomGeneratorPage from "./pages/RandomGeneratorPage";
+import TipCalculatorPage from "./pages/TipCalculatorPage";
+import DiscountCalculatorPage from "./pages/DiscountCalculatorPage";
+import CurrencyConverterPage from "./pages/CurrencyConverterPage";
+import FuelEconomyCalculatorPage from "./pages/FuelEconomyCalculatorPage";
+import TimeCalculatorPage from "./pages/TimeCalculatorPage";
+import ScientificCalculatorPage from "./pages/ScientificCalculatorPage";
+import PregnancyDueCalculatorPage from "./pages/PregnancyDueCalculatorPage";
+import CalorieCalculatorPage from "./pages/CalorieCalculatorPage";
+import WeightConverterPage from "./pages/WeightConverterPage";
+import RetirementCalculatorPage from "./pages/RetirementCalculatorPage";
+import GPACalculatorPage from "./pages/GPACalculatorPage";
+import MortgageCalculatorPage from "./pages/MortgageCalculatorPage";
+import SavingsCalculatorPage from "./pages/SavingsCalculatorPage";
+import CompoundInterestCalculatorPage from "./pages/CompoundInterestCalculatorPage";
+import MentalBurnoutCalculatorPage from "./pages/MentalBurnoutCalculatorPage";
+import ContentCreatorROICalculatorPage from "./pages/ContentCreatorROICalculatorPage";
+import EVChargeCalculatorPage from "./pages/EVChargeCalculatorPage";
+import AICostEstimatorPage from "./pages/AICostEstimatorPage";
+import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
+import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
+import StockMarketCalculatorPage from "./pages/StockMarketCalculatorPage";
 
 const queryClient = new QueryClient();
 
-function App() {
-  const location = useLocation();
-  const [displayLocation, setDisplayLocation] = useState(location);
-  const [transitionStage, setTransitionStage] = useState("fadeIn");
-
-  useEffect(() => {
-    if (location.pathname !== displayLocation.pathname) setTransitionStage("fadeOut");
-  }, [location]);
-
-  return (
-    <>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <Toaster />
-      </ThemeProvider>
-      <AuthProvider>
-        <QueryClientProvider client={queryClient}>
-          <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/stock-market-calculator" element={<StockMarketCalculatorPage />} />
-              <Route path="/mortgage-calculator" element={<MortgageCalculatorPage />} />
-              <Route path="/loan-calculator" element={<LoanCalculatorPage />} />
-              <Route path="/compound-interest-calculator" element={<CompoundInterestCalculatorPage />} />
-              <Route path="/retirement-calculator" element={<RetirementCalculatorPage />} />
-              <Route path="/calculators" element={<AllCalculatorsPage />} />
-              
-              {/* Add the embed code page route */}
-              <Route path="/embed-code" element={<EmbedCodePage />} />
-              
-              {/* Admin route with protection */}
-              <Route path="/admin" element={
-                <ProtectedRoute>
-                  <AdminPage />
-                </ProtectedRoute>
-              } />
-              <Route path="/login" element={<LoginPage />} />
-              
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </Suspense>
-        </QueryClientProvider>
-      </AuthProvider>
-    </>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/calculators" element={<AllCalculatorsPage />} />
+          <Route path="/info" element={<InfoFaqPage />} />
+          <Route path="/calculator/basic" element={<BasicCalculatorPage />} />
+          <Route path="/calculator/bmi" element={<BMICalculatorPage />} />
+          <Route path="/calculator/age" element={<AgeCalculatorPage />} />
+          <Route path="/calculator/loan" element={<LoanCalculatorPage />} />
+          <Route path="/calculator/unit-converter" element={<UnitConverterPage />} />
+          <Route path="/calculator/percentage" element={<PercentageCalculatorPage />} />
+          <Route path="/calculator/timezone" element={<TimezoneConverterPage />} />
+          <Route path="/calculator/date" element={<DateCalculatorPage />} />
+          <Route path="/calculator/random" element={<RandomGeneratorPage />} />
+          <Route path="/calculator/tip" element={<TipCalculatorPage />} />
+          <Route path="/calculator/discount" element={<DiscountCalculatorPage />} />
+          <Route path="/calculator/currency" element={<CurrencyConverterPage />} />
+          <Route path="/calculator/fuel-economy" element={<FuelEconomyCalculatorPage />} />
+          <Route path="/calculator/time" element={<TimeCalculatorPage />} />
+          <Route path="/calculator/scientific" element={<ScientificCalculatorPage />} />
+          <Route path="/calculator/pregnancy-due" element={<PregnancyDueCalculatorPage />} />
+          <Route path="/calculator/calorie" element={<CalorieCalculatorPage />} />
+          <Route path="/calculator/weight-converter" element={<WeightConverterPage />} />
+          <Route path="/calculator/retirement" element={<RetirementCalculatorPage />} />
+          <Route path="/calculator/gpa" element={<GPACalculatorPage />} />
+          <Route path="/calculator/mortgage" element={<MortgageCalculatorPage />} />
+          <Route path="/calculator/savings" element={<SavingsCalculatorPage />} />
+          <Route path="/calculator/compound-interest" element={<CompoundInterestCalculatorPage />} />
+          <Route path="/calculator/mental-burnout" element={<MentalBurnoutCalculatorPage />} />
+          <Route path="/calculator/content-creator-roi" element={<ContentCreatorROICalculatorPage />} />
+          <Route path="/calculator/ev-charge" element={<EVChargeCalculatorPage />} />
+          <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
+          <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
+          <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
+          <Route path="/calculator/stock-market" element={<StockMarketCalculatorPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
