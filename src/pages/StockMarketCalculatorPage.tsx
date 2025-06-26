@@ -1,7 +1,7 @@
 
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { StockMarketCalculator } from "@/components/calculators/StockMarketCalculator";
+import { StockMarketCalculatorTabs } from "@/components/calculators/StockMarketCalculatorTabs";
 
 const StockMarketCalculatorPage = () => {
   return (
@@ -19,7 +19,7 @@ const StockMarketCalculatorPage = () => {
           </div>
           
           <div className="flex justify-center">
-            <StockMarketCalculator />
+            <StockMarketCalculatorTabs />
           </div>
         </div>
       </main>

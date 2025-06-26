@@ -1,71 +1,56 @@
 
 import React from "react";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { EmbedWrapper } from "./EmbedWrapper";
+import { EmbedCodeButton } from "./EmbedCodeButton";
+import { useSearchParams } from "react-router-dom";
 
 interface CalculatorLayoutProps {
-  children: React.ReactNode;
   title: string;
-  description: string;
-  keywords?: string;
-  faqItems?: Array<{ question: string; answer: string }>;
+  description?: string;
+  keywords?: string; // Added optional keywords property
+  faqItems?: { question: string; answer: string }[]; // Added optional faqItems property
+  children: React.ReactNode;
 }
 
-export const CalculatorLayout = ({
-  children,
+export const CalculatorLayout: React.FC<CalculatorLayoutProps> = ({
   title,
   description,
-  keywords = "",
-  faqItems = []
-}: CalculatorLayoutProps) => {
-  // Update document title for SEO
-  React.useEffect(() => {
-    document.title = `${title} | Quickulus`;
-    
-    // Update meta description for SEO
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute("content", description);
-    }
-    
-    // Update meta keywords for SEO
-    const metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (metaKeywords && keywords) {
-      metaKeywords.setAttribute("content", `calculator, ${keywords}, online calculator, Quickulus`);
-    }
-  }, [title, description, keywords]);
-
+  children,
+  // We don't need to use keywords and faqItems in the component logic,
+  // but they need to be in the props interface to prevent TypeScript errors
+}) => {
+  const [searchParams] = useSearchParams();
+  const isEmbedded = searchParams.get("embed") === "true";
+  
+  if (isEmbedded) {
+    return (
+      <EmbedWrapper>
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold">{title}</h1>
+          {description && <p className="text-gray-500">{description}</p>}
+        </div>
+        <div className="calculator-content">{children}</div>
+      </EmbedWrapper>
+    );
+  }
+  
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      
-      <main className="flex-grow container px-4 py-8 md:py-12">
+      <main className="flex-grow container px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">{title}</h1>
-            <p className="text-muted-foreground">{description}</p>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="text-3xl font-bold">{title}</h1>
+              {description && <p className="text-gray-500">{description}</p>}
+            </div>
+            <EmbedCodeButton />
           </div>
-          
-          <div className="mb-12">
-            {children}
-          </div>
-          
-          {faqItems.length > 0 && (
-            <section className="mt-16">
-              <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
-              <div className="space-y-4">
-                {faqItems.map((item, index) => (
-                  <div key={index} className="p-5 border rounded-lg">
-                    <h3 className="text-lg font-medium mb-2">{item.question}</h3>
-                    <p className="text-muted-foreground">{item.answer}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
+          <div className="calculator-content">{children}</div>
         </div>
       </main>
-      
       <Footer />
     </div>
   );
