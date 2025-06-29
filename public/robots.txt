@@ -2,6 +2,8 @@
 User-agent: *
 Allow: /
 
-google-site-verification=Diy_aw5CX3eK5i1wxmYXdFZmLdpkF-ZyrjwWEAyZuOI
-
+# Sitemap
 Sitemap: https://quickulus.com/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
