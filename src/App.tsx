@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -37,6 +36,9 @@ import EVChargeCalculatorPage from "./pages/EVChargeCalculatorPage";
 import AICostEstimatorPage from "./pages/AICostEstimatorPage";
 import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
 import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
+import AboutPage from "./pages/AboutPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import TermsOfServicePage from "./pages/TermsOfServicePage";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +52,9 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/calculators" element={<AllCalculatorsPage />} />
           <Route path="/info" element={<InfoFaqPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms" element={<TermsOfServicePage />} />
           <Route path="/calculator/basic" element={<BasicCalculatorPage />} />
           <Route path="/calculator/bmi" element={<BMICalculatorPage />} />
           <Route path="/calculator/age" element={<AgeCalculatorPage />} />

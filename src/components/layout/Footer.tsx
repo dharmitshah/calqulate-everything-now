@@ -58,40 +58,40 @@ export const Footer = () => {
             <h3 className="text-sm font-medium mb-3">Categories</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link to="/category/finance" className="hover:underline hover:text-primary transition-colors">Finance</Link>
+                <Link to="/calculators" className="hover:underline hover:text-primary transition-colors">All Calculators</Link>
               </li>
               <li>
-                <Link to="/category/health" className="hover:underline hover:text-primary transition-colors">Health</Link>
+                <Link to="/calculator/mortgage" className="hover:underline hover:text-primary transition-colors">Finance</Link>
               </li>
               <li>
-                <Link to="/category/math" className="hover:underline hover:text-primary transition-colors">Math</Link>
+                <Link to="/calculator/bmi" className="hover:underline hover:text-primary transition-colors">Health</Link>
               </li>
               <li>
-                <Link to="/category/date-time" className="hover:underline hover:text-primary transition-colors">Date & Time</Link>
+                <Link to="/calculator/scientific" className="hover:underline hover:text-primary transition-colors">Math</Link>
               </li>
               <li>
-                <Link to="/category/conversion" className="hover:underline hover:text-primary transition-colors">Conversion</Link>
+                <Link to="/calculator/unit-converter" className="hover:underline hover:text-primary transition-colors">Conversion</Link>
               </li>
             </ul>
           </div>
           
           <div>
-            <h3 className="text-sm font-medium mb-3">Info</h3>
+            <h3 className="text-sm font-medium mb-3">Company</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link to="/info" className="hover:underline hover:text-primary transition-colors">About</Link>
+                <Link to="/about" className="hover:underline hover:text-primary transition-colors">About</Link>
               </li>
               <li>
-                <Link to="/info#faq" className="hover:underline hover:text-primary transition-colors">FAQ</Link>
+                <Link to="/info" className="hover:underline hover:text-primary transition-colors">FAQ</Link>
               </li>
               <li>
-                <Link to="/info#privacy" className="hover:underline hover:text-primary transition-colors">Privacy</Link>
+                <Link to="/privacy" className="hover:underline hover:text-primary transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <Link to="/info#contact" className="hover:underline hover:text-primary transition-colors">Contact</Link>
+                <Link to="/terms" className="hover:underline hover:text-primary transition-colors">Terms of Service</Link>
               </li>
               <li>
-                <Link to="/sitemap" className="hover:underline hover:text-primary transition-colors">Sitemap</Link>
+                <a href="mailto:support@quickulus.com" className="hover:underline hover:text-primary transition-colors">Contact</a>
               </li>
             </ul>
           </div>
@@ -99,7 +99,10 @@ export const Footer = () => {
         
         <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
           <p>© {currentYear} Quickulus. All calculations are provided for information purposes only.</p>
-          <p className="mt-2">This site uses SSL encryption to protect your data. <Link to="/info#privacy" className="text-primary hover:underline">Learn more</Link></p>
+          <p className="mt-2">
+            This site uses SSL encryption to protect your data. 
+            <Link to="/privacy" className="text-primary hover:underline ml-1">Learn more about our privacy practices</Link>
+          </p>
         </div>
       </div>
     </footer>

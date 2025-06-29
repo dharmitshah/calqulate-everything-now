@@ -9,6 +9,9 @@ interface CalculatorLayoutProps {
   description: string;
   keywords?: string;
   faqItems?: Array<{ question: string; answer: string }>;
+  howToUse?: Array<{ step: number; instruction: string }>;
+  benefits?: string[];
+  relatedCalculators?: Array<{ title: string; path: string; description: string }>;
 }
 
 export const CalculatorLayout = ({
@@ -16,7 +19,10 @@ export const CalculatorLayout = ({
   title,
   description,
   keywords = "",
-  faqItems = []
+  faqItems = [],
+  howToUse = [],
+  benefits = [],
+  relatedCalculators = []
 }: CalculatorLayoutProps) => {
   // Update document title for SEO
   React.useEffect(() => {
@@ -43,13 +49,65 @@ export const CalculatorLayout = ({
         <div className="max-w-4xl mx-auto">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">{title}</h1>
-            <p className="text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground text-lg">{description}</p>
           </div>
           
           <div className="mb-12">
             {children}
           </div>
+
+          {/* How to Use Section */}
+          {howToUse.length > 0 && (
+            <section className="mt-16 mb-12">
+              <h2 className="text-2xl font-bold mb-6">How to Use This Calculator</h2>
+              <div className="grid gap-4">
+                {howToUse.map((step, index) => (
+                  <div key={index} className="flex gap-4 p-4 border rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">
+                      {step.step}
+                    </div>
+                    <p className="text-muted-foreground">{step.instruction}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Benefits Section */}
+          {benefits.length > 0 && (
+            <section className="mt-16 mb-12">
+              <h2 className="text-2xl font-bold mb-6">Benefits of Using This Calculator</h2>
+              <div className="grid md:grid-cols-2 gap-4">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <p className="text-muted-foreground">{benefit}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Related Calculators */}
+          {relatedCalculators.length > 0 && (
+            <section className="mt-16 mb-12">
+              <h2 className="text-2xl font-bold mb-6">Related Calculators</h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {relatedCalculators.map((calc, index) => (
+                  <a 
+                    key={index} 
+                    href={calc.path}
+                    className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <h3 className="font-semibold mb-2">{calc.title}</h3>
+                    <p className="text-sm text-muted-foreground">{calc.description}</p>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
           
+          {/* FAQ Section */}
           {faqItems.length > 0 && (
             <section className="mt-16">
               <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
@@ -57,7 +115,7 @@ export const CalculatorLayout = ({
                 {faqItems.map((item, index) => (
                   <div key={index} className="p-5 border rounded-lg">
                     <h3 className="text-lg font-medium mb-2">{item.question}</h3>
-                    <p className="text-muted-foreground">{item.answer}</p>
+                    <p className="text-muted-foreground leading-relaxed">{item.answer}</p>
                   </div>
                 ))}
               </div>
