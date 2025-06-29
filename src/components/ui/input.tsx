@@ -14,8 +14,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     // Set the appropriate inputMode and type based on the numeric prop
     const inputProps = numeric
       ? {
-          type: "text",
-          inputMode: "decimal",
+          type: "text" as const,
+          inputMode: "decimal" as const,
           pattern: "[0-9]*\\.?[0-9]*",
         }
       : { type };
