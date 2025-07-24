@@ -2,6 +2,11 @@
 User-agent: *
 Allow: /
 
+# Block non-existent paths
+Disallow: /index.html
+Disallow: /sitemap
+Disallow: /category/
+
 # Sitemap
 Sitemap: https://quickulus.com/sitemap.xml
 

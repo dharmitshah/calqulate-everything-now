@@ -84,6 +84,12 @@ const App = () => (
           <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
           <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
           <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
+          
+          {/* Redirects for old URLs */}
+          <Route path="/index.html" element={<Index />} />
+          <Route path="/sitemap" element={<NotFound />} />
+          <Route path="/category/*" element={<NotFound />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
