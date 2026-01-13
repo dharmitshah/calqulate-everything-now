@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, X, Brain, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -22,7 +22,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center space-x-2" aria-label="Quickulus Home">
-            <span className="text-2xl font-heading font-bold gradient-heading">
+            <span className="text-2xl font-heading font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
               Quickulus
             </span>
           </Link>
@@ -33,18 +33,25 @@ export const Header = () => {
             <Link to="/" className={`transition-colors hover:text-primary ${location.pathname === '/' ? 'text-primary font-medium' : ''}`}>
               Home
             </Link>
+            <Link 
+              to="/calculator/ai" 
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-500 text-white hover:from-purple-700 hover:to-pink-600 transition-all ${location.pathname === '/calculator/ai' ? 'ring-2 ring-purple-300' : ''}`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              AI Math Solver
+            </Link>
             <Link to="/calculators" className={`transition-colors hover:text-primary ${location.pathname === '/calculators' ? 'text-primary font-medium' : ''}`}>
               All Calculators
             </Link>
             <Link to="/info" className={`transition-colors hover:text-primary ${location.pathname === '/info' ? 'text-primary font-medium' : ''}`}>
-              Info & FAQ
+              FAQ
             </Link>
             <div className="relative">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
               <input
                 type="search"
-                placeholder="Search calculators..."
-                className="pl-8 h-9 md:w-[200px] lg:w-[250px] rounded-xl border bg-background/80 backdrop-blur-sm px-3"
+                placeholder="Search..."
+                className="pl-8 h-9 md:w-[150px] lg:w-[200px] rounded-xl border bg-background/80 backdrop-blur-sm px-3"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search calculators"
@@ -82,6 +89,14 @@ export const Header = () => {
               Home
             </Link>
             <Link 
+              to="/calculator/ai" 
+              className="px-3 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-500 text-white text-lg flex items-center gap-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Sparkles className="w-4 h-4" />
+              AI Math Solver
+            </Link>
+            <Link 
               to="/calculators" 
               className={`px-3 py-2 rounded-lg hover:bg-accent/10 text-lg ${location.pathname === '/calculators' ? 'bg-accent/10 text-primary' : ''}`}
               onClick={() => setMobileMenuOpen(false)}
@@ -93,7 +108,7 @@ export const Header = () => {
               className={`px-3 py-2 rounded-lg hover:bg-accent/10 text-lg ${location.pathname === '/info' ? 'bg-accent/10 text-primary' : ''}`}
               onClick={() => setMobileMenuOpen(false)}
             >
-              Info & FAQ
+              FAQ
             </Link>
             <div className="relative mt-2">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" />
