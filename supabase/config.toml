@@ -1,1 +1,43 @@
 project_id = "ctquagiotugkgvbmwdhv"
+
+[functions.api-bmi]
+verify_jwt = false
+
+[functions.api-loan]
+verify_jwt = false
+
+[functions.api-mortgage]
+verify_jwt = false
+
+[functions.api-random]
+verify_jwt = false
+
+[functions.api-percentage]
+verify_jwt = false
+
+[functions.api-tip]
+verify_jwt = false
+
+[functions.api-discount]
+verify_jwt = false
+
+[functions.api-compound-interest]
+verify_jwt = false
+
+[functions.api-calculator]
+verify_jwt = false
+
+[functions.api-age]
+verify_jwt = false
+
+[functions.api-calorie]
+verify_jwt = false
+
+[functions.api-unit-convert]
+verify_jwt = false
+
+[functions.api-password]
+verify_jwt = false
+
+[functions.api-ai-calculator]
+verify_jwt = false
