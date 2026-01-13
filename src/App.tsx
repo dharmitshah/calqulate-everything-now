@@ -36,6 +36,7 @@ import EVChargeCalculatorPage from "./pages/EVChargeCalculatorPage";
 import AICostEstimatorPage from "./pages/AICostEstimatorPage";
 import SustainabilityCalculatorPage from "./pages/SustainabilityCalculatorPage";
 import FreelancerPricingCalculatorPage from "./pages/FreelancerPricingCalculatorPage";
+import CategoryPage from "./pages/CategoryPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
@@ -85,10 +86,12 @@ const App = () => (
           <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
           <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
           
+          {/* Category routes */}
+          <Route path="/category/:category" element={<CategoryPage />} />
+          
           {/* Redirects for old URLs */}
           <Route path="/index.html" element={<Index />} />
           <Route path="/sitemap" element={<NotFound />} />
-          <Route path="/category/*" element={<NotFound />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
