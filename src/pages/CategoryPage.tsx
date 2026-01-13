@@ -3,6 +3,8 @@ import { useParams, Navigate } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CalculatorCard } from "@/components/CalculatorCard";
+import { SEO } from "@/components/SEO";
+import { StructuredData } from "@/components/StructuredData";
 import { 
   CalculatorIcon, 
   Scale, 
@@ -296,8 +298,31 @@ const CategoryPage = () => {
   const filteredCalculators = allCalculators.filter(calc => calc.category === categoryKey);
   const info = categoryInfo[categoryKey];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": info.title,
+    "description": info.description,
+    "url": `https://quickulus.com/category/${categoryKey}`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": filteredCalculators.map((calc, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": calc.title,
+        "url": `https://quickulus.com${calc.path}`
+      }))
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO 
+        title={info.title}
+        description={info.description}
+        keywords={`${categoryKey} calculators, free ${categoryKey} tools, online ${categoryKey} calculator`}
+      />
+      <StructuredData data={structuredData} />
       <Header />
       
       <main className="flex-grow container px-4 py-8 md:py-12">

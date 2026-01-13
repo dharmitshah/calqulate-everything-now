@@ -1,8 +1,9 @@
-
 import React from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CalculatorCard } from "@/components/CalculatorCard";
+import { SEO } from "@/components/SEO";
+import { StructuredData } from "@/components/StructuredData";
 import { 
   CalculatorIcon, 
   Scale, 
@@ -222,8 +223,31 @@ const AllCalculatorsPage = () => {
     }
   ];
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "All Free Online Calculators",
+    "description": "Comprehensive collection of free online calculators for finance, health, math, and technology.",
+    "url": "https://quickulus.com/calculators",
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": calculators.map((calc, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": calc.title,
+        "url": `https://quickulus.com${calc.path}`
+      }))
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO 
+        title="All Free Online Calculators"
+        description="Explore our comprehensive collection of free online calculators for finance, health, math, and technology. BMI, mortgage, loan, currency converter & more."
+        keywords="free calculators, online calculators, BMI calculator, mortgage calculator, loan calculator, currency converter"
+      />
+      <StructuredData data={structuredData} />
       <Header />
       
       <main className="flex-grow container px-4 py-8 md:py-12">
