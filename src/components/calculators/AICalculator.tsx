@@ -19,12 +19,14 @@ const AICalculator = () => {
   const [copied, setCopied] = useState(false);
 
   const exampleQueries = [
+    "Find the derivative of x³ + 2x² - 5x + 3",
+    "Integrate sin(x) * cos(x) dx",
+    "Calculate the limit of (x² - 1)/(x - 1) as x approaches 1",
+    "Solve the differential equation dy/dx = 2xy",
+    "Find the Taylor series of e^x around x=0",
+    "Calculate the eigenvalues of matrix [[2,1],[1,2]]",
     "What is 15% of 250?",
-    "Calculate compound interest on $1000 at 5% for 3 years",
-    "If I drive 150 miles at 60 mph, how long will it take?",
-    "Convert 72°F to Celsius",
-    "What's the area of a circle with radius 5?",
-    "Calculate the tip on $85 at 18%"
+    "Find the area under y = x² from 0 to 3"
   ];
 
   const handleCalculate = async () => {
