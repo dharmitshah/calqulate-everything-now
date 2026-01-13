@@ -33,7 +33,8 @@ import {
   BatteryCharging,
   Cpu,
   Earth,
-  HandHelping
+  HandHelping,
+  KeyRound
 } from "lucide-react";
 
 const AllCalculatorsPage = () => {
@@ -219,6 +220,13 @@ const AllCalculatorsPage = () => {
       description: "Analyze your freelance rates against market benchmarks",
       icon: <HandHelping />,
       path: "/calculator/freelancer-pricing",
+      popular: true
+    },
+    {
+      title: "Password Generator",
+      description: "Generate strong, cryptographically secure passwords",
+      icon: <KeyRound />,
+      path: "/calculator/password",
       popular: true
     }
   ];

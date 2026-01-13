@@ -42,6 +42,7 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
 import DeveloperDocsPage from "./pages/DeveloperDocsPage";
+import PasswordGeneratorPage from "./pages/PasswordGeneratorPage";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,7 @@ const App = () => (
           <Route path="/calculator/ai-cost" element={<AICostEstimatorPage />} />
           <Route path="/calculator/sustainability" element={<SustainabilityCalculatorPage />} />
           <Route path="/calculator/freelancer-pricing" element={<FreelancerPricingCalculatorPage />} />
+          <Route path="/calculator/password" element={<PasswordGeneratorPage />} />
           
           {/* Category routes */}
           <Route path="/category/:category" element={<CategoryPage />} />
