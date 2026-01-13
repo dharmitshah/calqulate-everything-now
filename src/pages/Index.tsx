@@ -353,8 +353,8 @@ const Index = () => {
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10" asChild>
-                  <Link to="/info">
-                    Learn More
+                  <Link to="/info" aria-label="Learn more about Quickulus calculators and FAQ">
+                    View FAQ & Help
                   </Link>
                 </Button>
               </div>
