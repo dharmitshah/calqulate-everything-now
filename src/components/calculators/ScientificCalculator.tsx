@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calculator, Delete, RotateCcw, Plus, Minus, X, Divide, Equal, Percent } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { evaluate } from "mathjs";
 
 export const ScientificCalculator = () => {
   const [display, setDisplay] = useState("0");
@@ -54,8 +55,8 @@ export const ScientificCalculator = () => {
         .replace(/×/g, "*")
         .replace(/÷/g, "/");
       
-      // Use Function constructor to safely evaluate the expression
-      const result = new Function(`return ${sanitizedEquation}`)();
+      // Use mathjs to safely evaluate the expression (prevents code injection)
+      const result = evaluate(sanitizedEquation);
       
       // Format the result
       const formattedResult = Number.isInteger(result) 

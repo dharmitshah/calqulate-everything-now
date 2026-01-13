@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calculator, Delete, RotateCcw, Plus, Minus, X, Divide, Equal } from "lucide-react";
+import { evaluate } from "mathjs";
 
 export const BasicCalculator = () => {
   const [display, setDisplay] = useState("0");
@@ -45,13 +46,13 @@ export const BasicCalculator = () => {
         .replace(/×/g, "*")
         .replace(/÷/g, "/");
       
-      // Use Function constructor to safely evaluate the expression
-      const result = new Function(`return ${sanitizedEquation}`)();
+      // Use mathjs to safely evaluate the expression (prevents code injection)
+      const result = evaluate(sanitizedEquation);
       
       // Format the result
       const formattedResult = Number.isInteger(result) 
         ? result.toString() 
-        : result.toFixed(8).replace(/\.?0+$/, "");
+        : parseFloat(result.toFixed(8)).toString().replace(/\.?0+$/, "");
       
       setDisplay(formattedResult);
       setEquation("");
