@@ -2,6 +2,7 @@
 import React from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { StructuredData } from "@/components/StructuredData";
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
@@ -41,9 +42,57 @@ export const CalculatorLayout = ({
     }
   }, [title, description, keywords]);
 
+  // Generate FAQ structured data for rich snippets
+  const faqStructuredData = faqItems.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqItems.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }))
+  } : null;
+
+  // Generate HowTo structured data for rich snippets
+  const howToStructuredData = howToUse.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `How to Use ${title}`,
+    "description": description,
+    "step": howToUse.map(step => ({
+      "@type": "HowToStep",
+      "position": step.step,
+      "text": step.instruction
+    }))
+  } : null;
+
+  // Generate WebApplication structured data
+  const appStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": title,
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Web Browser",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": description
+  };
+
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
+    <>
+      {/* Structured Data for SEO Rich Snippets */}
+      <StructuredData data={appStructuredData} />
+      {faqStructuredData && <StructuredData data={faqStructuredData} />}
+      {howToStructuredData && <StructuredData data={howToStructuredData} />}
+      
+      <div className="flex flex-col min-h-screen">
+        <Header />
       
       <main className="flex-grow container px-4 py-8 md:py-12">
         <div className="max-w-4xl mx-auto">
@@ -126,5 +175,6 @@ export const CalculatorLayout = ({
       
       <Footer />
     </div>
+    </>
   );
 };

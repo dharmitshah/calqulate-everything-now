@@ -25,6 +25,14 @@ const faqItems = [
   {
     question: "Is it really free?",
     answer: "Yes, the AI Math Solver is completely free to use. No signup required, no hidden fees, no ads. Just type your problem and get your solution."
+  },
+  {
+    question: "How is this different from other math solvers like Photomath or Mathway?",
+    answer: "Unlike other apps that require photos or specific syntax, our AI Math Solver understands natural language. Just type 'integrate x squared' or 'find the derivative of sin(x)cos(x)' and get instant solutions. It's faster, more flexible, and completely free."
+  },
+  {
+    question: "Can it help me prepare for exams like SAT, ACT, or AP Calculus?",
+    answer: "Yes! Our AI solver is perfect for exam prep. It covers all topics on standardized tests including algebra, geometry, trigonometry, and calculus. The step-by-step explanations help you understand concepts, not just get answers."
   }
 ];
 
@@ -42,7 +50,42 @@ const benefits = [
   "Natural language input - no complex syntax needed",
   "Handles algebra, matrices, differential equations, and more",
   "Free AI-powered math solver - no signup required",
-  "Works on any device - desktop, tablet, or mobile"
+  "Works on any device - desktop, tablet, or mobile",
+  "Perfect for SAT, ACT, AP Calculus exam preparation",
+  "24/7 access to AI math tutoring"
+];
+
+const relatedCalculators = [
+  { 
+    title: "Scientific Calculator", 
+    path: "/calculator/scientific", 
+    description: "Advanced calculator with trigonometric functions, logarithms, and scientific notation." 
+  },
+  { 
+    title: "Percentage Calculator", 
+    path: "/calculator/percentage", 
+    description: "Calculate percentages, percentage change, and percentage of a number." 
+  },
+  { 
+    title: "GPA Calculator", 
+    path: "/calculator/gpa", 
+    description: "Calculate your Grade Point Average for college and high school." 
+  },
+  { 
+    title: "Unit Converter", 
+    path: "/calculator/unit-converter", 
+    description: "Convert between different units of measurement." 
+  },
+  { 
+    title: "Basic Calculator", 
+    path: "/calculator/basic", 
+    description: "Simple calculator for basic arithmetic operations." 
+  },
+  { 
+    title: "Compound Interest Calculator", 
+    path: "/calculator/compound-interest", 
+    description: "Calculate compound interest and investment growth." 
+  }
 ];
 
 const AICalculatorPage = () => {
@@ -50,10 +93,11 @@ const AICalculatorPage = () => {
     <CalculatorLayout
       title="AI Math Solver - Free Calculus, Integration & Homework Calculator"
       description="Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems instantly with step-by-step solutions. Best online math solver for students."
-      keywords="AI math solver, AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, derivative calculator, integral calculator, calculus help, math homework help"
+      keywords="AI math solver, AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, derivative calculator, integral calculator, calculus help, math homework help, online calculus solver, SAT math help, AP calculus solver"
       faqItems={faqItems}
       howToUse={howToUse}
       benefits={benefits}
+      relatedCalculators={relatedCalculators}
     >
       <div className="flex justify-center">
         <AICalculator />

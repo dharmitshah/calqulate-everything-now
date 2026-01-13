@@ -82,7 +82,7 @@
       "@type": "Organization",
       "name": "Quickulus",
       "url": "https://quickulus.com",
-      "logo": "https://quickulus.com/logo.png",
+      "logo": "https://quickulus.com/favicon.png",
       "description": "Free AI-powered math solver and online calculators",
       "sameAs": [
         "https://twitter.com/quickulus"
@@ -96,7 +96,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Quickulus - AI Math Solver",
-      "alternateName": ["Quickulus", "AI Math Solver", "AI Calculator"],
+      "alternateName": ["Quickulus", "AI Math Solver", "AI Calculator", "Math Problem Solver", "Calculus Solver", "Homework Math Solver"],
       "url": "https://quickulus.com",
       "description": "Free AI-powered math problem solver for calculus, integration, differentiation, algebra, and homework help with step-by-step solutions",
       "potentialAction": {
@@ -106,7 +106,8 @@
           "urlTemplate": "https://quickulus.com/calculators?q={search_term_string}"
         },
         "query-input": "required name=search_term_string"
-      }
+      },
+      "inLanguage": "en-US"
     }
     </script>
     
@@ -129,7 +130,53 @@
         "ratingCount": "2850",
         "bestRating": "5"
       },
-      "description": "Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems with step-by-step solutions."
+      "description": "Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems with step-by-step solutions.",
+      "featureList": [
+        "AI Math Solver",
+        "Calculus Calculator",
+        "Integration Calculator", 
+        "Differentiation Calculator",
+        "Homework Math Solver",
+        "Step-by-Step Solutions",
+        "Algebra Solver",
+        "Scientific Calculator",
+        "SAT Math Help",
+        "AP Calculus Solver"
+      ]
+    }
+    </script>
+
+    <!-- Structured Data - EducationalOrganization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "Quickulus",
+      "url": "https://quickulus.com",
+      "description": "Free online learning platform with AI-powered math tools for students",
+      "areaServed": "Worldwide",
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Free Math Tools",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "AI Math Solver",
+              "description": "Solve any math problem with AI"
+            }
+          },
+          {
+            "@type": "Offer", 
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Scientific Calculator",
+              "description": "Advanced scientific calculations"
+            }
+          }
+        ]
+      }
     }
     </script>
   </head>

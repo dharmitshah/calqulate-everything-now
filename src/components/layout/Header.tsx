@@ -22,6 +22,13 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center space-x-2" aria-label="Quickulus Home">
+            <img 
+              src="/favicon.png" 
+              alt="Quickulus Logo" 
+              className="w-8 h-8 rounded-lg"
+              width={32}
+              height={32}
+            />
             <span className="text-2xl font-heading font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
               Quickulus
             </span>
