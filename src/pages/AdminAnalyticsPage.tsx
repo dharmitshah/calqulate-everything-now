@@ -62,66 +62,91 @@ const AdminAnalyticsPage = () => {
 
   const fetchData = async () => {
     setLoading(true);
+    setError('');
+    
     try {
-      // Fetch calculator usage
-      const { data: calcData } = await supabase
-        .from('calculator_usage')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-      setCalculatorUsage(calcData || []);
+      // Get current session for auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session?.access_token) {
+        setError('No active session. Please sign in again.');
+        setIsAuthenticated(false);
+        setLoading(false);
+        return;
+      }
 
-      // Fetch search logs
-      const { data: searchData } = await supabase
-        .from('search_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-      setSearchLogs(searchData || []);
+      // Fetch analytics via secure edge function
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/api-admin-analytics`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
 
-      // Fetch page views
-      const { data: viewsData } = await supabase
-        .from('page_views')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-      setPageViews(viewsData || []);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          setError('Session expired. Please sign in again.');
+          setIsAuthenticated(false);
+        } else if (response.status === 403) {
+          setError('Access denied. Admin privileges required.');
+        } else {
+          setError(errorData.error || 'Failed to fetch analytics data');
+        }
+        setLoading(false);
+        return;
+      }
 
-      // Calculate stats
-      const topCalcs = (calcData || []).reduce((acc: Record<string, number>, item) => {
+      const data = await response.json();
+      
+      const calcData = data.calculator_usage || [];
+      const searchData = data.search_logs || [];
+      const viewsData = data.page_views || [];
+      
+      setCalculatorUsage(calcData);
+      setSearchLogs(searchData);
+      setPageViews(viewsData);
+
+      // Calculate stats from fetched data
+      const topCalcs = calcData.reduce((acc: Record<string, number>, item: CalculatorUsage) => {
         acc[item.calculator_name] = (acc[item.calculator_name] || 0) + 1;
         return acc;
       }, {});
 
-      const topSearchTerms = (searchData || []).reduce((acc: Record<string, number>, item) => {
+      const topSearchTerms = searchData.reduce((acc: Record<string, number>, item: SearchLog) => {
         acc[item.search_query] = (acc[item.search_query] || 0) + 1;
         return acc;
       }, {});
 
-      const topPaths = (viewsData || []).reduce((acc: Record<string, number>, item) => {
+      const topPaths = viewsData.reduce((acc: Record<string, number>, item: PageView) => {
         acc[item.page_path] = (acc[item.page_path] || 0) + 1;
         return acc;
       }, {});
 
       setStats({
-        totalCalculatorUsage: calcData?.length || 0,
-        totalSearches: searchData?.length || 0,
-        totalPageViews: viewsData?.length || 0,
+        totalCalculatorUsage: calcData.length,
+        totalSearches: searchData.length,
+        totalPageViews: viewsData.length,
         topCalculators: Object.entries(topCalcs)
-          .map(([name, count]) => ({ name, count }))
+          .map(([name, count]) => ({ name, count: count as number }))
           .sort((a, b) => b.count - a.count)
           .slice(0, 10),
         topSearches: Object.entries(topSearchTerms)
-          .map(([query, count]) => ({ query, count }))
+          .map(([query, count]) => ({ query, count: count as number }))
           .sort((a, b) => b.count - a.count)
           .slice(0, 10),
         topPages: Object.entries(topPaths)
-          .map(([path, count]) => ({ path, count }))
+          .map(([path, count]) => ({ path, count: count as number }))
           .sort((a, b) => b.count - a.count)
           .slice(0, 10),
       });
     } catch (err) {
       console.error('Failed to fetch analytics:', err);
+      setError('Failed to load analytics data. Please try again.');
     }
     setLoading(false);
   };

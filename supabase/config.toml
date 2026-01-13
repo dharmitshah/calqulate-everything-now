@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.api-ai-calculator]
 verify_jwt = false
+
+[functions.api-admin-analytics]
+verify_jwt = false
