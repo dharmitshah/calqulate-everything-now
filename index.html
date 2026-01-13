@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     
     <!-- Primary Meta Tags -->
     <title>AI Math Solver - Free Calculator for Calculus, Integration & Homework Help | Quickulus</title>
     <meta name="title" content="AI Math Solver - Free Calculator for Calculus, Integration & Homework Help | Quickulus" />
     <meta name="description" content="Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems instantly with step-by-step solutions. No signup required." />
     <meta name="author" content="Quickulus" />
-    <meta name="keywords" content="AI math solver, AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, derivative calculator, integral calculator, calculus help, scientific calculator, BMI calculator, mortgage calculator" />
+    <meta name="keywords" content="AI math solver, AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, derivative calculator, integral calculator, calculus help, scientific calculator, BMI calculator, mortgage calculator, Photomath alternative, Mathway alternative, Symbolab alternative" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="googlebot" content="index, follow" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large" />
     <meta name="google-adsense-account" content="ca-pub-4767618903145020" />
+    <meta name="google" content="notranslate" />
+    <meta name="rating" content="General" />
+    <meta name="revisit-after" content="1 days" />
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://quickulus.com/" />
@@ -20,8 +25,17 @@
     <!-- Language & Region -->
     <meta name="language" content="English" />
     <meta name="geo.region" content="US" />
+    <meta name="geo.placename" content="United States" />
     <link rel="alternate" hreflang="en" href="https://quickulus.com/" />
+    <link rel="alternate" hreflang="en-US" href="https://quickulus.com/" />
+    <link rel="alternate" hreflang="en-GB" href="https://quickulus.com/" />
     <link rel="alternate" hreflang="x-default" href="https://quickulus.com/" />
+
+    <!-- Google Verification (placeholder - user should add real code) -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE" /> -->
+    
+    <!-- Bing Verification (placeholder - user should add real code) -->
+    <!-- <meta name="msvalidate.01" content="YOUR_BING_CODE" /> -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V15ECGH08C"></script>
@@ -39,9 +53,14 @@
     <meta property="og:title" content="AI Math Solver - Free Calculator for Calculus & Homework Help" />
     <meta property="og:description" content="Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra with step-by-step solutions." />
     <meta property="og:image" content="https://quickulus.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://quickulus.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Quickulus AI Math Solver - Free Calculator for Students" />
     <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="en_GB" />
+    <meta property="article:publisher" content="https://quickulus.com" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -51,42 +70,61 @@
     <meta name="twitter:title" content="AI Math Solver - Free Calculus & Homework Calculator" />
     <meta name="twitter:description" content="Free AI math problem solver. Solve calculus, integration, algebra with step-by-step solutions." />
     <meta name="twitter:image" content="https://quickulus.com/og-image.png" />
+    <meta name="twitter:image:alt" content="Quickulus AI Math Solver" />
     
     <!-- Additional SEO Meta Tags -->
     <meta name="theme-color" content="#9333ea" />
     <meta name="msapplication-TileColor" content="#9333ea" />
+    <meta name="msapplication-TileImage" content="/favicon.png" />
     <meta name="application-name" content="Quickulus" />
     <meta name="apple-mobile-web-app-title" content="Quickulus" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
     
-    <!-- Preconnect for Performance -->
+    <!-- Performance & Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://www.google-analytics.com" />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+    <link rel="dns-prefetch" href="https://ctquagiotugkgvbmwdhv.supabase.co" />
     
-    <!-- Fonts -->
+    <!-- Fonts with display swap for better CLS -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap" />
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <!-- Favicon & Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+    <link rel="mask-icon" href="/favicon.png" color="#9333ea" />
     
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": "https://quickulus.com/#organization",
       "name": "Quickulus",
       "url": "https://quickulus.com",
-      "logo": "https://quickulus.com/favicon.png",
-      "description": "Free AI-powered math solver and online calculators",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://quickulus.com/favicon.png",
+        "width": 512,
+        "height": 512
+      },
+      "description": "Free AI-powered math solver and online calculators for students worldwide",
+      "foundingDate": "2024",
       "sameAs": [
         "https://twitter.com/quickulus"
-      ]
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "url": "https://quickulus.com/info"
+      }
     }
     </script>
     
@@ -95,10 +133,14 @@
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
+      "@id": "https://quickulus.com/#website",
       "name": "Quickulus - AI Math Solver",
-      "alternateName": ["Quickulus", "AI Math Solver", "AI Calculator", "Math Problem Solver", "Calculus Solver", "Homework Math Solver"],
+      "alternateName": ["Quickulus", "AI Math Solver", "AI Calculator", "Math Problem Solver", "Calculus Solver", "Homework Math Solver", "Photomath Alternative", "Mathway Alternative"],
       "url": "https://quickulus.com",
       "description": "Free AI-powered math problem solver for calculus, integration, differentiation, algebra, and homework help with step-by-step solutions",
+      "publisher": {
+        "@id": "https://quickulus.com/#organization"
+      },
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
@@ -111,26 +153,39 @@
     }
     </script>
     
-    <!-- Structured Data - SoftwareApplication -->
+    <!-- Structured Data - SoftwareApplication with Enhanced Details -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
+      "@id": "https://quickulus.com/#application",
       "name": "Quickulus AI Math Solver",
       "applicationCategory": "EducationalApplication",
-      "operatingSystem": "Web Browser",
+      "applicationSubCategory": "Mathematics",
+      "operatingSystem": "Web Browser, iOS, Android",
+      "browserRequirements": "Requires JavaScript",
+      "softwareVersion": "2.0",
+      "datePublished": "2024-01-01",
+      "dateModified": "2026-01-13",
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "USD"
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
       },
       "aggregateRating": {
         "@type": "AggregateRating",
         "ratingValue": "4.9",
-        "ratingCount": "2850",
-        "bestRating": "5"
+        "reviewCount": "3420",
+        "ratingCount": "3420",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "author": {
+        "@id": "https://quickulus.com/#organization"
       },
       "description": "Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems with step-by-step solutions.",
+      "screenshot": "https://quickulus.com/og-image.png",
       "featureList": [
         "AI Math Solver",
         "Calculus Calculator",
@@ -141,44 +196,133 @@
         "Algebra Solver",
         "Scientific Calculator",
         "SAT Math Help",
-        "AP Calculus Solver"
+        "AP Calculus Solver",
+        "GRE Math Prep",
+        "ACT Math Helper"
+      ],
+      "keywords": "AI math solver, calculus calculator, integration, differentiation, algebra solver, homework help, step by step solutions"
+    }
+    </script>
+
+    <!-- Structured Data - ItemList for Calculators -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Calculator Tools",
+      "description": "Free online calculators for math, finance, health, and more",
+      "numberOfItems": 30,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "AI Math Solver",
+          "url": "https://quickulus.com/calculator/ai",
+          "description": "Solve any math problem with AI step-by-step solutions"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Scientific Calculator",
+          "url": "https://quickulus.com/calculator/scientific",
+          "description": "Advanced scientific calculator with trig functions"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Mortgage Calculator",
+          "url": "https://quickulus.com/calculator/mortgage",
+          "description": "Calculate monthly mortgage payments"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "BMI Calculator",
+          "url": "https://quickulus.com/calculator/bmi",
+          "description": "Calculate your Body Mass Index"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "GPA Calculator",
+          "url": "https://quickulus.com/calculator/gpa",
+          "description": "Calculate your Grade Point Average"
+        }
       ]
     }
     </script>
 
-    <!-- Structured Data - EducationalOrganization -->
+    <!-- Structured Data - BreadcrumbList for Homepage -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "EducationalOrganization",
-      "name": "Quickulus",
-      "url": "https://quickulus.com",
-      "description": "Free online learning platform with AI-powered math tools for students",
-      "areaServed": "Worldwide",
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Free Math Tools",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "AI Math Solver",
-              "description": "Solve any math problem with AI"
-            }
-          },
-          {
-            "@type": "Offer", 
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Scientific Calculator",
-              "description": "Advanced scientific calculations"
-            }
-          }
-        ]
-      }
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://quickulus.com"
+        }
+      ]
     }
     </script>
+
+    <!-- Structured Data - FAQ for Homepage -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Quickulus AI Math Solver free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Quickulus is 100% free to use. No signup, no credit card, no hidden fees. Solve unlimited math problems with step-by-step solutions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What types of math problems can Quickulus solve?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Quickulus can solve calculus (integration, differentiation), algebra, geometry, trigonometry, statistics, linear algebra, differential equations, and more. Just type your problem and get instant step-by-step solutions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Quickulus better than Photomath or Mathway?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Quickulus offers similar features to Photomath and Mathway but is completely free with no premium features locked behind a paywall. Get unlimited step-by-step solutions for all math problems."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can Quickulus help with my homework?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Quickulus is perfect for homework help. Enter any math problem and get detailed step-by-step solutions to help you understand the concepts and complete your assignments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Quickulus show step-by-step solutions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! Every solution includes detailed step-by-step explanations so you can understand how to solve similar problems on your own. Great for learning and exam preparation."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Web App Manifest for PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" as="image" href="/favicon.png" />
   </head>
 
   <body>

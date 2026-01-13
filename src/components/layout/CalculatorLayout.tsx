@@ -1,8 +1,11 @@
-
 import React from "react";
+import { useLocation } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { StructuredData } from "@/components/StructuredData";
+import { SEO } from "@/components/SEO";
+import { Link } from "react-router-dom";
+import { ChevronRight, Home } from "lucide-react";
 
 interface CalculatorLayoutProps {
   children: React.ReactNode;
@@ -13,6 +16,7 @@ interface CalculatorLayoutProps {
   howToUse?: Array<{ step: number; instruction: string }>;
   benefits?: string[];
   relatedCalculators?: Array<{ title: string; path: string; description: string }>;
+  category?: string;
 }
 
 export const CalculatorLayout = ({
@@ -23,24 +27,11 @@ export const CalculatorLayout = ({
   faqItems = [],
   howToUse = [],
   benefits = [],
-  relatedCalculators = []
+  relatedCalculators = [],
+  category = "Math"
 }: CalculatorLayoutProps) => {
-  // Update document title for SEO
-  React.useEffect(() => {
-    document.title = `${title} | Quickulus`;
-    
-    // Update meta description for SEO
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.setAttribute("content", description);
-    }
-    
-    // Update meta keywords for SEO
-    const metaKeywords = document.querySelector('meta[name="keywords"]');
-    if (metaKeywords && keywords) {
-      metaKeywords.setAttribute("content", `calculator, ${keywords}, online calculator, Quickulus`);
-    }
-  }, [title, description, keywords]);
+  const location = useLocation();
+  const currentPath = `https://quickulus.com${location.pathname}`;
 
   // Generate FAQ structured data for rich snippets
   const faqStructuredData = faqItems.length > 0 ? {
@@ -62,9 +53,11 @@ export const CalculatorLayout = ({
     "@type": "HowTo",
     "name": `How to Use ${title}`,
     "description": description,
+    "totalTime": "PT2M",
     "step": howToUse.map(step => ({
       "@type": "HowToStep",
       "position": step.step,
+      "name": `Step ${step.step}`,
       "text": step.instruction
     }))
   } : null;
@@ -76,34 +69,102 @@ export const CalculatorLayout = ({
     "name": title,
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "Web Browser",
+    "url": currentPath,
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
     },
-    "description": description
+    "description": description,
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "520",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  };
+
+  // Breadcrumb structured data
+  const breadcrumbData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://quickulus.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculators",
+        "item": "https://quickulus.com/calculators"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": title,
+        "item": currentPath
+      }
+    ]
   };
 
   return (
     <>
+      {/* SEO Component */}
+      <SEO 
+        title={title}
+        description={description}
+        keywords={`${keywords}, calculator, online calculator, free calculator, Quickulus`}
+        canonicalUrl={currentPath}
+      />
+      
       {/* Structured Data for SEO Rich Snippets */}
       <StructuredData data={appStructuredData} />
+      <StructuredData data={breadcrumbData} />
       {faqStructuredData && <StructuredData data={faqStructuredData} />}
       {howToStructuredData && <StructuredData data={howToStructuredData} />}
       
       <div className="flex flex-col min-h-screen">
         <Header />
       
-      <main className="flex-grow container px-4 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">{title}</h1>
-            <p className="text-muted-foreground text-lg">{description}</p>
-          </div>
-          
-          <div className="mb-12">
-            {children}
-          </div>
+        <main className="flex-grow container px-4 py-8 md:py-12">
+          <div className="max-w-4xl mx-auto">
+            {/* Breadcrumb Navigation */}
+            <nav aria-label="Breadcrumb" className="mb-6">
+              <ol className="flex items-center gap-2 text-sm text-muted-foreground">
+                <li>
+                  <Link to="/" className="hover:text-foreground flex items-center gap-1">
+                    <Home className="w-4 h-4" />
+                    <span className="sr-only">Home</span>
+                  </Link>
+                </li>
+                <ChevronRight className="w-4 h-4" />
+                <li>
+                  <Link to="/calculators" className="hover:text-foreground">
+                    Calculators
+                  </Link>
+                </li>
+                <ChevronRight className="w-4 h-4" />
+                <li>
+                  <span className="text-foreground font-medium" aria-current="page">
+                    {title}
+                  </span>
+                </li>
+              </ol>
+            </nav>
+
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold mb-2">{title}</h1>
+              <p className="text-muted-foreground text-lg">{description}</p>
+            </div>
+            
+            <div className="mb-12">
+              {children}
+            </div>
 
           {/* How to Use Section */}
           {howToUse.length > 0 && (

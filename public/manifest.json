@@ -1,0 +1,38 @@
+{
+  "name": "Quickulus - AI Math Solver & Calculator",
+  "short_name": "Quickulus",
+  "description": "Free AI-powered math problem solver. Solve calculus, integration, differentiation, algebra with step-by-step solutions.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#9333ea",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en-US",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Quickulus AI Math Solver Homepage"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
