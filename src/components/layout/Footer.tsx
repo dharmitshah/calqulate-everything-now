@@ -85,7 +85,7 @@ export const Footer = () => {
                 <Link to="/info" className="hover:underline hover:text-primary transition-colors">FAQ</Link>
               </li>
               <li>
-                <Link to="/developer" className="hover:underline hover:text-primary transition-colors">Developer API</Link>
+                <Link to="/developers" className="hover:underline hover:text-primary transition-colors">Developer API</Link>
               </li>
               <li>
                 <Link to="/privacy" className="hover:underline hover:text-primary transition-colors">Privacy Policy</Link>
