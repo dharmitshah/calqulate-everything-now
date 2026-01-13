@@ -206,7 +206,13 @@ const AllCalculatorsPage = () => {
       title: "AI Cost Estimator",
       description: "Calculate and optimize your AI API expenses",
       icon: <Cpu />,
-      path: "/calculator/ai-cost",
+      path: "/calculator/ai-cost"
+    },
+    {
+      title: "AI Calculator",
+      description: "Natural language math solver with step-by-step solutions",
+      icon: <Brain />,
+      path: "/calculator/ai",
       popular: true
     },
     {
