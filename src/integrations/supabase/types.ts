@@ -14,7 +14,105 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      calculator_usage: {
+        Row: {
+          calculator_name: string
+          created_at: string
+          id: string
+          input_data: Json
+          ip_hash: string | null
+          referrer: string | null
+          result_data: Json | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          calculator_name: string
+          created_at?: string
+          id?: string
+          input_data: Json
+          ip_hash?: string | null
+          referrer?: string | null
+          result_data?: Json | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          calculator_name?: string
+          created_at?: string
+          id?: string
+          input_data?: Json
+          ip_hash?: string | null
+          referrer?: string | null
+          result_data?: Json | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      page_views: {
+        Row: {
+          created_at: string
+          id: string
+          page_path: string
+          page_title: string | null
+          referrer: string | null
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_path: string
+          page_title?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_path?: string
+          page_title?: string | null
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      search_logs: {
+        Row: {
+          created_at: string
+          id: string
+          page_path: string | null
+          referrer: string | null
+          results_count: number | null
+          search_query: string
+          session_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          page_path?: string | null
+          referrer?: string | null
+          results_count?: number | null
+          search_query: string
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          page_path?: string | null
+          referrer?: string | null
+          results_count?: number | null
+          search_query?: string
+          session_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
