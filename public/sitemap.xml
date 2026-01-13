@@ -52,6 +52,14 @@
     <priority>0.8</priority>
   </url>
   
+  <!-- AI Calculator - Featured -->
+  <url>
+    <loc>https://quickulus.com/calculator/ai</loc>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
   <!-- High Priority Calculator Pages -->
   <url>
     <loc>https://quickulus.com/calculator/bmi</loc>
