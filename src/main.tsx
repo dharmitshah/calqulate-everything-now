@@ -1,4 +1,4 @@
-
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -21,4 +21,8 @@ linkFonts.rel = 'stylesheet';
 linkFonts.href = 'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Lexend:wght@300;400;500;600;700&display=swap';
 document.head.appendChild(linkFonts);
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
