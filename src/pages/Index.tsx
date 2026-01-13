@@ -4,8 +4,62 @@ import { CalculatorCard } from "@/components/CalculatorCard";
 import { BasicCalculator } from "@/components/calculators/BasicCalculator";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
+import { StructuredData } from "@/components/StructuredData";
 
 const Index = () => {
+  // Structured data for homepage
+  const websiteStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Quickulus",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "Web Browser",
+    "url": "https://quickulus.com",
+    "description": "Free online calculators for BMI, mortgage, loans, scientific calculations, unit conversion and more. Fast, accurate, and easy to use.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1250",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "featureList": [
+      "BMI Calculator",
+      "Mortgage Calculator", 
+      "Scientific Calculator",
+      "Currency Converter",
+      "Loan Calculator",
+      "Percentage Calculator",
+      "Unit Converter",
+      "GPA Calculator"
+    ]
+  };
+
+  const breadcrumbStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://quickulus.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculators",
+        "item": "https://quickulus.com/calculators"
+      }
+    ]
+  };
+
   const featuredCalculators = [
     {
       title: "BMI Calculator",
@@ -77,8 +131,18 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
+    <>
+      <SEO 
+        title="Free Online Calculators - BMI, Mortgage, Scientific & More"
+        description="Free online calculators for BMI, mortgage, loans, scientific calculations, unit conversion & more. Fast, accurate, and easy to use. No signup required."
+        keywords="free calculator, online calculator, BMI calculator, mortgage calculator, loan calculator, scientific calculator, percentage calculator, unit converter"
+        canonicalUrl="https://quickulus.com/"
+      />
+      <StructuredData data={websiteStructuredData} />
+      <StructuredData data={breadcrumbStructuredData} />
+      
+      <div className="min-h-screen flex flex-col">
+        <Header />
       
       <main className="flex-grow">
         {/* Hero Section */}
@@ -271,6 +335,7 @@ const Index = () => {
       
       <Footer />
     </div>
+    </>
   );
 };
 

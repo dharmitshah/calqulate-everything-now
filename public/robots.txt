@@ -1,14 +1,29 @@
+# Quickulus Robots.txt
+# https://quickulus.com
 
 User-agent: *
 Allow: /
 
-# Block non-existent paths
-Disallow: /index.html
-Disallow: /sitemap
-Disallow: /category/
+# Allow all calculator pages
+Allow: /calculator/
+Allow: /calculators
+Allow: /category/
 
-# Sitemap
+# Block admin and non-content paths
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /src/
+
+# Sitemap location
 Sitemap: https://quickulus.com/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
