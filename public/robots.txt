@@ -1,19 +1,70 @@
 # Quickulus Robots.txt
+# AI Math Solver & Calculator Tools
 # https://quickulus.com
+# Last updated: 2026-01-13
 
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Primary Sitemap
 Sitemap: https://quickulus.com/sitemap.xml
 
-# Block only build artifacts
+# Block build artifacts and private paths
+Disallow: /admin/
 Disallow: /assets/*.js$
 Disallow: /assets/*.css$
+Disallow: /*.map$
 
-# Specific bot instructions
+# Google Bot - Full Access
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
+# Bing Bot
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 2
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /
+
+# Google AdsBot
+User-agent: AdsBot-Google
+Allow: /
+
+# Facebook Bot
+User-agent: facebookexternalhit
+Allow: /
+
+# Twitter Bot
+User-agent: Twitterbot
+Allow: /
+
+# LinkedIn Bot
+User-agent: LinkedInBot
+Allow: /
+
+# Apple Bot
+User-agent: Applebot
+Allow: /
+
+# DuckDuckGo Bot
+User-agent: DuckDuckBot
+Allow: /
+
+# Block AI crawlers from training (optional - helps with content protection)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+# Host
+Host: https://quickulus.com
