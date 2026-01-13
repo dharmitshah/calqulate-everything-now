@@ -53,10 +53,9 @@ const BMICalculatorPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <SEO 
-        title="BMI Calculator - Body Mass Index Calculator" 
-        description="Calculate your BMI (Body Mass Index) with our free, accurate calculator. Supports metric and imperial units. Get instant results and health category classification."
-        keywords="BMI calculator, body mass index, weight calculator, health calculator, BMI chart, obesity calculator"
-        canonicalUrl="https://quickulus.com/calculator/bmi"
+        title="Free BMI Calculator (lbs & kg) - Check Your BMI Now" 
+        description="Calculate your BMI instantly! Works with lbs or kg. Get your body mass index score in seconds + see if you're underweight, healthy, overweight, or obese. 100% free."
+        keywords="BMI calculator, BMI calculator lbs, body mass index calculator, calculate BMI, BMI checker, weight calculator, BMI calculator kg cm, compute BMI"
       />
       <StructuredData data={structuredData} />
       
