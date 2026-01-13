@@ -7,6 +7,16 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+// Hash API key for secure storage - never store plain text API keys
+async function hashApiKey(apiKey: string | null): Promise<string | null> {
+  if (!apiKey) return null;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(apiKey);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // Safe math expression evaluator - no eval() or Function constructor
 function evaluateExpression(expr: string): number {
   // Remove whitespace
@@ -187,7 +197,8 @@ Deno.serve(async (req) => {
       result: Math.round(result * 1000000) / 1000000
     };
 
-    // Log API usage
+    // Log API usage with hashed API key for security
+    const hashedKey = await hashApiKey(req.headers.get('x-api-key'));
     await supabase.from('api_usage').insert({
       api_name: 'calculator',
       endpoint: '/api-calculator',
@@ -195,7 +206,7 @@ Deno.serve(async (req) => {
       response_data: response,
       status_code: 200,
       ip_address: req.headers.get('x-forwarded-for') || 'unknown',
-      api_key: req.headers.get('x-api-key') || null
+      api_key: hashedKey
     });
 
     return new Response(
