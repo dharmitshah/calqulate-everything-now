@@ -195,22 +195,26 @@ IMPORTANT RULES:
 
     const aiResponse = await response.json();
     
-    let result;
+    let parsedResult;
     const toolCall = aiResponse.choices?.[0]?.message?.tool_calls?.[0];
     if (toolCall?.function?.arguments) {
-      result = JSON.parse(toolCall.function.arguments);
+      parsedResult = JSON.parse(toolCall.function.arguments);
     } else {
       // Fallback if tool calling doesn't work
-      result = {
+      parsedResult = {
         answer: aiResponse.choices?.[0]?.message?.content || 'Unable to calculate',
         steps: [],
         explanation: 'Processed by AI'
       };
     }
 
+    // Map 'answer' to 'result' for frontend compatibility
     const finalResult = {
       query,
-      ...result,
+      result: parsedResult.answer,
+      steps: parsedResult.steps || [],
+      explanation: parsedResult.explanation || '',
+      formula: parsedResult.formula || null,
       poweredBy: 'AI'
     };
 

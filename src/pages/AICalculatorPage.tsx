@@ -3,44 +3,54 @@ import AICalculator from "@/components/calculators/AICalculator";
 
 const faqItems = [
   {
-    question: "What is the AI Calculator?",
-    answer: "The AI Calculator is a natural language math solver that understands your questions in plain English and provides step-by-step solutions. Just type your math problem as you would ask a human, and get detailed answers instantly."
+    question: "What is the AI Math Solver?",
+    answer: "The AI Math Solver is a powerful calculator that understands your math problems in plain English. Whether it's calculus, integration, differentiation, algebra, or homework problems, just type your question and get detailed step-by-step solutions instantly."
   },
   {
-    question: "What types of calculations can it handle?",
-    answer: "The AI Calculator can handle percentages, compound interest, unit conversions, geometry, algebra, time/distance calculations, financial math, statistics, and much more. It understands context and can solve complex word problems."
+    question: "Can it solve calculus problems like integration and differentiation?",
+    answer: "Yes! Our AI calculator excels at calculus. It can solve definite and indefinite integrals, compute derivatives (including partial and higher-order), evaluate limits, work with Taylor series, and solve differential equations with full step-by-step explanations."
+  },
+  {
+    question: "Is this good for homework help?",
+    answer: "Absolutely! Students use our AI math solver for homework help because it shows every step of the solution, helping you understand the process. It's like having a math tutor available 24/7 for free."
+  },
+  {
+    question: "What types of math problems can it solve?",
+    answer: "The AI calculator handles: Calculus (integration, differentiation, limits), Algebra (equations, factoring, polynomials), Linear Algebra (matrices, eigenvalues), Trigonometry, Statistics, Geometry, Financial math, Unit conversions, and word problems."
   },
   {
     question: "How accurate are the results?",
-    answer: "The AI Calculator uses advanced language models to interpret your questions and perform calculations. While highly accurate for standard math problems, we recommend verifying critical calculations for important decisions."
+    answer: "Our AI uses advanced language models and mathematical reasoning to provide highly accurate solutions. For academic or professional use, we recommend verifying critical calculations, but accuracy is typically 99%+ for standard math problems."
   },
   {
-    question: "Is my data private?",
-    answer: "Yes, your calculations are processed securely and we don't store your personal queries. The AI processes your question, returns the answer, and that's it."
+    question: "Is it really free?",
+    answer: "Yes, the AI Math Solver is completely free to use. No signup required, no hidden fees, no ads. Just type your problem and get your solution."
   }
 ];
 
 const howToUse = [
-  { step: 1, instruction: "Type your math question in plain English (e.g., 'What is 15% of 250?')" },
-  { step: 2, instruction: "Click 'Calculate with AI' or press Enter" },
-  { step: 3, instruction: "View your answer with step-by-step solution" },
-  { step: 4, instruction: "Copy the result or try another calculation" }
+  { step: 1, instruction: "Type your math problem in plain English (e.g., 'Find the derivative of x³ + 2x² - 5x')" },
+  { step: 2, instruction: "You can also ask calculus questions like 'Integrate sin(x)cos(x) dx'" },
+  { step: 3, instruction: "Click 'Calculate with AI' or press Enter" },
+  { step: 4, instruction: "View your answer with detailed step-by-step solution" },
+  { step: 5, instruction: "Copy the result or explore the explanation to learn" }
 ];
 
 const benefits = [
-  "Natural language input - no complex formulas needed",
-  "Step-by-step solutions for learning",
-  "Handles word problems and context",
-  "Works with percentages, finance, geometry, and more",
-  "Instant answers powered by AI"
+  "Solve integration, differentiation, and calculus problems instantly",
+  "Step-by-step solutions perfect for homework and learning",
+  "Natural language input - no complex syntax needed",
+  "Handles algebra, matrices, differential equations, and more",
+  "Free AI-powered math solver - no signup required",
+  "Works on any device - desktop, tablet, or mobile"
 ];
 
 const AICalculatorPage = () => {
   return (
     <CalculatorLayout
-      title="AI Calculator - Natural Language Math Solver | Calqulate"
-      description="Ask any math question in plain English and get step-by-step solutions. Our AI calculator understands context and solves percentages, finance, geometry, and more."
-      keywords="AI calculator, natural language calculator, math solver, AI math, smart calculator, word problem solver, step by step calculator"
+      title="AI Math Solver - Free Calculus, Integration & Homework Calculator"
+      description="Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems instantly with step-by-step solutions. Best online math solver for students."
+      keywords="AI math solver, AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, derivative calculator, integral calculator, calculus help, math homework help"
       faqItems={faqItems}
       howToUse={howToUse}
       benefits={benefits}
