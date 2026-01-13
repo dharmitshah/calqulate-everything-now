@@ -98,8 +98,9 @@ const App = () => (
           {/* Admin route - hidden from public */}
           <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
           
-          {/* Developer docs */}
+          {/* Developer docs - support both paths */}
           <Route path="/developers" element={<DeveloperDocsPage />} />
+          <Route path="/developer" element={<DeveloperDocsPage />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
