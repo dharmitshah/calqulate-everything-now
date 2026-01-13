@@ -7,6 +7,127 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+// Safe math expression evaluator - no eval() or Function constructor
+function evaluateExpression(expr: string): number {
+  // Remove whitespace
+  expr = expr.replace(/\s/g, '');
+  
+  // Tokenize the expression
+  const tokens: (number | string)[] = [];
+  let i = 0;
+  
+  while (i < expr.length) {
+    const char = expr[i];
+    
+    // Parse numbers (including decimals)
+    if (/\d/.test(char) || (char === '.' && i + 1 < expr.length && /\d/.test(expr[i + 1]))) {
+      let num = '';
+      while (i < expr.length && (/\d/.test(expr[i]) || expr[i] === '.')) {
+        num += expr[i];
+        i++;
+      }
+      tokens.push(parseFloat(num));
+      continue;
+    }
+    
+    // Parse operators and parentheses
+    if ('+-*/()'.includes(char)) {
+      tokens.push(char);
+      i++;
+      continue;
+    }
+    
+    // Handle ** for exponentiation
+    if (char === '*' && expr[i + 1] === '*') {
+      tokens.push('**');
+      i += 2;
+      continue;
+    }
+    
+    throw new Error('Invalid character: ' + char);
+  }
+  
+  // Recursive descent parser
+  let pos = 0;
+  
+  function parseExpression(): number {
+    let left = parseTerm();
+    
+    while (pos < tokens.length && (tokens[pos] === '+' || tokens[pos] === '-')) {
+      const op = tokens[pos];
+      pos++;
+      const right = parseTerm();
+      left = op === '+' ? left + right : left - right;
+    }
+    
+    return left;
+  }
+  
+  function parseTerm(): number {
+    let left = parsePower();
+    
+    while (pos < tokens.length && (tokens[pos] === '*' || tokens[pos] === '/')) {
+      const op = tokens[pos];
+      pos++;
+      const right = parsePower();
+      if (op === '/' && right === 0) throw new Error('Division by zero');
+      left = op === '*' ? left * right : left / right;
+    }
+    
+    return left;
+  }
+  
+  function parsePower(): number {
+    let left = parseFactor();
+    
+    while (pos < tokens.length && tokens[pos] === '**') {
+      pos++;
+      const right = parseFactor();
+      left = Math.pow(left, right);
+    }
+    
+    return left;
+  }
+  
+  function parseFactor(): number {
+    // Handle unary minus
+    if (tokens[pos] === '-') {
+      pos++;
+      return -parseFactor();
+    }
+    
+    // Handle unary plus
+    if (tokens[pos] === '+') {
+      pos++;
+      return parseFactor();
+    }
+    
+    // Handle parentheses
+    if (tokens[pos] === '(') {
+      pos++;
+      const result = parseExpression();
+      if (tokens[pos] !== ')') throw new Error('Missing closing parenthesis');
+      pos++;
+      return result;
+    }
+    
+    // Handle numbers
+    if (typeof tokens[pos] === 'number') {
+      return tokens[pos++] as number;
+    }
+    
+    throw new Error('Unexpected token');
+  }
+  
+  const result = parseExpression();
+  
+  if (pos < tokens.length) {
+    throw new Error('Unexpected token at end');
+  }
+  
+  return result;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -27,19 +148,26 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Safe evaluation - only allow numbers and basic operators
-    const sanitized = expression.replace(/[^0-9+\-*/().%^sqrt\s]/gi, '');
-    
-    // Replace common math functions
-    let evalExpression = sanitized
-      .replace(/sqrt\(([^)]+)\)/gi, 'Math.sqrt($1)')
-      .replace(/\^/g, '**')
-      .replace(/(\d+)%/g, '($1/100)');
+    // Validate input - only allow safe math characters
+    const safePattern = /^[0-9+\-*/().%^\s]+$/;
+    if (!safePattern.test(expression.replace(/sqrt/gi, ''))) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid characters in expression' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
+    // Safe evaluation using manual parsing (no eval or Function constructor)
     let result: number;
     try {
-      // Use Function constructor for safer eval
-      result = new Function(`return ${evalExpression}`)();
+      // Replace common math functions and operators
+      let evalExpression = expression
+        .replace(/sqrt\(([^)]+)\)/gi, (_, num) => Math.sqrt(parseFloat(num)).toString())
+        .replace(/\^/g, '**')
+        .replace(/(\d+)%/g, '($1/100)');
+      
+      // Parse and evaluate safely using a simple recursive descent parser
+      result = evaluateExpression(evalExpression);
     } catch {
       return new Response(
         JSON.stringify({ error: 'Invalid mathematical expression' }),
