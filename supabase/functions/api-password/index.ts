@@ -7,6 +7,16 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+// Hash API key for secure storage - never store plain text API keys
+async function hashApiKey(apiKey: string | null): Promise<string | null> {
+  if (!apiKey) return null;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(apiKey);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 // Rate limit: 60 requests per minute
 const RATE_LIMIT = 60;
 const RATE_WINDOW_MS = 60000;
@@ -159,7 +169,8 @@ Deno.serve(async (req) => {
       charsetSize: charset.length
     };
 
-    // Log API usage (don't log the actual passwords for security)
+    // Log API usage with hashed API key (don't log the actual passwords for security)
+    const hashedKey = await hashApiKey(req.headers.get('x-api-key'));
     await supabase.from('api_usage').insert({
       api_name: 'password',
       endpoint: '/api-password',
@@ -167,7 +178,7 @@ Deno.serve(async (req) => {
       response_data: { generated: count, strength, entropy: result.entropy },
       status_code: 200,
       ip_address: clientIP,
-      api_key: req.headers.get('x-api-key') || null
+      api_key: hashedKey
     });
 
     return new Response(
