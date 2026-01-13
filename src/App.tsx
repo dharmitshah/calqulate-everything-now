@@ -41,6 +41,7 @@ import AboutPage from "./pages/AboutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
 import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
+import DeveloperDocsPage from "./pages/DeveloperDocsPage";
 
 const queryClient = new QueryClient();
 
@@ -92,6 +93,9 @@ const App = () => (
           
           {/* Admin route - hidden from public */}
           <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
+          
+          {/* Developer docs */}
+          <Route path="/developers" element={<DeveloperDocsPage />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
