@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      api_usage: {
+        Row: {
+          api_key: string | null
+          api_name: string
+          created_at: string
+          endpoint: string
+          id: string
+          ip_address: string | null
+          request_data: Json | null
+          response_data: Json | null
+          status_code: number | null
+        }
+        Insert: {
+          api_key?: string | null
+          api_name: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          ip_address?: string | null
+          request_data?: Json | null
+          response_data?: Json | null
+          status_code?: number | null
+        }
+        Update: {
+          api_key?: string | null
+          api_name?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          ip_address?: string | null
+          request_data?: Json | null
+          response_data?: Json | null
+          status_code?: number | null
+        }
+        Relationships: []
+      }
       calculator_usage: {
         Row: {
           calculator_name: string
