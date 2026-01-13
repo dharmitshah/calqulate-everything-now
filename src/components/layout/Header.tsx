@@ -22,13 +22,23 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <Link to="/" className="flex items-center space-x-2" aria-label="Quickulus Home">
-            <img 
-              src="/favicon.png" 
-              alt="Quickulus Logo" 
-              className="w-8 h-8 rounded-lg"
-              width={32}
-              height={32}
-            />
+            {/* Inline SVG logo for performance - no external image load */}
+            <svg 
+              className="w-8 h-8 rounded-lg" 
+              viewBox="0 0 32 32" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <rect width="32" height="32" rx="8" fill="url(#logoGradient)" />
+              <text x="8" y="23" fontSize="18" fontWeight="bold" fill="white" fontFamily="system-ui">Q</text>
+              <defs>
+                <linearGradient id="logoGradient" x1="0" y1="0" x2="32" y2="32">
+                  <stop stopColor="#9333ea" />
+                  <stop offset="1" stopColor="#ec4899" />
+                </linearGradient>
+              </defs>
+            </svg>
             <span className="text-2xl font-heading font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
               Quickulus
             </span>
