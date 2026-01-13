@@ -40,6 +40,7 @@ import CategoryPage from "./pages/CategoryPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import TermsOfServicePage from "./pages/TermsOfServicePage";
+import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +89,9 @@ const App = () => (
           
           {/* Category routes */}
           <Route path="/category/:category" element={<CategoryPage />} />
+          
+          {/* Admin route - hidden from public */}
+          <Route path="/admin/analytics" element={<AdminAnalyticsPage />} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
