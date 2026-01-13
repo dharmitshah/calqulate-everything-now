@@ -89,10 +89,6 @@ const App = () => (
           {/* Category routes */}
           <Route path="/category/:category" element={<CategoryPage />} />
           
-          {/* Redirects for old URLs */}
-          <Route path="/index.html" element={<Index />} />
-          <Route path="/sitemap" element={<NotFound />} />
-          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

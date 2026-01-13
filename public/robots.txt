@@ -4,21 +4,12 @@
 User-agent: *
 Allow: /
 
-# Allow all calculator pages
-Allow: /calculator/
-Allow: /calculators
-Allow: /category/
-
-# Block admin and non-content paths
-Disallow: /api/
-Disallow: /*.json$
-Disallow: /src/
-
 # Sitemap location
 Sitemap: https://quickulus.com/sitemap.xml
 
-# Crawl-delay for polite crawling
-Crawl-delay: 1
+# Block only build artifacts
+Disallow: /assets/*.js$
+Disallow: /assets/*.css$
 
 # Specific bot instructions
 User-agent: Googlebot
@@ -26,4 +17,3 @@ Allow: /
 
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 2
