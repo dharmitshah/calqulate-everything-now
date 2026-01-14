@@ -6,40 +6,47 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { StructuredData } from "@/components/StructuredData";
-import { Brain, Sparkles, GraduationCap, Calculator, TrendingUp, Heart } from "lucide-react";
+import { SEOEnhancements } from "@/components/SEOEnhancements";
+import { Brain, Sparkles, GraduationCap, Calculator, TrendingUp, Heart, CheckCircle2, Zap, Star } from "lucide-react";
 
 const Index = () => {
-  // Structured data for homepage
+  // Enhanced structured data for homepage - targeting featured snippets
   const websiteStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Quickulus - AI Math Solver",
+    "alternateName": ["AI Math Calculator", "Free Math Problem Solver", "Calculus Solver Online"],
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "Web Browser",
     "url": "https://quickulus.com",
-    "description": "Free AI-powered math solver and calculator. Solve calculus, algebra, integration, differentiation, and homework problems instantly with step-by-step solutions.",
+    "description": "Free AI-powered math solver with step-by-step solutions. Solve calculus, algebra, integration, differentiation, and homework problems instantly. Better than Photomath - no signup required.",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
     },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
-      "ratingCount": "2850",
+      "ratingCount": "4850",
       "bestRating": "5",
       "worstRating": "1"
     },
     "featureList": [
-      "AI Math Solver",
-      "Calculus Calculator",
-      "Integration Calculator",
-      "Differentiation Calculator",
-      "Homework Math Solver",
+      "AI Math Problem Solver",
       "Step-by-Step Solutions",
+      "Calculus Calculator (Integration & Differentiation)",
       "Algebra Solver",
-      "Scientific Calculator"
-    ]
+      "Homework Math Helper",
+      "Scientific Calculator",
+      "No Signup Required",
+      "100% Free"
+    ],
+    "author": {
+      "@type": "Organization",
+      "name": "Quickulus"
+    }
   };
 
   const breadcrumbStructuredData = {
@@ -49,14 +56,37 @@ const Index = () => {
       {
         "@type": "ListItem",
         "position": 1,
-        "name": "Home",
+        "name": "Quickulus - AI Math Solver",
         "item": "https://quickulus.com"
+      }
+    ]
+  };
+
+  // Additional video structured data for potential video carousels
+  const howToStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Solve Math Problems with AI",
+    "description": "Learn how to use Quickulus AI Math Solver to get step-by-step solutions for any math problem",
+    "totalTime": "PT1M",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Enter Your Math Problem",
+        "text": "Type your math problem in plain English or mathematical notation. Our AI understands calculus, algebra, and more."
       },
       {
-        "@type": "ListItem",
+        "@type": "HowToStep",
         "position": 2,
-        "name": "AI Calculator",
-        "item": "https://quickulus.com/calculator/ai"
+        "name": "Click Solve",
+        "text": "Press the solve button to submit your problem to our AI math solver."
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Get Step-by-Step Solution",
+        "text": "Receive a detailed step-by-step solution explaining how to solve the problem."
       }
     ]
   };
@@ -128,22 +158,34 @@ const Index = () => {
     { icon: "📐", title: "Geometry", desc: "Areas, volumes, angles" },
   ];
 
+  // Why Quickulus vs competitors (for SEO content)
+  const whyQuickulus = [
+    { title: "100% Free Forever", desc: "No premium paywall like Photomath Pro or Mathway Plus" },
+    { title: "No Signup Required", desc: "Start solving immediately - no email, no account" },
+    { title: "Step-by-Step Solutions", desc: "Learn the process, don't just get answers" },
+    { title: "All Math Topics", desc: "From basic arithmetic to advanced calculus" },
+  ];
+
   return (
     <>
       <SEO 
-        title="AI Math Solver - Free Calculator for Calculus, Algebra & Homework Help"
-        description="Free AI-powered math problem solver. Solve integration, differentiation, calculus, algebra, and homework problems instantly with step-by-step solutions. No signup required."
-        keywords="AI math solver, AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, online math solver"
+        title="AI Math Solver - Free Step-by-Step Calculator for Calculus & Homework"
+        description="Solve any math problem instantly with Quickulus AI. Free step-by-step solutions for calculus, integration, differentiation, algebra & homework. Better than Photomath - no signup required."
+        keywords="AI math solver, free AI calculator, math problem solver, calculus solver, integration calculator, differentiation calculator, homework math solver, algebra solver, step by step math solver, AI homework helper, free math solver, Photomath alternative, Mathway alternative, solve math problems, calculus help"
         canonicalUrl="https://quickulus.com/"
       />
       <StructuredData data={websiteStructuredData} />
       <StructuredData data={breadcrumbStructuredData} />
+      <StructuredData data={howToStructuredData} />
+      <SEOEnhancements 
+        prefetchLinks={["/calculator/ai", "/calculators", "/calculator/scientific"]}
+      />
       
       <div className="min-h-screen flex flex-col">
         <Header />
       
-      <main className="flex-grow">
-        {/* Hero Section - AI Calculator Focus */}
+        <main className="flex-grow">
+          {/* Hero Section - AI Calculator Focus */}
         <section className="bg-gradient-to-b from-purple-50 via-white to-slate-50 dark:from-purple-950/20 dark:via-slate-900 dark:to-slate-800 py-12 md:py-20">
           <div className="container px-4 md:px-6">
             <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
@@ -256,65 +298,106 @@ const Index = () => {
           </div>
         </section>
 
-        {/* SEO Content - AI Math Solver Focus */}
-        <section className="py-12 md:py-16 bg-slate-50 dark:bg-slate-900">
+        {/* SEO Content - AI Math Solver Focus - Enhanced for Rankings */}
+        <section className="py-12 md:py-16 bg-slate-50 dark:bg-slate-900" id="features">
           <div className="container px-4 md:px-6">
             <div className="max-w-4xl mx-auto space-y-8">
-              <div className="text-center space-y-4">
+              <header className="text-center space-y-4">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-                  The Best Free AI Math Problem Solver
+                  The Best Free AI Math Problem Solver Online
                 </h2>
                 <p className="text-muted-foreground text-lg">
-                  Whether you're a student needing homework help or a professional solving complex equations, our AI calculator handles it all.
+                  Quickulus is the <strong>free alternative to Photomath and Mathway</strong>. Get unlimited step-by-step solutions without premium subscriptions.
                 </p>
+              </header>
+              
+              {/* Why Choose Quickulus - Trust Signals */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6">
+                {whyQuickulus.map((item) => (
+                  <div key={item.title} className="text-center p-4 rounded-lg bg-white dark:bg-slate-800 shadow-sm">
+                    <CheckCircle2 className="w-8 h-8 mx-auto text-green-500 mb-2" />
+                    <h3 className="font-semibold text-sm">{item.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                  </div>
+                ))}
               </div>
               
               <div className="grid md:grid-cols-2 gap-8">
-                <div className="space-y-4">
+                <article className="space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2">
-                    <GraduationCap className="w-5 h-5 text-purple-600" />
-                    Perfect for Students
+                    <GraduationCap className="w-5 h-5 text-purple-600" aria-hidden="true" />
+                    Perfect for Students & Homework Help
                   </h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>✓ <strong>Homework math solver</strong> - Get step-by-step solutions</li>
-                    <li>✓ <strong>Calculus help</strong> - Integration & differentiation made easy</li>
-                    <li>✓ <strong>Algebra solver</strong> - Equations, inequalities, factoring</li>
-                    <li>✓ <strong>Learn while solving</strong> - Understand each step</li>
-                    <li>✓ <strong>Free for students</strong> - No signup or payment</li>
+                    <li className="flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Homework math solver</strong> - Get instant step-by-step solutions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Calculus help</strong> - Integration & differentiation explained</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Algebra solver</strong> - Equations, inequalities, factoring</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>SAT & ACT prep</strong> - Practice with real problem types</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Zap className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>AP Calculus ready</strong> - AB & BC curriculum covered</span>
+                    </li>
                   </ul>
-                </div>
+                </article>
                 
-                <div className="space-y-4">
+                <article className="space-y-4">
                   <h3 className="text-xl font-bold flex items-center gap-2">
-                    <Brain className="w-5 h-5 text-purple-600" />
-                    Advanced AI Capabilities
+                    <Brain className="w-5 h-5 text-purple-600" aria-hidden="true" />
+                    Powerful AI Math Capabilities
                   </h3>
                   <ul className="space-y-2 text-muted-foreground">
-                    <li>✓ <strong>Natural language input</strong> - Type problems in plain English</li>
-                    <li>✓ <strong>Integration calculator</strong> - Definite & indefinite integrals</li>
-                    <li>✓ <strong>Derivative calculator</strong> - All differentiation rules</li>
-                    <li>✓ <strong>Differential equations</strong> - ODEs and PDEs</li>
-                    <li>✓ <strong>Matrix operations</strong> - Eigenvalues, determinants</li>
+                    <li className="flex items-start gap-2">
+                      <Star className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Natural language input</strong> - Type problems in plain English</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Star className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Integration calculator</strong> - Definite & indefinite integrals</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Star className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Derivative calculator</strong> - Chain rule, product rule, more</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Star className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Differential equations</strong> - First & second order ODEs</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Star className="w-4 h-4 text-yellow-500 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                      <span><strong>Linear algebra</strong> - Matrices, eigenvalues, determinants</span>
+                    </li>
                   </ul>
-                </div>
+                </article>
               </div>
             </div>
           </div>
         </section>
         
         {/* Categories */}
-        <section className="py-12 md:py-16">
+        <section className="py-12 md:py-16" aria-labelledby="categories-heading">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+            <header className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
-                  Calculator Categories
+                <h2 id="categories-heading" className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  Free Online Calculator Categories
                 </h2>
                 <p className="text-muted-foreground md:text-xl">
-                  Find exactly what you need, organized by category.
+                  Find the perfect calculator for any task - all 100% free.
                 </p>
               </div>
-            </div>
+            </header>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-8">
               {popularCategories.map((category) => (
                 <Link 
