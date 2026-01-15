@@ -16,7 +16,7 @@ export type Database = {
     Tables: {
       api_usage: {
         Row: {
-          api_key: string | null
+          api_key_hash: string | null
           api_name: string
           created_at: string
           endpoint: string
@@ -27,7 +27,7 @@ export type Database = {
           status_code: number | null
         }
         Insert: {
-          api_key?: string | null
+          api_key_hash?: string | null
           api_name: string
           created_at?: string
           endpoint: string
@@ -38,7 +38,7 @@ export type Database = {
           status_code?: number | null
         }
         Update: {
-          api_key?: string | null
+          api_key_hash?: string | null
           api_name?: string
           created_at?: string
           endpoint?: string
