@@ -89,7 +89,7 @@ const AICalculator = () => {
             <Brain className="h-8 w-8 text-white" />
           </div>
         </div>
-        <CardTitle className="text-2xl">AI Calculator</CardTitle>
+        <p className="text-2xl font-semibold leading-none tracking-tight">AI Calculator</p>
         <CardDescription>
           Ask any math question in plain English and get step-by-step solutions
         </CardDescription>
