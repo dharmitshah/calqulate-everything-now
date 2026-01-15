@@ -7,14 +7,15 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-// Hash API key for secure storage - never store plain text API keys
-async function hashApiKey(apiKey: string | null): Promise<string | null> {
+// Hash API key for secure storage - only store truncated hash, never plaintext
+async function hashApiKeyTruncated(apiKey: string | null): Promise<string | null> {
   if (!apiKey) return null;
   const encoder = new TextEncoder();
   const data = encoder.encode(apiKey);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  const fullHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return fullHash.substring(0, 16);
 }
 
 // Rate limit: 60 requests per minute
@@ -121,8 +122,8 @@ Deno.serve(async (req) => {
       healthyRange: { min: 18.5, max: 24.9 }
     };
 
-    // Log API usage with hashed API key for security
-    const hashedKey = await hashApiKey(req.headers.get('x-api-key'));
+    // Log API usage with truncated hashed API key for security
+    const hashedKey = await hashApiKeyTruncated(req.headers.get('x-api-key'));
     await supabase.from('api_usage').insert({
       api_name: 'bmi',
       endpoint: '/api-bmi',
@@ -130,7 +131,7 @@ Deno.serve(async (req) => {
       response_data: result,
       status_code: 200,
       ip_address: clientIP,
-      api_key: hashedKey
+      api_key_hash: hashedKey
     });
 
     return new Response(
